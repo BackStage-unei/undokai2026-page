@@ -218,21 +218,13 @@ Googleドキュメントを根拠とする内容:
 ├── index.html
 ├── イベント概要_大運動会2026.html
 ├── undo-kai.html
-├── assets/
-│   ├── css/
-│   │   └── site.css
-│   ├── js/
-│   │   └── site.js
-│   └── images/
-│       ├── brand/
-│       └── casts/
 └── tests/
     └── test_event_page.py
 ```
 
-公開本体は `index.html` とする。旧ファイル名からも同じ内容へ到達できるようにする。複数HTMLを残す場合は生成または同期テストで差分を防ぐ。
+`main` と現行実装に合わせ、CSS、JavaScript、画像はHTML内に保持する。今回の作業ではassets分割を行わない。
 
-画像をbase64から分離する場合も、画像内容、キャスト名、チーム分け、並び順を変更しない。
+公開本体は `index.html` とする。3つのHTMLは同じ内容を維持し、同期テストで差分を防ぐ。画像内容、キャスト名、チーム分け、並び順を変更しない。
 
 ## 10. JavaScriptの役割
 
