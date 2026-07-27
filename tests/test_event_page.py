@@ -206,10 +206,18 @@ def main() -> int:
     emoji_hits = re.findall(r"[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F]", text)
     ok &= print_result("絵文字 0件", "PASS" if not emoji_hits else "FAIL", f"{len(emoji_hits)}件")
 
-    no_script = len(re.findall(r"<script", text, re.I)) == 0
-    public_text = CAST_ONLY_PV_PATTERN.sub("", strip_data_uris(text))
-    no_url = len(re.findall(r"https?://", public_text, re.I)) == 0
-    ok &= print_result("<script と http(s) URL 0件", "PASS" if no_script and no_url else "FAIL")
+    allowed_urls = {
+        "https://forms.gle/SMoTKsQ16n4mtEuE9",
+        "https://discord.com/channels/1138387287986679879/1475808380453916682",
+    }
+    found_urls = set(re.findall(r'https?://[^"\s<]+', strip_data_uris(text)))
+    unexpected_urls = sorted(found_urls - allowed_urls)
+    external_scripts = re.findall(r'<script\b[^>]*\bsrc\s*=', text, re.I)
+    ok &= print_result(
+        "外部URLは提出フォームとDiscordのみ・外部scriptなし",
+        "PASS" if not unexpected_urls and not external_scripts else "FAIL",
+        ", ".join(unexpected_urls),
+    )
 
     pv_matches = CAST_ONLY_PV_PATTERN.findall(text)
     pv_block = next((m for m in pv_matches if 'id="pv-voice"' in m), "")
@@ -291,6 +299,57 @@ def main() -> int:
         "PASS" if not nav_missing else "FAIL",
         ", ".join(nav_missing),
     )
+
+    mobile_nav = re.search(
+        r'<dialog\b[^>]*\bid="mobile-menu"[^>]*>(.*?)</dialog>',
+        text,
+        re.S | re.I,
+    )
+    mobile_nav_html = mobile_nav.group(1) if mobile_nav else ""
+    mobile_nav_hrefs = [
+        "#about",
+        "#teams",
+        "#rules",
+        "#points",
+        "#half-time",
+        "#survival",
+        "#schedule",
+        "#prize",
+        "#pv-voice",
+        "#faq",
+        "#contact",
+    ]
+    mobile_nav_failures = []
+    for selector in ['id="menu-toggle"', 'id="mobile-menu"', 'id="menu-close"']:
+        if selector not in text:
+            mobile_nav_failures.append(selector)
+    for href in mobile_nav_hrefs:
+        if f'href="{href}"' not in mobile_nav_html:
+            mobile_nav_failures.append(href)
+    for js_term in [
+        "showModal()",
+        "menuDialog.close()",
+        'menuDialog.addEventListener("close"',
+        "event.target === menuDialog",
+    ]:
+        if js_term not in text:
+            mobile_nav_failures.append(js_term)
+    if external_scripts:
+        mobile_nav_failures.append("外部script")
+    ok &= print_result(
+        "モバイルメニュー: dialog・11リンク・閉じる操作",
+        "PASS" if not mobile_nav_failures else "FAIL",
+        ", ".join(mobile_nav_failures),
+    )
+
+    contact_html = section_block(text, "contact")
+    discord_url = "https://discord.com/channels/1138387287986679879/1475808380453916682"
+    contact_ok = (
+        "運営への依頼窓口" in visible_text(contact_html)
+        and contact_html.count(discord_url) == 1
+        and 'rel="noopener noreferrer"' in contact_html
+    )
+    ok &= print_result("お問い合わせ: Discord窓口", "PASS" if contact_ok else "FAIL")
 
     teams_block = section_block(text, "teams")
     leader_ok = (
