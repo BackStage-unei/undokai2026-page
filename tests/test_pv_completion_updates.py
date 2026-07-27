@@ -78,8 +78,10 @@ def run_focused_browser_check() -> tuple[bool, dict[str, bool] | str]:
       const completionControlLayouts = checks.map((check) => {
         const label = check.closest(".pv-completion-label");
         const head = check.closest(".pv-say-head");
+        const firstHeadingItem = head?.querySelector(".pv-say-num");
         const labelRect = label?.getBoundingClientRect();
         const headRect = head?.getBoundingClientRect();
+        const firstHeadingItemRect = firstHeadingItem?.getBoundingClientRect();
         return {
           inputOnly:
             label?.children.length === 1
@@ -87,6 +89,9 @@ def run_focused_browser_check() -> tuple[bool, dict[str, bool] | str]:
           atRight:
             getComputedStyle(label).position === "absolute"
             && Math.abs(headRect.right - labelRect.right) <= 16,
+          contentAtLeft:
+            getComputedStyle(head).justifyContent === "flex-start"
+            && Math.abs(firstHeadingItemRect.left - headRect.left) <= 18,
         };
       });
       const results = {
@@ -95,7 +100,7 @@ def run_focused_browser_check() -> tuple[bool, dict[str, bool] | str]:
           && JSON.stringify(lines) === JSON.stringify(["1", "2", "3", "4", "5"]),
         completionControlIsSecondary:
           completionControlLayouts.every((layout) =>
-            layout.inputOnly && layout.atRight
+            layout.inputOnly && layout.atRight && layout.contentAtLeft
           ),
         completionTurnsGreen:
           checks[0]?.checked === true
