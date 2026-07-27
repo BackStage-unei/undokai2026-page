@@ -40,6 +40,39 @@ PRIZE_DETAIL_URL = (
     "https://discord.com/channels/1138387287986679879/"
     "1528011762572595231/1529844197350309939"
 )
+PRESERVED_SECTION_TERMS = {
+    "about": [
+        "待望の第2回",
+        "7日間",
+        "チーム分けは運営が実施",
+    ],
+    "teams": ["赤組", "青組", "黄組", "緑組", "橙組", "紫組"],
+    "rules": ["12時間", "12人", "3人", "1日12時間まで", "3ヶ月以上"],
+    "points": [
+        "1本クリア = 1pt",
+        "最大 12pt",
+        "重点ミッション",
+        "14時間30分",
+        "13時間50分",
+        "14人",
+        "13人",
+        "あと1人",
+        "11pt",
+        "9pt",
+        "5pt",
+    ],
+    "half-time": ["早押しクイズ大会", "+8pt", "+6pt", "+4pt", "+2pt"],
+    "survival": ["累積10pt以上ある？", "10pt未満", "3pt×4日＝12pt"],
+    "schedule": ["8/20", "集計 0:00〜20:00", "8/23", "集計 0:00〜21:00"],
+    "prize": ["優勝賞品", "準優勝賞品", "集合SDイラスト", "集合立ち絵ポスター"],
+    "pv-voice": [
+        "全員共通の3つ＋自分のチームの2つ、あわせて5つです",
+        "TitleCall01_ORG.wav",
+        "TeamShout02_ORG.wav",
+    ],
+    "faq": ["ミッションは毎日変わりますか？", "最終結果が同点だったら？"],
+    "contact": ["運営への依頼窓口"],
+}
 
 
 def strip_data_uris(text: str) -> str:
@@ -222,6 +255,18 @@ def main() -> int:
     css = style_block(text)
     rendered_text = visible_text(strip_data_uris(text))
     ok = copy_test_ok
+
+    preservation_failures = []
+    for section_id, required_terms in PRESERVED_SECTION_TERMS.items():
+        section_text = visible_text(section_block(text, section_id))
+        missing = [term for term in required_terms if term not in section_text]
+        if missing:
+            preservation_failures.append(f"{section_id}: {', '.join(missing)}")
+    ok &= print_result(
+        "main情報分類・詳細内容の保持",
+        "PASS" if not preservation_failures else "FAIL",
+        "; ".join(preservation_failures),
+    )
 
     ok &= print_result("応援枠 0件", "PASS" if text.count("応援枠") == 0 else "FAIL", f"{text.count('応援枠')}件")
 
@@ -427,6 +472,18 @@ def main() -> int:
         "セクショントグル: 既存DOMを保持する11分類",
         "PASS" if toggle_contract_ok else "FAIL",
         ", ".join(toggle_config_failures),
+    )
+
+    destructive_toggle_terms = [
+        ".innerHTML =",
+        ".outerHTML =",
+        "section.replaceChildren",
+    ]
+    destructive_hits = [term for term in destructive_toggle_terms if term in text]
+    ok &= print_result(
+        "トグル変換: 既存本文の文字列置換なし",
+        "PASS" if not destructive_hits else "FAIL",
+        ", ".join(destructive_hits),
     )
 
     toggle_navigation_terms = [
@@ -885,11 +942,21 @@ def main() -> int:
 
     if not CHROME.exists():
         ok &= print_result("Chromeヘッドレスレンダリング", "SKIP", f"Chromeなし: {CHROME}")
+        ok &= print_result(
+            "セクショントグル: 描画後11件・概要のみ初期展開",
+            "SKIP",
+            f"Chromeなし: {CHROME}",
+        )
         ok &= print_result("PV音声: 描画後6チーム×9画像", "SKIP", f"Chromeなし: {CHROME}")
     else:
         chrome_ok, chrome_detail = chrome_probe()
         if not chrome_ok:
             ok &= print_result("Chromeヘッドレスレンダリング", "SKIP", chrome_detail)
+            ok &= print_result(
+                "セクショントグル: 描画後11件・概要のみ初期展開",
+                "SKIP",
+                chrome_detail,
+            )
             ok &= print_result("PV音声: 描画後6チーム×9画像", "SKIP", chrome_detail)
         else:
             render_ok, render_html = dump_rendered_dom()
