@@ -58,7 +58,8 @@
     }
 
     a:focus-visible,
-    summary:focus-visible {
+    summary:focus-visible,
+    button:focus-visible {
       outline: 3px solid var(--yellow);
       outline-offset: 4px;
     }
@@ -167,7 +168,7 @@
 
     .page {
       position: relative;
-      overflow: hidden;
+      overflow: clip;
       min-height: 100vh;
     }
 
@@ -186,21 +187,28 @@
     }
 
     .topbar {
-      position: relative;
-      z-index: 4;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding-top: env(safe-area-inset-top);
       color: var(--white);
-      background: transparent;
+      background: var(--sky-deep);
+      box-shadow: 0 4px 12px rgba(31, 56, 110, 0.14);
     }
 
     .topbar-inner {
-      display: grid;
+      position: relative;
+      display: flex;
+      min-height: 64px;
       align-items: center;
-      justify-items: center;
       justify-content: center;
-      gap: 0;
-      min-height: 0;
-      padding: 18px 0;
+      padding: 10px 0;
       text-align: center;
+    }
+
+    .topbar-brand {
+      display: grid;
+      justify-items: center;
     }
 
     .topbar-logo {
@@ -217,6 +225,140 @@
       line-height: 1.3;
       letter-spacing: 0.3em;
       text-align: center;
+    }
+
+    .menu-toggle,
+    .menu-close {
+      display: inline-flex;
+      min-width: 44px;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 2px solid currentColor;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .menu-toggle {
+      position: absolute;
+      right: 0;
+      color: var(--white);
+      background: transparent;
+    }
+
+    .menu-icon {
+      display: grid;
+      gap: 5px;
+      width: 20px;
+    }
+
+    .menu-icon span {
+      display: block;
+      height: 2px;
+      background: currentColor;
+      border-radius: 999px;
+    }
+
+    .menu-dialog {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .menu-dialog::backdrop {
+      background: rgba(20, 35, 72, 0.62);
+    }
+
+    .menu-panel {
+      width: min(88vw, 380px);
+      min-height: 100dvh;
+      margin-left: auto;
+      overflow-y: auto;
+      padding:
+        max(18px, env(safe-area-inset-top))
+        20px
+        max(24px, env(safe-area-inset-bottom));
+      background: var(--white);
+      box-shadow: -8px 0 24px rgba(31, 56, 110, 0.18);
+    }
+
+    .menu-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .menu-panel-title {
+      margin: 0;
+      color: var(--royal-deep);
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.4;
+      text-wrap: balance;
+    }
+
+    .menu-close {
+      flex: 0 0 auto;
+      color: var(--royal-deep);
+      background: var(--white);
+    }
+
+    .menu-close svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .mobile-menu-links {
+      display: grid;
+      gap: 4px;
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mobile-menu-link {
+      display: flex;
+      min-height: 44px;
+      align-items: center;
+      padding: 9px 12px;
+      color: var(--royal-deep);
+      border-bottom: 1px solid var(--card-line);
+      font-weight: 700;
+      line-height: 1.5;
+      text-wrap: pretty;
+    }
+
+    .mobile-menu-link:focus-visible,
+    .contact-link:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 2px;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    .contact-link {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      color: var(--white);
+      background: var(--royal);
+      border-radius: 999px;
+      box-shadow: 0 4px 0 var(--royal-deep);
+      font-weight: 800;
+      line-height: 1.5;
+      text-wrap: balance;
     }
 
     .hero {
@@ -2078,6 +2220,46 @@
       text-align: left;
     }
 
+    .collection-window-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      max-width: 840px;
+      margin: 18px auto 0;
+    }
+
+    .collection-window-card {
+      display: grid;
+      gap: 3px;
+      padding: 14px 16px;
+      color: var(--royal-deep);
+      background: rgba(255, 216, 75, 0.25);
+      border: 2px solid var(--yellow);
+      border-radius: 14px;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+    }
+
+    .collection-window-card strong,
+    .collection-window-card span {
+      font-weight: 800;
+    }
+
+    .collection-window-card small {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .collection-window-note {
+      max-width: 840px;
+      margin: 8px auto 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
     .tally-table {
       display: grid;
       gap: 10px;
@@ -2496,6 +2678,12 @@
       line-height: 1.25;
     }
 
+    #pv-voice .pv-deadline-note {
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+
     #pv-voice .pv-section-heading {
       margin: 32px auto 10px;
       text-wrap: balance;
@@ -2509,7 +2697,10 @@
     }
 
     #pv-voice .pv-common-grid {
-      margin: 0 auto 28px;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+      max-width: 1100px;
+      margin: 18px auto 28px;
     }
 
     #pv-voice .pv-card-line {
@@ -2578,20 +2769,14 @@
     #pv-voice .pv-steps {
       display: grid;
       gap: 8px;
-      margin: 0 auto 14px;
+      margin: 0 0 14px;
       padding: 0;
       list-style: none;
+      text-align: left;
     }
 
     #pv-voice .pv-steps li {
       text-wrap: balance;
-    }
-
-    #pv-voice .pv-say-grid {
-      grid-template-columns: minmax(0, 1fr);
-      align-items: stretch;
-      max-width: 880px;
-      margin: 18px auto 8px;
     }
 
     #pv-voice .pv-say-card {
@@ -2718,6 +2903,44 @@
       text-wrap: balance;
     }
 
+    #pv-voice .pv-team-line p {
+      margin: 0 auto;
+      font-weight: 800;
+    }
+
+    #pv-voice .pv-team-members {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      width: min(180px, 100%);
+      margin: 0 auto 14px;
+    }
+
+    #pv-voice .pv-team-members img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border: 2px solid var(--tc);
+      border-radius: 50%;
+    }
+
+    #pv-voice .pv-file-names {
+      display: grid;
+      gap: 4px;
+      margin: 10px 14px 0;
+    }
+
+    #pv-voice .pv-file-names code {
+      overflow-wrap: anywhere;
+      color: var(--royal-deep);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.5;
+      white-space: normal;
+      word-break: break-word;
+    }
+
     #pv-voice .pv-say-badge {
       display: inline-flex;
       align-items: center;
@@ -2812,6 +3035,17 @@
       padding-top: 30px;
       border: 2px solid var(--card-line);
       box-shadow: var(--shadow-card);
+      text-align: left;
+    }
+
+    #pv-voice .pv-route-card p {
+      margin-left: 0;
+      margin-right: 0;
+      text-align: left;
+    }
+
+    #pv-voice .pv-route-card li {
+      text-align: left;
     }
 
     #pv-voice .pv-route-card::before {
@@ -2889,11 +3123,12 @@
     }
 
     #pv-voice .pv-detail-box {
-      margin: 14px auto 0;
+      margin: 14px 0 0;
       padding: 14px 14px 12px;
       background: rgba(64, 70, 196, 0.06);
       border: 1.5px dashed var(--royal);
       border-radius: 14px;
+      text-align: left;
     }
 
     #pv-voice .pv-route-b .pv-detail-box {
@@ -2923,6 +3158,7 @@
       display: block;
       max-width: 760px;
       margin: 0 auto 28px;
+      text-align: left;
     }
 
     #pv-voice .pv-submit {
@@ -3003,16 +3239,25 @@
     }
 
     @media (min-width: 720px) {
+      .menu-toggle,
+      .menu-dialog {
+        display: none;
+      }
+
       .wrap {
         width: min(1120px, calc(100% - 56px));
+      }
+
+      .collection-window-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .prize-rank-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      #pv-voice .pv-say-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      #pv-voice .pv-common-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       #pv-voice .pv-team-grid {
@@ -3117,8 +3362,8 @@
       }
 
       .topbar-inner {
-        padding-top: 18px;
-        padding-bottom: 18px;
+        padding-top: 12px;
+        padding-bottom: 12px;
       }
 
       .hero {
@@ -3154,7 +3399,7 @@
       .topbar-inner {
         align-items: center;
         justify-content: center;
-        padding: 18px 0;
+        padding: 10px 0;
       }
 
       .topbar-logo {
@@ -3293,16 +3538,52 @@
         transform: rotate(90deg);
       }
     }
+
+    @media (max-width: 719px) {
+      .anchor-nav {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="page">
     <header class="topbar">
       <div class="wrap topbar-inner">
+        <div class="topbar-brand">
         <img class="topbar-logo" src="data:image/png;base64,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" alt="BackStage">
         <div class="event-label">TEAM BATTLE EVENT 2026</div>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="ページメニューを開く" aria-controls="mobile-menu" aria-expanded="false">
+          <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
       </div>
     </header>
+    <dialog class="menu-dialog" id="mobile-menu" aria-labelledby="mobile-menu-title">
+      <div class="menu-panel">
+        <div class="menu-panel-head">
+          <p class="menu-panel-title" id="mobile-menu-title">ページメニュー</p>
+          <button class="menu-close" id="menu-close" type="button" aria-label="ページメニューを閉じる">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24">
+              <path d="M6 6l12 12M18 6L6 18"></path>
+            </svg>
+          </button>
+        </div>
+        <ul class="mobile-menu-links">
+          <li><a class="mobile-menu-link" href="#about">イベント概要</a></li>
+          <li><a class="mobile-menu-link" href="#teams">チーム発表</a></li>
+          <li><a class="mobile-menu-link" href="#rules">デイリーミッション</a></li>
+          <li><a class="mobile-menu-link" href="#points">ポイントのしくみ</a></li>
+          <li><a class="mobile-menu-link" href="#half-time">中間発表クイズ</a></li>
+          <li><a class="mobile-menu-link" href="#survival">脱落ルール</a></li>
+          <li><a class="mobile-menu-link" href="#schedule">スケジュール</a></li>
+          <li><a class="mobile-menu-link" href="#prize">特典</a></li>
+          <li><a class="mobile-menu-link" href="#pv-voice">PV音声収録</a></li>
+          <li><a class="mobile-menu-link" href="#faq">FAQ</a></li>
+          <li><a class="mobile-menu-link" href="#contact">お問い合わせ</a></li>
+        </ul>
+      </div>
+    </dialog>
     <span class="cloud cloud-one" aria-hidden="true"></span>
     <span class="cloud cloud-two" aria-hidden="true"></span>
     <span class="cloud cloud-three" aria-hidden="true"></span>
@@ -3329,10 +3610,11 @@
             <path d="M17 37C7 35 4 24 11 17c5-5 13-4 17 1C31 8 43 4 52 11c5 4 7 9 6 15 10-2 20 5 20 16 0 10-8 17-18 17H20C10 59 3 51 6 43c2-4 6-6 11-6z" fill="currentColor" stroke="#FFFFFF" stroke-width="4"></path>
           </svg>
         </div>
-        <p class="lead">チームで挑む、7日間の本気の運動会。あなたの通話が、チームの得点になる。</p>
+        <p class="lead">チームで挑む、7日間の大運動会。日々の待機・通話実績が、チームの得点になります。</p>
         <div class="date-pill">イベント開催期間：8/17(月) 〜 8/23(日)</div>
         <p class="date-sub">全7日間</p>
         <nav class="anchor-nav" aria-label="ページ内ナビゲーション">
+          <a href="#about">イベント概要</a>
           <a href="#teams">チーム発表</a>
           <a href="#rules">デイリーミッション</a>
           <a href="#points">ポイントのしくみ</a>
@@ -3340,22 +3622,21 @@
           <a href="#survival">脱落ルール</a>
           <a href="#schedule">スケジュール</a>
           <a href="#prize">特典</a>
-          <!-- CAST-ONLY:PV-VOICE START（ナビリンク。公開デプロイ前にこのSTART〜ENDも削除） -->
           <a href="#pv-voice">PV音声収録</a>
-          <!-- CAST-ONLY:PV-VOICE END -->
           <a href="#faq">FAQ</a>
+          <a href="#contact">お問い合わせ</a>
         </nav>
       </div>
     </section>
 
     <main class="wrap">
       <section class="section with-checker" id="about" aria-label="このイベントについて">
-        <div class="catch">待機も通話も全部が勝負！キャストと共に勝利をつかめ！</div>
+        <div class="catch">待機も通話もすべてが勝負。チームで力を合わせて勝利を目指しましょう！</div>
         <p class="mini-kicker">ABOUT</p>
         <ol class="about-lines">
           <li><span class="zekken">01</span><span>前回大好評だった<span class="nw">BackStage</span>大運動会、<strong class="kw">待望の第2回</strong>。</span></li>
           <li><span class="zekken">02</span><span>キャストがチームに分かれ、7日間、毎日の「<strong class="kw"><span class="nw">デイリーミッション</span></strong>」で競い合うチーム対抗戦。</span></li>
-          <li><span class="zekken">03</span><span>ユーザーのみなさんの通話と応援が、<strong class="kw">そのままチームの得点に</strong>なります。</span></li>
+          <li><span class="zekken">03</span><span>ユーザーのみなさんとの通話と応援が、<strong class="kw">そのままチームの得点に</strong>なります。</span></li>
         </ol>
         <ul class="about-chips" aria-label="チーム編成の補足">
           <li>
@@ -3374,7 +3655,7 @@
       <section class="section" id="teams" aria-labelledby="teams-title">
         <p class="mini-kicker">TEAMS</p>
         <h2 class="bar-title" id="teams-title">チーム発表</h2>
-        <p>全6チーム・各9名。チームカラーを覚えて、推しのチームを応援しよう！</p>
+        <p>全6チーム・各9名。自分のチームとメンバーを確認してください。</p>
         <!-- 画像差し込み時: .member-photo 内の svg を <img src="data:..." alt="キャスト名"> に差し替え -->
         <div class="team-roster">
           <article class="team-card" style="--team-color: #E53935;">
@@ -3471,6 +3752,19 @@
         <p class="mini-kicker">RULE 01</p>
         <h2 class="bar-title" id="rules-title">デイリーミッション</h2>
         <p><span class="nw">デイリーミッション</span>は、<strong class="kw">毎日同じこの3つ</strong>。1日ごとに集計・リセットされ、チームで3つのクリアを目指します。</p>
+        <div class="collection-window-grid" aria-label="通常と異なる集計時間">
+          <div class="collection-window-card">
+            <strong>8/20(木)</strong>
+            <span>集計 0:00〜20:00</span>
+            <small>20:00締め／21:00中間発表</small>
+          </div>
+          <div class="collection-window-card">
+            <strong>8/23(日・最終日)</strong>
+            <span>集計 0:00〜21:00</span>
+            <small>21:00締め／21:00最終結果発表</small>
+          </div>
+        </div>
+        <p class="collection-window-note">通常日は0:00〜23:59で集計します。8/20と最終日のみ締め時間が異なります。</p>
         <div class="cards">
           <article class="mission-card">
             <div class="card-head">
@@ -3972,17 +4266,30 @@
           </li>
           <li>
             <span class="timeline-date">8.20 THU</span>
-            <span class="timeline-item-text"><span class="nw">中間発表</span>クイズ配信（21:00〜）</span>
+            <span class="timeline-item-text">20:00集計締め／21:00〜<span class="nw">中間発表</span>クイズ配信</span>
           </li>
           <li>
             <span class="timeline-date">8.23 SUN</span>
-            <span class="timeline-item-text">最終日・21:00〜<span class="nw">最終結果発表</span></span>
+            <span class="timeline-item-text">最終日・21:00集計締め／21:00〜<span class="nw">最終結果発表</span></span>
           </li>
           <li>
             <span class="timeline-date">後日</span>
             <span class="timeline-item-text">表彰・特典のお届け</span>
           </li>
         </ol>
+        <div class="collection-window-grid" aria-label="通常と異なる集計時間">
+          <div class="collection-window-card">
+            <strong>8/20(木)</strong>
+            <span>集計 0:00〜20:00</span>
+            <small>20:00締め／21:00中間発表</small>
+          </div>
+          <div class="collection-window-card">
+            <strong>8/23(日・最終日)</strong>
+            <span>集計 0:00〜21:00</span>
+            <small>21:00締め／21:00最終結果発表</small>
+          </div>
+        </div>
+        <p class="collection-window-note">通常日は0:00〜23:59で集計します。8/20と最終日のみ締め時間が異なります。</p>
         <div class="tally-table" aria-label="日別の集計タイムテーブル">
           <h3 class="tally-title">日別の集計タイムテーブル</h3>
           <div class="tally-axis" aria-hidden="true">
@@ -4137,20 +4444,22 @@
           <h2 class="bar-title" id="prize-title">特典</h2>
         </div>
         <div class="prize-content">
-          <p class="prize-main">優勝チームには、チームメンバー全員の描き下ろし「<strong><span class="nw">集合SDイラスト</span></strong>」を制作します。</p>
+          <p class="prize-main">賞品は<strong>優勝・準優勝の2種類</strong>です。</p>
           <p class="prize-sub">さらに、上位チームのイラストをネットカフェ「<strong><span class="nw">自遊空間</span></strong>」の店舗に掲出予定！<br>東京都内の店舗にて、今秋・約1ヶ月間を予定しています。</p>
           <div class="prize-rank-grid">
             <div class="prize-rank-card prize-rank-gold">
-              <p class="prize-rank-label">優勝チーム</p>
+              <p class="prize-rank-label">優勝賞品</p>
               <ul class="prize-rank-list">
+                <li>チームメンバー全員の描き下ろし<strong>集合SDイラスト</strong>を制作</li>
                 <li>集合SDイラストを店舗に<strong>パネル設置</strong></li>
                 <li>店内ブース席に<strong>チームのブースPOPを掲出</strong></li>
               </ul>
             </div>
             <div class="prize-rank-card prize-rank-silver">
-              <p class="prize-rank-label">準優勝チーム</p>
+              <p class="prize-rank-label">準優勝賞品</p>
               <ul class="prize-rank-list">
-                <li>チームの<strong>集合立ち絵ポスター</strong>（既存立ち絵使用）を<br>ブースPOPとして店内ブース席に掲出</li>
+                <li>既存立ち絵を使用した<strong>集合立ち絵ポスター</strong>を制作</li>
+                <li>ブースPOPとして店内ブース席に掲出</li>
               </ul>
             </div>
           </div>
@@ -4160,21 +4469,21 @@
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
 
-      <!-- CAST-ONLY:PV-VOICE START（キャスト向け一時セクション。公開デプロイ前にこのSTART〜ENDブロックを丸ごと削除） -->
       <section class="section" id="pv-voice" aria-labelledby="pv-voice-title">
         <p class="mini-kicker">PV VOICE</p>
         <h2 class="bar-title" id="pv-voice-title">PV音声収録</h2>
-        <p class="lead">イベントPVで、キャストのみなさんの声を映像内で使用する予定です。下記のセリフを収録して、期限までに提出してください。</p>
-        <p class="notice pv-notice">参加はご協力いただける方による<strong>有志</strong>で、<strong>収録は強制ではありません</strong>。お時間に余裕のある方は、ぜひご協力をお願いします！期日までに提出された音声を映像内で使用します。（このセクションはキャスト向けの案内です）</p>
+        <p class="lead">イベントのPVを現在作成中です。その中で、キャストのみなさんの声を映像内で使用したいと考えています。<br>もし参加可能な方がいらっしゃいましたら、下記セリフを期限までにご提出いただけると嬉しいです！</p>
+        <p class="notice pv-notice"><strong>参加は強制ではありません。</strong>お時間に余裕のある方は、ぜひご協力をお願いします！</p>
 
-        <div class="pv-deadline" aria-label="提出期限 8月1日土曜日 13時">
+        <div class="pv-deadline" aria-label="提出期限 8月1日土曜日 13時ごろ">
           <span class="pv-deadline-label">提出期限</span>
-          <span class="pv-deadline-time">8/1(土) 13:00</span>
+          <span class="pv-deadline-time">8/1(土) 13:00ごろ</span>
+          <span class="pv-deadline-note">この日の13:00ごろから本格的に作業を始める予定です。</span>
         </div>
 
-        <h3 class="pv-section-heading">収録をお願いしたいセリフは4つ</h3>
-        <p class="pv-structure">全員共通の2つ＋自分のチームの2つ、あわせて4つです。<br>さらに余裕があれば「＋α 応援の声」もぜひ！</p>
-        <div class="cards pv-say-grid">
+        <h3 class="pv-section-heading">収録をお願いしたいセリフは5つ</h3>
+        <p class="pv-structure">全員共通の3つ＋自分のチームの2つ、あわせて5つです。</p>
+        <div class="cards pv-common-grid">
           <article class="pv-say-card">
             <div class="pv-say-head">
               <span class="pv-say-num">セリフ 1</span>
@@ -4183,6 +4492,10 @@
             </div>
             <p class="pv-say-quote">「BackStage大運動会！」</p>
             <p class="pv-say-note">イベントロゴが大きく出るタイミングで使用。元気よく勢いのあるテンションで！</p>
+            <div class="pv-file-names" aria-label="タイトルコールのファイル名">
+              <code>{TeamColor}_{CastName}_TitleCall01_ORG.wav</code>
+              <code>{TeamColor}_{CastName}_TitleCall02_ORG.wav</code>
+            </div>
           </article>
           <article class="pv-say-card">
             <div class="pv-say-head">
@@ -4192,60 +4505,113 @@
             </div>
             <p class="pv-say-quote">「よーい、どん！」</p>
             <p class="pv-say-note">運動会のピストルを撃つタイミングで使用します。</p>
+            <div class="pv-file-names" aria-label="スタートのファイル名">
+              <code>{TeamColor}_{CastName}_Start01_ORG.wav</code>
+              <code>{TeamColor}_{CastName}_Start02_ORG.wav</code>
+            </div>
+          </article>
+          <article class="pv-say-card">
+            <div class="pv-say-head">
+              <span class="pv-say-num">セリフ 3</span>
+              <span class="pv-say-title">応援の声</span>
+              <span class="pv-say-time">目安なし</span>
+            </div>
+            <p class="pv-say-note">「○○組がんばれー！」「いけー！！！」など、自分のチームを応援する元気な掛け声をお願いします。</p>
+            <div class="pv-file-names" aria-label="応援の声のファイル名">
+              <code>{TeamColor}_{CastName}_Cheering01_ORG.wav</code>
+              <code>{TeamColor}_{CastName}_Cheering02_ORG.wav</code>
+            </div>
           </article>
         </div>
 
-        <h3 class="pv-section-heading">セリフ 3・4 — チーム別セリフ</h3>
+        <h3 class="pv-section-heading">セリフ4・5 — チーム別セリフ</h3>
         <div class="pv-team-grid">
-          <div class="pv-team-say" style="--tc: #E53935;">
+          <div class="pv-team-say" style="--tc: #E53935;" data-team-index="0">
             <p class="pv-team-name">赤組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「赤組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「よっしゃ行くぞ〜！」</p>
+            <div class="pv-team-members" aria-label="赤組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「赤組！」</p>
+              <div class="pv-file-names"><code>Red_{CastName}_TeamName01_ORG.wav</code><code>Red_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「よっしゃ行くぞ〜！」</p>
+              <div class="pv-file-names"><code>Red_{CastName}_TeamShout01_ORG.wav</code><code>Red_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #1E88E5;">
+          <div class="pv-team-say" style="--tc: #1E88E5;" data-team-index="1">
             <p class="pv-team-name">青組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「青組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「最高のイベントにしよう！」</p>
+            <div class="pv-team-members" aria-label="青組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「青組！」</p>
+              <div class="pv-file-names"><code>Blue_{CastName}_TeamName01_ORG.wav</code><code>Blue_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「最高のイベントにしよう！」</p>
+              <div class="pv-file-names"><code>Blue_{CastName}_TeamShout01_ORG.wav</code><code>Blue_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #FDD835;">
+          <div class="pv-team-say" style="--tc: #FDD835;" data-team-index="2">
             <p class="pv-team-name">黄組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「黄組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「みんな、お祭りだー！！」</p>
+            <div class="pv-team-members" aria-label="黄組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「黄組！」</p>
+              <div class="pv-file-names"><code>Yellow_{CastName}_TeamName01_ORG.wav</code><code>Yellow_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「みんな、お祭りだー！！」</p>
+              <div class="pv-file-names"><code>Yellow_{CastName}_TeamShout01_ORG.wav</code><code>Yellow_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #43A047;">
+          <div class="pv-team-say" style="--tc: #43A047;" data-team-index="3">
             <p class="pv-team-name">緑組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「緑組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「全力で楽しもう〜！」</p>
+            <div class="pv-team-members" aria-label="緑組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「緑組！」</p>
+              <div class="pv-file-names"><code>Green_{CastName}_TeamName01_ORG.wav</code><code>Green_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「全力で楽しもう〜！」</p>
+              <div class="pv-file-names"><code>Green_{CastName}_TeamShout01_ORG.wav</code><code>Green_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #FB8C00;">
+          <div class="pv-team-say" style="--tc: #FB8C00;" data-team-index="4">
             <p class="pv-team-name">橙組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「橙組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「ぜったい勝つぞ〜！」</p>
+            <div class="pv-team-members" aria-label="橙組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「橙組！」</p>
+              <div class="pv-file-names"><code>Orange_{CastName}_TeamName01_ORG.wav</code><code>Orange_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「ぜったい勝つぞ〜！」</p>
+              <div class="pv-file-names"><code>Orange_{CastName}_TeamShout01_ORG.wav</code><code>Orange_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #8E24AA;">
+          <div class="pv-team-say" style="--tc: #8E24AA;" data-team-index="5">
             <p class="pv-team-name">紫組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「紫組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「準備はいいか〜！？」</p>
+            <div class="pv-team-members" aria-label="紫組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「紫組！」</p>
+              <div class="pv-file-names"><code>Purple_{CastName}_TeamName01_ORG.wav</code><code>Purple_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「準備はいいか〜！？」</p>
+              <div class="pv-file-names"><code>Purple_{CastName}_TeamShout01_ORG.wav</code><code>Purple_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
         </div>
         <p class="pv-table-note">各セリフは<strong>別データ</strong>で収録。テイクは2つ以上あると助かります（音割れ時の予備）。目安秒数に合わせて収録してください。</p>
-
-        <div class="pv-extra-card">
-          <p class="pv-say-badge pv-say-extra">＋α（余裕があればぜひ！）</p>
-          <div class="card-head">
-            <span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 10v4"></path>
-                <path d="M7 9l10-4v14L7 15z"></path>
-                <path d="M8 15l2 5h3l-2-6"></path>
-                <path d="M20 9v6"></path>
-              </svg>
-            </span>
-            <h3>応援の声（内容自由）</h3>
-          </div>
-          <p class="pv-card-line">目安なし</p>
-          <p class="pv-card-note">チームを車に見立てて競争するシーンで使用。「◯◯組がんばれー！」「いけー！！！」など、自分のチームを応援する元気な掛け声を1つ。<strong>こちらは必須ではありません</strong>が、最高な応援ボイスをお待ちしています！</p>
-        </div>
 
         <h3 class="pv-section-heading">録音方法</h3>
         <div class="cards support-grid pv-submit-grid">
@@ -4308,8 +4674,6 @@
           <p class="pv-submit-note">収録は元気よく、明るい声で！ポップで楽しい映像になります</p>
         </div>
       </section>
-      <!-- CAST-ONLY:PV-VOICE END -->
-
       <section class="section" id="faq" aria-labelledby="faq-title">
         <p class="mini-kicker">FAQ</p>
         <h2 class="bar-title" id="faq-title">FAQ</h2>
@@ -4340,14 +4704,67 @@
           </details>
         </div>
       </section>
+
+      <section class="section" id="contact" aria-labelledby="contact-title">
+        <p class="mini-kicker">CONTACT</p>
+        <h2 class="bar-title" id="contact-title">お問い合わせ</h2>
+        <div class="highlight-card">
+          <p>イベント内容や提出物について不明点がある場合は、Discord内の「運営への依頼窓口」からご連絡ください。</p>
+          <a class="contact-link" href="https://discord.com/channels/1138387287986679879/1475808380453916682" target="_blank" rel="noopener noreferrer">Discord「運営への依頼窓口」を開く</a>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
       <div class="wrap footer-inner">
         <p class="footer-title">大運動会2026 — <span class="nw">BackStage</span></p>
-        <p class="footer-note">本ページの内容は一部調整中の項目を含みます。最新情報は公式のお知らせをご確認ください。</p>
+        <p class="footer-note">本ページは参加キャスト向けの案内です。一部調整中の項目がありますので、最新情報は運営からの連絡をご確認ください。</p>
       </div>
     </footer>
   </div>
+  <script>
+    (() => {
+      const menuButton = document.getElementById("menu-toggle");
+      const menuDialog = document.getElementById("mobile-menu");
+      const closeButton = document.getElementById("menu-close");
+      const menuLinks = menuDialog.querySelectorAll(".mobile-menu-link");
+      const teamCards = document.querySelectorAll("#teams .team-card");
+      const pvTeamCards = document.querySelectorAll("#pv-voice [data-team-index]");
+
+      pvTeamCards.forEach((pvTeamCard) => {
+        const teamIndex = Number(pvTeamCard.dataset.teamIndex);
+        const sourceImages = teamCards[teamIndex]?.querySelectorAll(".member img") ?? [];
+        const target = pvTeamCard.querySelector(".pv-team-members");
+        sourceImages.forEach((image) => target.append(image.cloneNode(true)));
+      });
+
+      const openMenu = () => {
+        menuDialog.showModal();
+        document.body.classList.add("menu-open");
+        menuButton.setAttribute("aria-expanded", "true");
+        closeButton.focus();
+      };
+
+      const closeMenu = () => {
+        if (menuDialog.open) {
+          menuDialog.close();
+        }
+      };
+
+      menuButton.addEventListener("click", openMenu);
+      closeButton.addEventListener("click", closeMenu);
+      menuLinks.forEach((link) => link.addEventListener("click", closeMenu));
+      menuDialog.addEventListener("click", (event) => {
+        if (event.target === menuDialog) {
+          closeMenu();
+        }
+      });
+      menuDialog.addEventListener("close", () => {
+        document.body.classList.remove("menu-open");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.focus();
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -10,7 +10,13 @@ from pathlib import Path
 
 
 SCRIPT_PATH = Path(__file__).resolve()
-HTML_PATH = (SCRIPT_PATH.parent / ".." / "イベント概要_大運動会2026.html").resolve()
+PROJECT_ROOT = SCRIPT_PATH.parent.parent
+HTML_PATH = (PROJECT_ROOT / "イベント概要_大運動会2026.html").resolve()
+HTML_COPIES = [
+    HTML_PATH,
+    (PROJECT_ROOT / "index.html").resolve(),
+    (PROJECT_ROOT / "undo-kai.html").resolve(),
+]
 SCRATCHPAD = Path(
     "/private/tmp/claude-501/-Users-kh-Documents-work-ob/"
     "bb78e0a7-a76e-437b-954a-05c7adc6dd90/scratchpad"
@@ -194,10 +200,18 @@ def main() -> int:
         print_result("HTMLファイル存在", "FAIL", str(HTML_PATH))
         return 1
 
+    copy_contents = [path.read_bytes() for path in HTML_COPIES if path.exists()]
+    copies_ok = len(copy_contents) == 3 and len(set(copy_contents)) == 1
+    copy_test_ok = print_result(
+        "3つのHTMLが同一内容",
+        "PASS" if copies_ok else "FAIL",
+        ", ".join(path.name for path in HTML_COPIES),
+    )
+
     text = HTML_PATH.read_text(encoding="utf-8")
     css = style_block(text)
     rendered_text = visible_text(strip_data_uris(text))
-    ok = True
+    ok = copy_test_ok
 
     ok &= print_result("応援枠 0件", "PASS" if text.count("応援枠") == 0 else "FAIL", f"{text.count('応援枠')}件")
 
