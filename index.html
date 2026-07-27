@@ -372,6 +372,11 @@
       list-style: none;
     }
 
+    .section-toggle-summary:focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 3px;
+    }
+
     .section-toggle-summary::-webkit-details-marker {
       display: none;
     }
@@ -401,10 +406,28 @@
       font-size: clamp(1.2rem, 5vw, 1.65rem);
       line-height: 1.35;
       text-align: left;
+      overflow-wrap: anywhere;
     }
 
     .section-toggle-content {
       padding-top: 24px;
+    }
+
+    .section-toggle-content,
+    .section-toggle-content > *,
+    .section-toggle-content .cards,
+    .section-toggle-content .mission-example-grid,
+    .section-toggle-content .team-scores,
+    .section-toggle-content .tally-table,
+    .section-toggle-content .pv-team-block {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .section-toggle-content .pv-filename,
+    .section-toggle-content code {
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .section-toggle-original-heading,
@@ -3656,6 +3679,21 @@
     @media (max-width: 719px) {
       .anchor-nav {
         display: none;
+      }
+
+      .section-toggle-summary {
+        min-height: 64px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        font-size: 1rem;
+      }
+
+      .section-toggle-content {
+        padding-top: 18px;
+      }
+
+      .section-toggle[open] > .section-toggle-summary {
+        margin-bottom: 4px;
       }
     }
   </style>

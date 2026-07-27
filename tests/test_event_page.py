@@ -614,6 +614,21 @@ def main() -> int:
         f"auto-phrase={auto_phrase_ok}, pretty={pretty_ok}",
     )
 
+    toggle_css_terms = [
+        ".section-toggle-summary",
+        "min-height: 64px",
+        "cursor: pointer",
+        ".section-toggle-summary:focus-visible",
+        "@media (max-width: 719px)",
+        "overflow-wrap: anywhere",
+    ]
+    missing_toggle_css = [term for term in toggle_css_terms if term not in css_compact]
+    ok &= print_result(
+        "トグル: モバイル操作・折り返しCSS",
+        "PASS" if not missing_toggle_css else "FAIL",
+        ", ".join(missing_toggle_css),
+    )
+
     nw_rule_ok = bool(re.search(r"\.nw\s*\{[^}]*white-space\s*:\s*nowrap\b", css, re.S))
     nw_count = len(re.findall(r'class="nw"', text))
     ok &= print_result(
