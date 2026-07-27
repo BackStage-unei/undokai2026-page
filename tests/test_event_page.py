@@ -3,9 +3,14 @@
 
 from __future__ import annotations
 
+import html
+import json
+import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -21,7 +26,7 @@ SCRATCHPAD = Path(
     "/private/tmp/claude-501/-Users-kh-Documents-work-ob/"
     "bb78e0a7-a76e-437b-954a-05c7adc6dd90/scratchpad"
 )
-CHROME = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+REQUIRE_BROWSER_TESTS = os.environ.get("REQUIRE_BROWSER_TESTS") == "1"
 TOGGLE_SECTIONS = [
     ("about", "イベント概要"),
     ("teams", "チーム発表"),
@@ -73,6 +78,74 @@ PRESERVED_SECTION_TERMS = {
     "faq": ["ミッションは毎日変わりますか？", "最終結果が同点だったら？"],
     "contact": ["運営への依頼窓口"],
 }
+EXPECTED_MEMBERS = [
+    "言乃葩和", "魔法少女ぴょん", "夜狩うる", "7_ko", "境内リカ", "まいくま", "ブルーローズアイス", "冬月シオン", "わたあめ",
+    "玉木瑶", "あまタクシー", "紫月ほたる", "目黒れる", "山岸紫苑", "Nico", "スイ・カウハ", "紗衣", "オイエ・ナイスガイ",
+    "千里香", "赤絲こゆび", "旅乃とき", "かずさ", "ミラ・エトワール", "沙耶", "おめがまる", "焦赤緋色", "ルカ・ミント",
+    "蔦ヰ田リウ", "はちみつ", "プルミエール・エトワール", "微々", "雪織みみ", "水野ゆか", "西那てまり", "月詠くるみ", "ゆうり",
+    "こぐま もる", "白猫にゃる", "小向なのか", "MUZU", "桜咲はるね", "白浪しおん", "めぐるん", "黒川水晶", "シン・クラーク",
+    "黒柴えいら", "超絶はおちー", "蒼羽れいな", "三毒ローパ", "呑田くれい", "奈夢夛", "六華ミル", "海鈴なぎ", "木ノ崎叶和",
+]
+
+
+def browser_candidates() -> list[Path]:
+    candidates: list[Path] = []
+    for variable in ["EVENT_PAGE_BROWSER", "CHROME_PATH", "CHROME_BIN"]:
+        value = os.environ.get(variable)
+        if value:
+            candidates.append(Path(value).expanduser())
+
+    candidates.extend(
+        Path(path)
+        for path in [
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            "/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+            "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+            "/usr/bin/google-chrome",
+            "/usr/bin/google-chrome-stable",
+            "/usr/bin/chromium",
+            "/usr/bin/chromium-browser",
+        ]
+    )
+    for executable in [
+        "google-chrome",
+        "google-chrome-stable",
+        "chromium",
+        "chromium-browser",
+        "chrome",
+    ]:
+        resolved = shutil.which(executable)
+        if resolved:
+            candidates.append(Path(resolved))
+
+    cache_roots = [
+        Path.home() / "Library/Caches/ms-playwright",
+        Path.home() / ".cache/ms-playwright",
+        PROJECT_ROOT / "node_modules/playwright-core/.local-browsers",
+    ]
+    playwright_patterns = [
+        "chromium-*/chrome-mac*/Chromium.app/Contents/MacOS/Chromium",
+        "chromium-*/chrome-mac*/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+        "chromium-*/chrome-linux*/chrome",
+        "chromium_headless_shell-*/chrome-headless-shell-mac*/chrome-headless-shell",
+        "chromium_headless_shell-*/chrome-headless-shell-linux*/chrome-headless-shell",
+    ]
+    for root in cache_roots:
+        for pattern in playwright_patterns:
+            candidates.extend(sorted(root.glob(pattern), reverse=True))
+
+    return list(dict.fromkeys(path.resolve() for path in candidates))
+
+
+def discover_browser() -> Path | None:
+    for candidate in browser_candidates():
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return candidate
+    return None
+
+
+BROWSER = discover_browser()
 
 
 def strip_data_uris(text: str) -> str:
@@ -82,6 +155,75 @@ def strip_data_uris(text: str) -> str:
 def style_block(text: str) -> str:
     match = re.search(r"<style>\s*(.*?)\s*</style>", text, re.S | re.I)
     return match.group(1) if match else ""
+
+
+def at_rule_body(css: str, header_pattern: str) -> str:
+    match = re.search(header_pattern, css, re.I)
+    if not match:
+        return ""
+    opening = css.find("{", match.end())
+    if opening < 0:
+        return ""
+    depth = 1
+    cursor = opening + 1
+    while cursor < len(css) and depth:
+        if css[cursor] == "{":
+            depth += 1
+        elif css[cursor] == "}":
+            depth -= 1
+        cursor += 1
+    return css[opening + 1 : cursor - 1] if depth == 0 else ""
+
+
+def css_rule_bodies(css: str, target_selector: str) -> list[str]:
+    bodies = []
+    for selector_text, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css, re.S):
+        selectors = []
+        start = 0
+        depth = 0
+        for index, character in enumerate(selector_text):
+            if character == "(":
+                depth += 1
+            elif character == ")":
+                depth = max(0, depth - 1)
+            elif character == "," and depth == 0:
+                selectors.append(selector_text[start:index].strip())
+                start = index + 1
+        selectors.append(selector_text[start:].strip())
+        if target_selector in selectors:
+            bodies.append(body)
+    return bodies
+
+
+def last_font_size_px(css: str, target_selector: str) -> float | None:
+    sizes = []
+    for body in css_rule_bodies(css, target_selector):
+        sizes.extend(
+            float(value)
+            for value in re.findall(r"font-size\s*:\s*([0-9.]+)px\b", body)
+        )
+    return sizes[-1] if sizes else None
+
+
+def css_color(css: str, custom_property: str) -> str:
+    match = re.search(
+        rf"--{re.escape(custom_property)}\s*:\s*(#[0-9A-Fa-f]{{6}})\b",
+        css,
+    )
+    return match.group(1) if match else ""
+
+
+def contrast_ratio(first: str, second: str) -> float:
+    def luminance(color: str) -> float:
+        channels = [int(color[index : index + 2], 16) / 255 for index in (1, 3, 5)]
+        linear = [
+            value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
+            for value in channels
+        ]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    lighter, darker = sorted([luminance(first), luminance(second)], reverse=True)
+    return (lighter + 0.05) / (darker + 0.05)
 
 
 def visible_text(text: str) -> str:
@@ -177,48 +319,236 @@ def css_rule_failures(css: str) -> list[str]:
     return failures
 
 
-def chrome_probe() -> tuple[bool, str]:
-    try:
-        result = subprocess.run(
-            [str(CHROME), "--headless", "--disable-gpu", "--dump-dom", "about:blank"],
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=30,
+def browser_probe() -> tuple[bool, str]:
+    global BROWSER
+    executable_candidates = [
+        candidate
+        for candidate in browser_candidates()
+        if candidate.is_file() and os.access(candidate, os.X_OK)
+    ]
+    if not executable_candidates:
+        return False, "Chromium系ブラウザが見つかりません"
+    failures = []
+    for candidate in executable_candidates:
+        try:
+            with tempfile.TemporaryDirectory(prefix="event-page-browser-probe-") as profile:
+                result = subprocess.run(
+                    [
+                        str(candidate),
+                        "--headless",
+                        "--no-sandbox",
+                        "--disable-gpu",
+                        "--disable-dev-shm-usage",
+                        f"--user-data-dir={profile}",
+                        "--dump-dom",
+                        "about:blank",
+                    ],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=15,
+                )
+        except Exception as exc:  # noqa: BLE001
+            failures.append(f"{candidate.name}: {exc}")
+            continue
+        if result.returncode == 0:
+            BROWSER = candidate
+            return True, str(candidate)
+        message = (result.stderr or result.stdout).strip().splitlines()
+        failures.append(
+            f"{candidate.name}: "
+            f"{message[-1] if message else f'exit {result.returncode}'}"
         )
-    except Exception as exc:  # noqa: BLE001
-        return False, f"Chrome起動失敗: {exc}"
-    if result.returncode != 0:
-        message = (result.stderr or result.stdout).strip()
-        if not message:
-            message = f"Chrome headless returned {result.returncode}"
-        return False, message[:500]
-    return True, "ok"
+    return False, "; ".join(failures)[:500]
 
 
 def dump_rendered_dom() -> tuple[bool, str]:
-    result = subprocess.run(
-        [str(CHROME), "--headless", "--disable-gpu", "--dump-dom", HTML_PATH.as_uri()],
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
+    if BROWSER is None:
+        return False, ""
+    with tempfile.TemporaryDirectory(prefix="event-page-render-") as profile:
+        result = subprocess.run(
+            [
+                str(BROWSER),
+                "--headless",
+                "--no-sandbox",
+                "--disable-gpu",
+                "--disable-dev-shm-usage",
+                f"--user-data-dir={profile}",
+                "--dump-dom",
+                HTML_PATH.as_uri(),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
     return result.returncode == 0, result.stdout
 
 
+def dump_no_js_dom() -> tuple[bool, str]:
+    if BROWSER is None:
+        return False, ""
+    with tempfile.TemporaryDirectory(prefix="event-page-no-js-") as profile:
+        result = subprocess.run(
+            [
+                str(BROWSER),
+                "--headless",
+                "--no-sandbox",
+                "--disable-gpu",
+                "--disable-dev-shm-usage",
+                "--disable-javascript",
+                f"--user-data-dir={profile}",
+                "--dump-dom",
+                HTML_PATH.as_uri(),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+    return result.returncode == 0, result.stdout
+
+
+def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | str]:
+    if BROWSER is None:
+        return False, "Chromium系ブラウザが見つかりません"
+    harness = """
+  <output id="runtime-test-results" hidden></output>
+  <script>
+    (() => {
+      const results = {};
+      const output = document.getElementById("runtime-test-results");
+      output.textContent = JSON.stringify({ harnessStarted: true });
+      const toggles = [...document.querySelectorAll(".section-toggle")];
+      const summaries = toggles.map((details) => details.querySelector("summary"));
+      const teams = document.querySelector('[data-section-id="teams"]');
+      const points = document.querySelector('[data-section-id="points"]');
+
+      results.keyboardNativeDetails =
+        toggles.length === 11
+        && summaries.every((summary) => summary?.tagName === "SUMMARY" && summary.tabIndex === 0);
+      teams.querySelector("summary").click();
+      points.querySelector("summary").click();
+      results.nativeSummaryActivation = teams.open && points.open;
+      results.multipleToggles = teams.open && points.open
+        && document.querySelector('[data-section-id="about"]').open;
+
+      const dialog = document.getElementById("mobile-menu");
+      document.getElementById("menu-toggle").click();
+      results.menuOpened = dialog.open
+        && document.getElementById("menu-toggle").getAttribute("aria-expanded") === "true"
+        && document.activeElement === document.getElementById("menu-close");
+      document.getElementById("menu-close").click();
+
+      setTimeout(() => {
+        results.menuDismissalFocus = !dialog.open
+          && document.activeElement === document.getElementById("menu-toggle");
+        document.getElementById("menu-toggle").click();
+        dialog.querySelector('a[href="#prize"]').click();
+
+        setTimeout(() => {
+        const prize = document.querySelector('[data-section-id="prize"]');
+        results.menuNavigation = !dialog.open
+          && window.location.hash === "#prize"
+          && prize.open;
+
+          window.history.replaceState(null, "", "#faq");
+          window.dispatchEvent(new HashChangeEvent("hashchange"));
+          results.hashNavigation =
+            document.querySelector('[data-section-id="faq"]').open;
+          const rosters = [...document.querySelectorAll(".pv-team-members")];
+          results.enhancedRosters = rosters.length === 6
+            && rosters.every((roster) =>
+              roster.querySelectorAll("img").length === 9
+              && roster.querySelectorAll(
+                ".pv-team-members-fallback:not([hidden]) li"
+              ).length === 0
+            );
+          toggles.forEach((details) => {
+            details.open = true;
+          });
+          const labelSelectors = [
+            ".mission-rank",
+            ".mission-status",
+            ".score-scale",
+            ".tally-axis-labels",
+            ".tally-date small",
+            ".tally-broadcast-label",
+          ];
+          results.mobileType = parseFloat(getComputedStyle(document.body).fontSize) >= 16
+            && labelSelectors.every((selector) =>
+              parseFloat(getComputedStyle(document.querySelector(selector)).fontSize) >= 13
+            );
+          results.noHorizontalOverflow =
+            document.documentElement.scrollWidth <= window.innerWidth;
+          output.textContent = JSON.stringify(results);
+        }, 250);
+      }, 250);
+    })();
+  </script>
+"""
+    with tempfile.TemporaryDirectory(prefix="event-page-runtime-") as temp_dir:
+        runtime_path = Path(temp_dir) / "runtime.html"
+        runtime_path.write_text(
+            source_html.replace("</body>", f"{harness}\n</body>"),
+            encoding="utf-8",
+        )
+        result = subprocess.run(
+            [
+                str(BROWSER),
+                "--headless",
+                "--no-sandbox",
+                "--disable-gpu",
+                "--disable-dev-shm-usage",
+                f"--user-data-dir={temp_dir}/profile",
+                "--window-size=390,900",
+                "--virtual-time-budget=2000",
+                "--dump-dom",
+                runtime_path.as_uri(),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+    if result.returncode != 0:
+        return False, (result.stderr or result.stdout).strip()[:500]
+    match = re.search(
+        r'<output\b(?=[^>]*\bid="runtime-test-results")[^>]*>(.*?)</output>',
+        result.stdout,
+        re.S,
+    )
+    if not match:
+        return False, "runtime results were not emitted"
+    try:
+        return True, json.loads(html.unescape(match.group(1)))
+    except json.JSONDecodeError as exc:
+        return False, f"runtime results were invalid: {exc}"
+
+
 def run_chrome(width: int, height: int, output: Path) -> tuple[str, bool, str]:
+    if BROWSER is None:
+        return ("FAIL", False, "Chromium系ブラウザが見つかりません")
     cmd = [
-        str(CHROME),
+        str(BROWSER),
         "--headless",
+        "--no-sandbox",
         "--disable-gpu",
+        "--disable-dev-shm-usage",
         f"--screenshot={output}",
         f"--window-size={width},{height}",
         HTML_PATH.as_uri(),
     ]
     try:
         output.parent.mkdir(parents=True, exist_ok=True)
-        result = subprocess.run(cmd, check=False, capture_output=True, text=True, timeout=60)
+        with tempfile.TemporaryDirectory(prefix="event-page-screenshot-") as profile:
+            result = subprocess.run(
+                [*cmd[:-1], f"--user-data-dir={profile}", cmd[-1]],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
     except Exception as exc:  # noqa: BLE001
         return ("FAIL", False, f"Chrome起動失敗: {exc}")
     if result.returncode != 0:
@@ -342,6 +672,22 @@ def main() -> int:
         "PV音声: 必須5セリフとファイル名",
         "PASS" if pv_ok else "FAIL",
     )
+    pv_form_link_match = re.search(
+        rf'<a\b[^>]*\bhref="{re.escape(pv_form_url)}"[^>]*>',
+        pv_block,
+        re.I,
+    )
+    pv_form_link = pv_form_link_match.group(0) if pv_form_link_match else ""
+    pv_form_rel_match = re.search(r'\brel="([^"]*)"', pv_form_link, re.I)
+    pv_form_rel = set(pv_form_rel_match.group(1).split()) if pv_form_rel_match else set()
+    pv_form_link_ok = (
+        'target="_blank"' in pv_form_link
+        and {"noopener", "noreferrer"}.issubset(pv_form_rel)
+    )
+    ok &= print_result(
+        "PV音声: 提出フォームの外部リンク保護",
+        "PASS" if pv_form_link_ok else "FAIL",
+    )
 
     team_color_prefixes = ["Red", "Blue", "Yellow", "Green", "Orange", "Purple"]
     pv_team_contract = all(
@@ -425,6 +771,20 @@ def main() -> int:
     for href in mobile_nav_hrefs:
         if f'href="{href}"' not in mobile_nav_html:
             mobile_nav_failures.append(href)
+    mobile_nav_labels = {
+        href: visible_text(label)
+        for href, label in re.findall(
+            r'<a\b[^>]*\bhref="(#[^"]+)"[^>]*>(.*?)</a>',
+            mobile_nav_html,
+            re.S | re.I,
+        )
+    }
+    for section_id, expected_label in TOGGLE_SECTIONS:
+        href = f"#{section_id}"
+        if mobile_nav_labels.get(href) != expected_label:
+            mobile_nav_failures.append(
+                f"{href}={mobile_nav_labels.get(href)!r} (expected {expected_label!r})"
+            )
     if '<nav aria-label="モバイル用ページ内ナビゲーション">' not in mobile_nav_html:
         mobile_nav_failures.append("モバイルnavランドマーク")
     for js_term in [
@@ -591,6 +951,87 @@ def main() -> int:
     )
 
     css_compact = re.sub(r"\s+", " ", css)
+    reduced_motion_css = at_rule_body(
+        css,
+        r"@media\s*\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)",
+    )
+    reduced_motion_ok = any(
+        re.search(r"scroll-behavior\s*:\s*auto\b", body)
+        for body in css_rule_bodies(reduced_motion_css, "html")
+    )
+    ok &= print_result(
+        "モーション低減: CSSスムーズスクロール無効化",
+        "PASS" if reduced_motion_ok else "FAIL",
+    )
+
+    light_focus_selectors = [
+        "a:focus-visible",
+        ".mobile-menu-link:focus-visible",
+        ".contact-link:focus-visible",
+        ".section-toggle-summary:focus-visible",
+    ]
+    dark_focus_selectors = [
+        ".topbar :is(a, button):focus-visible",
+        ".section.inverse .section-toggle-summary:focus-visible",
+    ]
+    light_focus_rules_ok = all(
+        any("var(--royal)" in body for body in css_rule_bodies(css, selector))
+        for selector in light_focus_selectors
+    )
+    dark_focus_rules_ok = all(
+        any("var(--yellow)" in body for body in css_rule_bodies(css, selector))
+        for selector in dark_focus_selectors
+    )
+    royal = css_color(css, "royal")
+    yellow = css_color(css, "yellow")
+    white = css_color(css, "white")
+    royal_deep = css_color(css, "royal-deep")
+    sky_deep = css_color(css, "sky-deep")
+    focus_contrast_ok = (
+        all([royal, yellow, white, royal_deep, sky_deep])
+        and contrast_ratio(royal, white) >= 3
+        and contrast_ratio(yellow, royal_deep) >= 3
+        and contrast_ratio(yellow, sky_deep) >= 3
+    )
+    ok &= print_result(
+        "フォーカス表示: 明背景・暗背景で3:1以上",
+        "PASS"
+        if light_focus_rules_ok and dark_focus_rules_ok and focus_contrast_ok
+        else "FAIL",
+        (
+            f"light={light_focus_rules_ok}, dark={dark_focus_rules_ok}, "
+            f"contrast={focus_contrast_ok}"
+        ),
+    )
+
+    mobile_css = at_rule_body(css, r"@media\s*\(\s*max-width\s*:\s*560px\s*\)")
+    mobile_label_selectors = [
+        ".mission-rank",
+        ".mission-status",
+        ".mission-bonus",
+        ".score-scale",
+        ".tally-axis-labels",
+        ".tally-date",
+        ".tally-date small",
+        ".tally-broadcast-label",
+    ]
+    body_font_size = last_font_size_px(strip_media_blocks(css), "body")
+    undersized_mobile_labels = {
+        selector: last_font_size_px(mobile_css, selector)
+        for selector in mobile_label_selectors
+        if (last_font_size_px(mobile_css, selector) or 0) < 13
+    }
+    mobile_type_ok = (
+        body_font_size is not None
+        and body_font_size >= 16
+        and not undersized_mobile_labels
+    )
+    ok &= print_result(
+        "390px文字サイズ: 本文16px・重要ラベル13px以上",
+        "PASS" if mobile_type_ok else "FAIL",
+        f"body={body_font_size}; labels={undersized_mobile_labels}",
+    )
+
     pv_alignment_ok = all(
         re.search(
             rf"{re.escape(selector)}\s*\{{[^}}]*text-align\s*:\s*left\b",
@@ -686,14 +1127,6 @@ def main() -> int:
         f"{member_photo_count}件",
     )
 
-    expected_members = [
-        "言乃葩和", "魔法少女ぴょん", "夜狩うる", "7_ko", "境内リカ", "まいくま", "ブルーローズアイス", "冬月シオン", "わたあめ",
-        "玉木瑶", "あまタクシー", "紫月ほたる", "目黒れる", "山岸紫苑", "Nico", "スイ・カウハ", "紗衣", "オイエ・ナイスガイ",
-        "千里香", "赤絲こゆび", "旅乃とき", "かずさ", "ミラ・エトワール", "沙耶", "おめがまる", "焦赤緋色", "ルカ・ミント",
-        "蔦ヰ田リウ", "はちみつ", "プルミエール・エトワール", "微々", "雪織みみ", "水野ゆか", "西那てまり", "月詠くるみ", "ゆうり",
-        "こぐま もる", "白猫にゃる", "小向なのか", "MUZU", "桜咲はるね", "白浪しおん", "めぐるん", "黒川水晶", "シン・クラーク",
-        "黒柴えいら", "超絶はおちー", "蒼羽れいな", "三毒ローパ", "呑田くれい", "奈夢夛", "六華ミル", "海鈴なぎ", "木ノ崎叶和",
-    ]
     teams_html = section_block(text, "teams")
     actual_members = re.findall(r'<div class="member-photo"[^>]*>(?:<img [^>]*alt="([^"]+)"|<svg)', teams_html)
     actual_members = [m for m in actual_members if m]
@@ -705,8 +1138,35 @@ def main() -> int:
     )
     ok &= print_result(
         "チームメンバー表記・並び順",
-        "PASS" if actual_members == expected_members else "FAIL",
+        "PASS" if actual_members == EXPECTED_MEMBERS else "FAIL",
         f"{len(actual_members)}名",
+    )
+
+    pre_js_rosters = re.findall(
+        r'<div class="pv-team-members"[^>]*>(.*?)</div>',
+        pv_block,
+        re.S | re.I,
+    )
+    pre_js_roster_names = []
+    for roster in pre_js_rosters:
+        image_names = re.findall(r'<img\b[^>]*\balt="([^"]+)"', roster, re.I)
+        fallback_names = [
+            visible_text(item)
+            for item in re.findall(
+                r'<li\b[^>]*>(.*?)</li>',
+                roster,
+                re.S | re.I,
+            )
+        ]
+        pre_js_roster_names.append(image_names or fallback_names)
+    expected_pv_rosters = [
+        EXPECTED_MEMBERS[index : index + 9]
+        for index in range(0, len(EXPECTED_MEMBERS), 9)
+    ]
+    ok &= print_result(
+        "PV音声: JavaScript実行前も6チーム×9名",
+        "PASS" if pre_js_roster_names == expected_pv_rosters else "FAIL",
+        str([len(roster) for roster in pre_js_roster_names]),
     )
 
     old_team_size_count = text.count("1チーム 5〜10人")
@@ -955,28 +1415,43 @@ def main() -> int:
         f"section {text.count('<section')}/{text.count('</section>')}, div {text.count('<div')}/{text.count('</div>')}",
     )
 
-    if not CHROME.exists():
-        ok &= print_result("Chromeヘッドレスレンダリング", "SKIP", f"Chromeなし: {CHROME}")
-        ok &= print_result(
-            "セクショントグル: 描画後11件・概要のみ初期展開",
-            "SKIP",
-            f"Chromeなし: {CHROME}",
+    if BROWSER is None:
+        missing_status = "FAIL" if REQUIRE_BROWSER_TESTS else "SKIP"
+        browser_detail = (
+            "Chromium系ブラウザなし。EVENT_PAGE_BROWSER、CHROME_PATH、"
+            "またはCHROME_BINで実行ファイルを指定できます"
         )
-        ok &= print_result("PV音声: 描画後6チーム×9画像", "SKIP", f"Chromeなし: {CHROME}")
+        ok &= print_result("Chromium系ブラウザ発見", missing_status, browser_detail)
+        ok &= print_result(
+            "実ブラウザ: details・メニュー・ハッシュ・複数展開・390px表示",
+            missing_status,
+            browser_detail,
+        )
+        ok &= print_result(
+            "実ブラウザ: JavaScript無効でもPV 6チーム×9名",
+            missing_status,
+            browser_detail,
+        )
     else:
-        chrome_ok, chrome_detail = chrome_probe()
-        if not chrome_ok:
-            ok &= print_result("Chromeヘッドレスレンダリング", "SKIP", chrome_detail)
+        browser_ok, browser_detail = browser_probe()
+        if not browser_ok:
+            unavailable_status = "FAIL" if REQUIRE_BROWSER_TESTS else "SKIP"
+            ok &= print_result("Chromium系ブラウザ発見", unavailable_status, browser_detail)
             ok &= print_result(
-                "セクショントグル: 描画後11件・概要のみ初期展開",
-                "SKIP",
-                chrome_detail,
+                "実ブラウザ: details・メニュー・ハッシュ・複数展開・390px表示",
+                unavailable_status,
+                browser_detail,
             )
-            ok &= print_result("PV音声: 描画後6チーム×9画像", "SKIP", chrome_detail)
+            ok &= print_result(
+                "実ブラウザ: JavaScript無効でもPV 6チーム×9名",
+                unavailable_status,
+                browser_detail,
+            )
         else:
+            ok &= print_result("Chromium系ブラウザ発見", "PASS", str(BROWSER))
             render_ok, render_html = dump_rendered_dom()
             if not render_ok:
-                raise RuntimeError("Chrome DOM dump failed")
+                raise RuntimeError("Chromium DOM dump failed")
             rendered_toggle_ids = re.findall(
                 r'<details class="section-toggle" data-section-id="([^"]+)"',
                 render_html,
@@ -1005,6 +1480,51 @@ def main() -> int:
                 "PV音声: 描画後6チーム×9画像",
                 "PASS" if pv_member_counts == [9, 9, 9, 9, 9, 9] else "FAIL",
                 str(pv_member_counts),
+            )
+
+            runtime_ok, runtime_results = run_runtime_assertions(text)
+            expected_runtime_keys = {
+                "keyboardNativeDetails",
+                "nativeSummaryActivation",
+                "multipleToggles",
+                "menuOpened",
+                "menuNavigation",
+                "menuDismissalFocus",
+                "hashNavigation",
+                "enhancedRosters",
+                "mobileType",
+                "noHorizontalOverflow",
+            }
+            runtime_passed = (
+                runtime_ok
+                and isinstance(runtime_results, dict)
+                and expected_runtime_keys.issubset(runtime_results)
+                and all(runtime_results[key] for key in expected_runtime_keys)
+            )
+            ok &= print_result(
+                "実ブラウザ: details・メニュー・ハッシュ・複数展開・390px表示",
+                "PASS" if runtime_passed else "FAIL",
+                str(runtime_results),
+            )
+
+            no_js_ok, no_js_html = dump_no_js_dom()
+            no_js_pv = section_block(no_js_html, "pv-voice") if no_js_ok else ""
+            no_js_rosters = re.findall(
+                r'<div class="pv-team-members"[^>]*>(.*?)</div>',
+                no_js_pv,
+                re.S | re.I,
+            )
+            no_js_counts = [
+                max(
+                    len(re.findall(r"<img\b", roster, re.I)),
+                    len(re.findall(r"<li\b", roster, re.I)),
+                )
+                for roster in no_js_rosters
+            ]
+            ok &= print_result(
+                "実ブラウザ: JavaScript無効でもPV 6チーム×9名",
+                "PASS" if no_js_counts == [9, 9, 9, 9, 9, 9] else "FAIL",
+                str(no_js_counts),
             )
 
             screenshot_dir = SCRATCHPAD

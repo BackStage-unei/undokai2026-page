@@ -46,7 +46,7 @@
         radial-gradient(circle at 78% 70%, rgba(255, 255, 255, 0.15) 0 128px, transparent 260px),
         linear-gradient(180deg, var(--sky-light) 0%, var(--sky) 45%, var(--sky-deep) 100%);
       font-family: "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
-      font-size: 15.5px;
+      font-size: 16px;
       font-weight: 400;
       line-height: 2;
       letter-spacing: 0.02em;
@@ -61,8 +61,13 @@
     a:focus-visible,
     summary:focus-visible,
     button:focus-visible {
-      outline: 3px solid var(--yellow);
+      outline: 3px solid var(--royal);
       outline-offset: 4px;
+    }
+
+    .topbar :is(a, button):focus-visible,
+    .section.inverse .section-toggle-summary:focus-visible {
+      outline-color: var(--yellow);
     }
 
     h1,
@@ -341,7 +346,7 @@
 
     .mobile-menu-link:focus-visible,
     .contact-link:focus-visible {
-      outline: 3px solid var(--orange);
+      outline: 3px solid var(--royal);
       outline-offset: 2px;
     }
 
@@ -373,7 +378,7 @@
     }
 
     .section-toggle-summary:focus-visible {
-      outline: 3px solid var(--yellow);
+      outline: 3px solid var(--royal);
       outline-offset: 3px;
     }
 
@@ -3053,6 +3058,37 @@
       margin: 0 auto 14px;
     }
 
+    #pv-voice .pv-team-members-fallback {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    #pv-voice .pv-team-members-fallback[hidden] {
+      display: none;
+    }
+
+    #pv-voice .pv-team-members-fallback li {
+      display: grid;
+      min-width: 0;
+      min-height: 44px;
+      place-items: center;
+      padding: 5px 3px;
+      color: var(--royal-deep);
+      background: #F7FAFE;
+      border: 2px solid var(--tc);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+      text-align: center;
+    }
+
     #pv-voice .pv-team-members img {
       display: block;
       width: 100%;
@@ -3375,6 +3411,12 @@
       line-height: 1.7;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
     @media (min-width: 720px) {
       .menu-toggle,
       .menu-dialog {
@@ -3667,6 +3709,17 @@
         font-size: 9px;
       }
 
+      .mission-rank,
+      .mission-status,
+      .mission-bonus,
+      .score-scale,
+      .tally-axis-labels,
+      .tally-date,
+      .tally-date small,
+      .tally-broadcast-label {
+        font-size: 13px;
+      }
+
       .survival-flow {
         flex-direction: column;
       }
@@ -3730,7 +3783,7 @@
             <li><a class="mobile-menu-link" href="#half-time">中間発表クイズ</a></li>
             <li><a class="mobile-menu-link" href="#survival">脱落ルール</a></li>
             <li><a class="mobile-menu-link" href="#schedule">スケジュール</a></li>
-            <li><a class="mobile-menu-link" href="#prize">特典</a></li>
+            <li><a class="mobile-menu-link" href="#prize">優勝・準優勝賞品</a></li>
             <li><a class="mobile-menu-link" href="#pv-voice">PV音声収録</a></li>
             <li><a class="mobile-menu-link" href="#faq">FAQ</a></li>
             <li><a class="mobile-menu-link" href="#contact">お問い合わせ</a></li>
@@ -4691,7 +4744,19 @@
         <div class="pv-team-grid">
           <div class="pv-team-say" style="--tc: #E53935;" data-team-index="0">
             <p class="pv-team-name">赤組</p>
-            <div class="pv-team-members" aria-label="赤組のキャスト"></div>
+            <div class="pv-team-members" aria-label="赤組のキャスト">
+              <ol class="pv-team-members-fallback" aria-label="赤組のキャスト一覧">
+                <li>言乃葩和</li>
+                <li>魔法少女ぴょん</li>
+                <li>夜狩うる</li>
+                <li>7_ko</li>
+                <li>境内リカ</li>
+                <li>まいくま</li>
+                <li>ブルーローズアイス</li>
+                <li>冬月シオン</li>
+                <li>わたあめ</li>
+              </ol>
+            </div>
             <div class="pv-team-line">
               <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
               <p>「赤組！」</p>
@@ -4705,7 +4770,19 @@
           </div>
           <div class="pv-team-say" style="--tc: #1E88E5;" data-team-index="1">
             <p class="pv-team-name">青組</p>
-            <div class="pv-team-members" aria-label="青組のキャスト"></div>
+            <div class="pv-team-members" aria-label="青組のキャスト">
+              <ol class="pv-team-members-fallback" aria-label="青組のキャスト一覧">
+                <li>玉木瑶</li>
+                <li>あまタクシー</li>
+                <li>紫月ほたる</li>
+                <li>目黒れる</li>
+                <li>山岸紫苑</li>
+                <li>Nico</li>
+                <li>スイ・カウハ</li>
+                <li>紗衣</li>
+                <li>オイエ・ナイスガイ</li>
+              </ol>
+            </div>
             <div class="pv-team-line">
               <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
               <p>「青組！」</p>
@@ -4719,7 +4796,19 @@
           </div>
           <div class="pv-team-say" style="--tc: #FDD835;" data-team-index="2">
             <p class="pv-team-name">黄組</p>
-            <div class="pv-team-members" aria-label="黄組のキャスト"></div>
+            <div class="pv-team-members" aria-label="黄組のキャスト">
+              <ol class="pv-team-members-fallback" aria-label="黄組のキャスト一覧">
+                <li>千里香</li>
+                <li>赤絲こゆび</li>
+                <li>旅乃とき</li>
+                <li>かずさ</li>
+                <li>ミラ・エトワール</li>
+                <li>沙耶</li>
+                <li>おめがまる</li>
+                <li>焦赤緋色</li>
+                <li>ルカ・ミント</li>
+              </ol>
+            </div>
             <div class="pv-team-line">
               <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
               <p>「黄組！」</p>
@@ -4733,7 +4822,19 @@
           </div>
           <div class="pv-team-say" style="--tc: #43A047;" data-team-index="3">
             <p class="pv-team-name">緑組</p>
-            <div class="pv-team-members" aria-label="緑組のキャスト"></div>
+            <div class="pv-team-members" aria-label="緑組のキャスト">
+              <ol class="pv-team-members-fallback" aria-label="緑組のキャスト一覧">
+                <li>蔦ヰ田リウ</li>
+                <li>はちみつ</li>
+                <li>プルミエール・エトワール</li>
+                <li>微々</li>
+                <li>雪織みみ</li>
+                <li>水野ゆか</li>
+                <li>西那てまり</li>
+                <li>月詠くるみ</li>
+                <li>ゆうり</li>
+              </ol>
+            </div>
             <div class="pv-team-line">
               <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
               <p>「緑組！」</p>
@@ -4747,7 +4848,19 @@
           </div>
           <div class="pv-team-say" style="--tc: #FB8C00;" data-team-index="4">
             <p class="pv-team-name">橙組</p>
-            <div class="pv-team-members" aria-label="橙組のキャスト"></div>
+            <div class="pv-team-members" aria-label="橙組のキャスト">
+              <ol class="pv-team-members-fallback" aria-label="橙組のキャスト一覧">
+                <li>こぐま もる</li>
+                <li>白猫にゃる</li>
+                <li>小向なのか</li>
+                <li>MUZU</li>
+                <li>桜咲はるね</li>
+                <li>白浪しおん</li>
+                <li>めぐるん</li>
+                <li>黒川水晶</li>
+                <li>シン・クラーク</li>
+              </ol>
+            </div>
             <div class="pv-team-line">
               <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
               <p>「橙組！」</p>
@@ -4761,7 +4874,19 @@
           </div>
           <div class="pv-team-say" style="--tc: #8E24AA;" data-team-index="5">
             <p class="pv-team-name">紫組</p>
-            <div class="pv-team-members" aria-label="紫組のキャスト"></div>
+            <div class="pv-team-members" aria-label="紫組のキャスト">
+              <ol class="pv-team-members-fallback" aria-label="紫組のキャスト一覧">
+                <li>黒柴えいら</li>
+                <li>超絶はおちー</li>
+                <li>蒼羽れいな</li>
+                <li>三毒ローパ</li>
+                <li>呑田くれい</li>
+                <li>奈夢夛</li>
+                <li>六華ミル</li>
+                <li>海鈴なぎ</li>
+                <li>木ノ崎叶和</li>
+              </ol>
+            </div>
             <div class="pv-team-line">
               <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
               <p>「紫組！」</p>
@@ -4833,7 +4958,7 @@
         <h3 class="pv-section-heading">提出方法</h3>
         <p class="pv-structure">録音できたら、下の提出フォームから音声ファイルのURLを送信してください。<br>（ROUTE B・ボイスメモの方はメール送付でOK、フォームは不要です）</p>
         <div class="pv-submit">
-          <a class="pv-submit-btn" href="https://forms.gle/SMoTKsQ16n4mtEuE9" target="_blank" rel="noopener">提出フォームはこちら</a>
+          <a class="pv-submit-btn" href="https://forms.gle/SMoTKsQ16n4mtEuE9" target="_blank" rel="noopener noreferrer">提出フォームはこちら</a>
           <p class="pv-submit-note">収録は元気よく、明るい声で！ポップで楽しい映像になります</p>
         </div>
       </section>
@@ -4898,6 +5023,13 @@
         const teamIndex = Number(pvTeamCard.dataset.teamIndex);
         const sourceImages = teamCards[teamIndex]?.querySelectorAll(".member img") ?? [];
         const target = pvTeamCard.querySelector(".pv-team-members");
+        const fallback = target?.querySelector(".pv-team-members-fallback");
+        if (!target || sourceImages.length !== 9) {
+          return;
+        }
+        if (fallback) {
+          fallback.hidden = true;
+        }
         sourceImages.forEach((image) => target.append(image.cloneNode(true)));
       });
 
@@ -4960,6 +5092,7 @@
 
       const sectionToggles = enhanceSectionToggles();
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      let restoreMenuButtonFocus = true;
 
       const openSection = (sectionId, options = {}) => {
         const { scroll = false, focus = false } = options;
@@ -5001,7 +5134,8 @@
         closeButton.focus();
       };
 
-      const closeMenu = () => {
+      const closeMenu = (restoreFocus = true) => {
+        restoreMenuButtonFocus = restoreFocus;
         if (menuDialog.open) {
           menuDialog.close();
         }
@@ -5024,7 +5158,7 @@
           }
 
           event.preventDefault();
-          closeMenu();
+          closeMenu(false);
           window.history.replaceState(null, "", link.hash);
           openSection(targetId, { scroll: true, focus: true });
         });
@@ -5037,7 +5171,10 @@
       menuDialog.addEventListener("close", () => {
         document.body.classList.remove("menu-open");
         menuButton.setAttribute("aria-expanded", "false");
-        menuButton.focus();
+        if (restoreMenuButtonFocus) {
+          menuButton.focus();
+        }
+        restoreMenuButtonFocus = true;
       });
       window.addEventListener("hashchange", openSectionFromHash);
       openSectionFromHash();
