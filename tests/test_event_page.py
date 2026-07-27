@@ -575,18 +575,19 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
           const rankGrid = prizeSection.querySelector(".prize-rank-grid");
           const prizeSub = prizeSection.querySelector(".prize-sub");
           const prizeLink = prizeSection.querySelector(".prize-detail-link");
-          const goldLead = prizeSection.querySelector(".prize-rank-gold .prize-main");
-          const goldBenefits = prizeSection.querySelectorAll(
-            ".prize-rank-gold .prize-rank-list li"
-          );
+          const goldCards = prizeSection.querySelectorAll(".prize-rank-gold");
+          const illustrationCard = goldCards[0];
+          const placementCard = goldCards[1];
           const silverBenefits = prizeSection.querySelectorAll(
             ".prize-rank-silver .prize-rank-list li"
           );
           results.prizeSummaryFirst =
-            goldLead?.textContent.includes(
+            goldCards.length === 2
+            && illustrationCard.querySelector(".prize-main")?.textContent.includes(
               "優勝チームには、チームメンバー全員の描き下ろし「集合SDイラスト」を制作します。"
             )
-            && goldBenefits.length === 2
+            && illustrationCard.querySelectorAll(".prize-rank-list li").length === 0
+            && placementCard.querySelectorAll(".prize-rank-list li").length === 2
             && silverBenefits.length === 1
             && Boolean(
               prizeSub.compareDocumentPosition(rankGrid)
