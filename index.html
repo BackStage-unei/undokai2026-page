@@ -3315,62 +3315,31 @@
       background: #7E8DA6;
     }
 
-    .prize-benefit-list {
+    .prize-rank-card .prize-main {
+      margin-bottom: 12px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.9;
+    }
+
+    .prize-rank-list {
       display: grid;
-      gap: 12px;
+      gap: 6px;
       margin: 0 auto;
       padding: 0;
       list-style: none;
       font-size: 14px;
       font-weight: 700;
       line-height: 1.7;
-      text-align: left;
     }
 
-    .prize-benefit-item {
-      padding: 13px 14px;
-      background: rgba(255, 255, 255, 0.72);
-      border: 1px solid var(--card-line);
-      border-radius: 12px;
-    }
-
-    .prize-benefit-title {
-      margin: 0;
-      color: var(--ink);
-      font-weight: 700;
-      line-height: 1.7;
-      text-align: left;
-    }
-
-    .prize-benefit-title > strong:first-child {
+    .prize-rank-list strong {
       color: var(--orange-deep);
-      font-weight: 900;
-    }
-
-    .prize-benefit-details {
-      display: grid;
-      gap: 7px;
-      margin: 10px 0 0;
-      padding-top: 10px;
-      border-top: 1px dashed var(--card-line);
-    }
-
-    .prize-benefit-details > div {
-      display: grid;
-      grid-template-columns: 4.5em minmax(0, 1fr);
-      gap: 8px;
-      align-items: start;
-    }
-
-    .prize-benefit-details dt {
-      color: var(--royal-deep);
-      font-weight: 900;
-    }
-
-    .prize-benefit-details dd {
-      min-width: 0;
-      margin: 0;
-      overflow-wrap: anywhere;
+      font-weight: 800;
     }
 
     #pv-voice .pv-route-card {
@@ -4803,42 +4772,20 @@
           <h2 class="bar-title" id="prize-title">特典</h2>
         </div>
         <div class="prize-content">
+          <p class="prize-sub">さらに、上位チームのイラストをネットカフェ「<strong><span class="nw">自遊空間</span></strong>」の店舗に掲出予定！<br>東京都内の店舗にて、今秋・約1ヶ月間を予定しています。</p>
           <div class="prize-rank-grid">
             <div class="prize-rank-card prize-rank-gold">
-              <p class="prize-rank-label">優勝</p>
-              <ul class="prize-benefit-list">
-                <li class="prize-benefit-item">
-                  <p class="prize-benefit-title"><strong>特典①：</strong>チームメンバー全員のオリジナル描き下ろし集合SDイラストを制作</p>
-                </li>
-                <li class="prize-benefit-item">
-                  <p class="prize-benefit-title"><strong>特典②：</strong>ネットカフェ「<span class="nw">自遊空間</span>」内に<strong>特典①で制作した集合SDパネルを掲出</strong></p>
-                  <dl class="prize-benefit-details">
-                    <div><dt>サイズ</dt><dd>最大 約1,800mm × 900mm の等身大パネル</dd></div>
-                    <div><dt>内容</dt><dd>チーム全員の<strong>描き下ろし集合SDイラスト</strong>をパネル化</dd></div>
-                    <div><dt>場所</dt><dd>東京都内店舗（高田馬場で調整中）</dd></div>
-                  </dl>
-                </li>
-                <li class="prize-benefit-item">
-                  <p class="prize-benefit-title"><strong>特典③：</strong>ネットカフェ「<span class="nw">自遊空間</span>」内に<strong>ブースPOP（個室数の半分）を掲出</strong></p>
-                  <dl class="prize-benefit-details">
-                    <div><dt>サイズ</dt><dd>最大 A4ポスター or 卓上POP</dd></div>
-                    <div><dt>内容</dt><dd>チームの<strong>集合立ち絵</strong>を店内の<strong>個室ブース席</strong>に掲出！</dd></div>
-                    <div><dt>場所</dt><dd>東京都内店舗（高田馬場で調整中）</dd></div>
-                  </dl>
-                </li>
+              <p class="prize-rank-label">優勝チーム</p>
+              <p class="prize-main">優勝チームには、チームメンバー全員の描き下ろし「<strong>集合SDイラスト</strong>」を制作します。</p>
+              <ul class="prize-rank-list">
+                <li>集合SDイラストを店舗に<strong>パネル設置</strong></li>
+                <li>店内ブース席に<strong>チームのブースPOPを掲出</strong></li>
               </ul>
             </div>
             <div class="prize-rank-card prize-rank-silver">
-              <p class="prize-rank-label">準優勝</p>
-              <ul class="prize-benefit-list">
-                <li class="prize-benefit-item">
-                  <p class="prize-benefit-title"><strong>特典①：</strong>ネットカフェ「<span class="nw">自遊空間</span>」内に<strong>ブースPOP（個室数の半分）を掲出</strong></p>
-                  <dl class="prize-benefit-details">
-                    <div><dt>サイズ</dt><dd>最大 A4ポスター or 卓上POP</dd></div>
-                    <div><dt>内容</dt><dd>チームの<strong>集合立ち絵</strong>を店内の<strong>個室ブース席</strong>に掲出！</dd></div>
-                    <div><dt>場所</dt><dd>東京都内店舗（高田馬場で調整中）</dd></div>
-                  </dl>
-                </li>
+              <p class="prize-rank-label">準優勝チーム</p>
+              <ul class="prize-rank-list">
+                <li>チームの<strong>集合立ち絵ポスター</strong>（既存立ち絵使用）を<br>ブースPOPとして店内ブース席に掲出</li>
               </ul>
             </div>
           </div>
@@ -4850,6 +4797,7 @@
           >
             優勝賞品の詳細をDiscordで確認
           </a>
+          <p class="prize-note">掲出店舗・時期など詳細は調整中です。続報をお待ちください。</p>
         </div>
       </section>
 
