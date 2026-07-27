@@ -460,6 +460,13 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
         return parseFloat(style.borderTopLeftRadius) > 0
           && style.boxShadow !== "none";
       });
+      const everySectionToggleFrameIsRemoved = toggles.every((details) => {
+        const style = getComputedStyle(details);
+        return parseFloat(style.borderTopWidth) === 0
+          && parseFloat(style.borderTopLeftRadius) === 0
+          && style.boxShadow === "none"
+          && style.backgroundColor === "rgba(0, 0, 0, 0)";
+      });
       results.openToggleBorderlessWithTextFocus = points.open
         && everyClosedToggleHasTransparentBorder
         && everyOpenedToggleHasTransparentBorder
@@ -467,6 +474,7 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
         && openedSummaryStyle.outlineStyle === "none"
         && openedSummaryTitleStyle.textDecorationLine.includes("underline");
       results.openSectionFramePresent = everyOpenedSectionFrameIsPresent;
+      results.sectionToggleFrameRemoved = everySectionToggleFrameIsRemoved;
       results.multipleToggles = teams.open && points.open
         && document.querySelector('[data-section-id="about"]').open;
 
@@ -1525,6 +1533,7 @@ def main() -> int:
                 "nativeSummaryActivation",
                 "openToggleBorderlessWithTextFocus",
                 "openSectionFramePresent",
+                "sectionToggleFrameRemoved",
                 "multipleToggles",
                 "menuOpened",
                 "menuNavigation",
