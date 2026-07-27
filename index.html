@@ -3411,11 +3411,12 @@
       display: flex;
       align-items: flex-start;
       gap: 8px;
-      width: fit-content;
+      width: 100%;
       max-width: 100%;
-      margin: 0 auto;
+      margin: 0;
       counter-increment: pvstep;
       font-weight: 700;
+      text-align: left;
     }
 
     #pv-voice .pv-route-card .pv-steps li::before {
@@ -3947,7 +3948,7 @@
             <li><a class="mobile-menu-link" href="#survival">脱落ルール</a></li>
             <li><a class="mobile-menu-link" href="#schedule">スケジュール</a></li>
             <li><a class="mobile-menu-link" href="#prize">優勝・準優勝賞品</a></li>
-            <li><a class="mobile-menu-link" href="#pv-voice">PV音声収録</a></li>
+            <li><a class="mobile-menu-link" href="#pv-voice">PV音声収録のお願い</a></li>
             <li><a class="mobile-menu-link" href="#faq">FAQ</a></li>
             <li><a class="mobile-menu-link" href="#contact">お問い合わせ</a></li>
           </ul>
@@ -3992,7 +3993,7 @@
           <a href="#survival">脱落ルール</a>
           <a href="#schedule">スケジュール</a>
           <a href="#prize">特典</a>
-          <a href="#pv-voice">PV音声収録</a>
+          <a href="#pv-voice">PV音声収録のお願い</a>
           <a href="#faq">FAQ</a>
           <a href="#contact">お問い合わせ</a>
         </nav>
@@ -4823,7 +4824,7 @@
 
       <section class="section" id="pv-voice" aria-labelledby="pv-voice-title">
         <p class="mini-kicker">PV VOICE</p>
-        <h2 class="bar-title" id="pv-voice-title">PV音声収録</h2>
+        <h2 class="bar-title" id="pv-voice-title">PV音声収録のお願い</h2>
         <p class="lead">イベントのPVを現在作成中です。その中で、キャストのみなさんの声を映像内で使用したいと考えています。<br>もし参加可能な方がいらっしゃいましたら、下記セリフを期限までにご提出いただけると嬉しいです！</p>
         <p class="notice pv-notice"><strong>参加は強制ではありません。</strong>お時間に余裕のある方は、ぜひご協力をお願いします！</p>
 
@@ -5335,7 +5336,7 @@
         { id: "survival", label: "脱落ルール", open: false },
         { id: "schedule", label: "スケジュール", open: false },
         { id: "prize", label: "優勝・準優勝賞品", open: false },
-        { id: "pv-voice", label: "PV音声収録", open: false },
+        { id: "pv-voice", label: "PV音声収録のお願い", open: false },
         { id: "faq", label: "FAQ", open: false },
         { id: "contact", label: "お問い合わせ", open: false },
       ];
