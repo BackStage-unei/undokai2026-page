@@ -33,6 +33,7 @@
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: calc(76px + env(safe-area-inset-top));
     }
 
     body {
@@ -264,7 +265,9 @@
       position: fixed;
       inset: 0;
       width: 100%;
+      max-width: none;
       height: 100dvh;
+      max-height: none;
       margin: 0;
       padding: 0;
       border: 0;
@@ -2696,6 +2699,23 @@
       text-wrap: balance;
     }
 
+    #pv-voice .pv-filename-guide {
+      max-width: 800px;
+      margin: 0 auto 18px;
+      padding: 12px 14px;
+      color: var(--royal-deep);
+      background: rgba(255, 216, 75, 0.18);
+      border: 1.5px solid var(--yellow);
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    #pv-voice .pv-filename-guide code {
+      font-weight: 800;
+    }
+
     #pv-voice .pv-common-grid {
       grid-template-columns: minmax(0, 1fr);
       align-items: stretch;
@@ -3569,19 +3589,21 @@
             </svg>
           </button>
         </div>
-        <ul class="mobile-menu-links">
-          <li><a class="mobile-menu-link" href="#about">イベント概要</a></li>
-          <li><a class="mobile-menu-link" href="#teams">チーム発表</a></li>
-          <li><a class="mobile-menu-link" href="#rules">デイリーミッション</a></li>
-          <li><a class="mobile-menu-link" href="#points">ポイントのしくみ</a></li>
-          <li><a class="mobile-menu-link" href="#half-time">中間発表クイズ</a></li>
-          <li><a class="mobile-menu-link" href="#survival">脱落ルール</a></li>
-          <li><a class="mobile-menu-link" href="#schedule">スケジュール</a></li>
-          <li><a class="mobile-menu-link" href="#prize">特典</a></li>
-          <li><a class="mobile-menu-link" href="#pv-voice">PV音声収録</a></li>
-          <li><a class="mobile-menu-link" href="#faq">FAQ</a></li>
-          <li><a class="mobile-menu-link" href="#contact">お問い合わせ</a></li>
-        </ul>
+        <nav aria-label="モバイル用ページ内ナビゲーション">
+          <ul class="mobile-menu-links">
+            <li><a class="mobile-menu-link" href="#about">イベント概要</a></li>
+            <li><a class="mobile-menu-link" href="#teams">チーム発表</a></li>
+            <li><a class="mobile-menu-link" href="#rules">デイリーミッション</a></li>
+            <li><a class="mobile-menu-link" href="#points">ポイントのしくみ</a></li>
+            <li><a class="mobile-menu-link" href="#half-time">中間発表クイズ</a></li>
+            <li><a class="mobile-menu-link" href="#survival">脱落ルール</a></li>
+            <li><a class="mobile-menu-link" href="#schedule">スケジュール</a></li>
+            <li><a class="mobile-menu-link" href="#prize">特典</a></li>
+            <li><a class="mobile-menu-link" href="#pv-voice">PV音声収録</a></li>
+            <li><a class="mobile-menu-link" href="#faq">FAQ</a></li>
+            <li><a class="mobile-menu-link" href="#contact">お問い合わせ</a></li>
+          </ul>
+        </nav>
       </div>
     </dialog>
     <span class="cloud cloud-one" aria-hidden="true"></span>
@@ -3828,7 +3850,7 @@
             </dl>
           </article>
         </div>
-        <p class="notice">ミッションの種類は期間中この3つで固定。毎日0時にリセットされ、また新しい1日の勝負が始まります。目標値は変更になる場合があります。</p>
+        <p class="notice">ミッションの種類は期間中この3つで固定。毎日0時にリセットされ、また新しい1日の勝負が始まります。ただし、8/20は20:00締め、8/23は21:00締めです。目標値は変更になる場合があります。</p>
       </section>
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
@@ -4483,6 +4505,7 @@
 
         <h3 class="pv-section-heading">収録をお願いしたいセリフは5つ</h3>
         <p class="pv-structure">全員共通の3つ＋自分のチームの2つ、あわせて5つです。</p>
+        <p class="pv-filename-guide">ファイル名の<code>{TeamColor}</code>は自分のチーム色（赤組なら<code>Red</code>）、<code>{CastName}</code>は可能であれば半角英字のキャスト名に置き換えてください。</p>
         <div class="cards pv-common-grid">
           <article class="pv-say-card">
             <div class="pv-say-head">
@@ -4709,7 +4732,7 @@
         <p class="mini-kicker">CONTACT</p>
         <h2 class="bar-title" id="contact-title">お問い合わせ</h2>
         <div class="highlight-card">
-          <p>イベント内容や提出物について不明点がある場合は、Discord内の「運営への依頼窓口」からご連絡ください。</p>
+          <p>ご不明点や運営へのご相談は、Discord内の「運営への依頼窓口」からご連絡ください。</p>
           <a class="contact-link" href="https://discord.com/channels/1138387287986679879/1475808380453916682" target="_blank" rel="noopener noreferrer">Discord「運営への依頼窓口」を開く</a>
         </div>
       </section>

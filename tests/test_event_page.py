@@ -120,6 +120,8 @@ def css_rule_failures(css: str) -> list[str]:
                 pass
             elif re.search(r"max-width\s*:\s*100%", body):
                 pass
+            elif re.search(r"max-width\s*:\s*none\b", body):
+                pass
             elif "::" in selector:
                 pass
             elif not has_auto_margin(body):
@@ -266,6 +268,8 @@ def main() -> int:
         "TeamName02_ORG.wav",
         "TeamShout01_ORG.wav",
         "TeamShout02_ORG.wav",
+        "{TeamColor}は自分のチーム色",
+        "{CastName}は可能であれば半角英字",
     ]
     pv_forbidden = [
         "収録をお願いしたいセリフは4つ",
@@ -354,9 +358,21 @@ def main() -> int:
     close_button_html = close_button_match.group(1) if close_button_match else ""
     if 'fill="none"' not in close_button_html or 'stroke="currentColor"' not in close_button_html:
         mobile_nav_failures.append("閉じるアイコンの線")
+    menu_dialog_rule = re.search(r"\.menu-dialog\s*\{(?P<body>.*?)\}", css, re.S)
+    menu_dialog_body = menu_dialog_rule.group("body") if menu_dialog_rule else ""
+    if not re.search(r"max-width\s*:\s*none\b", menu_dialog_body):
+        mobile_nav_failures.append("dialog max-width:none")
+    if not re.search(r"max-height\s*:\s*none\b", menu_dialog_body):
+        mobile_nav_failures.append("dialog max-height:none")
+    html_rule = re.search(r"\bhtml\s*\{(?P<body>.*?)\}", css, re.S)
+    html_rule_body = html_rule.group("body") if html_rule else ""
+    if not re.search(r"scroll-padding-top\s*:", html_rule_body):
+        mobile_nav_failures.append("sticky header scroll offset")
     for href in mobile_nav_hrefs:
         if f'href="{href}"' not in mobile_nav_html:
             mobile_nav_failures.append(href)
+    if '<nav aria-label="モバイル用ページ内ナビゲーション">' not in mobile_nav_html:
+        mobile_nav_failures.append("モバイルnavランドマーク")
     for js_term in [
         "showModal()",
         "menuDialog.close()",
@@ -379,7 +395,7 @@ def main() -> int:
     contact_html = section_block(text, "contact")
     discord_url = "https://discord.com/channels/1138387287986679879/1475808380453916682"
     contact_ok = (
-        "運営への依頼窓口" in visible_text(contact_html)
+        "ご不明点や運営へのご相談は、Discord内の「運営への依頼窓口」からご連絡ください。" in visible_text(contact_html)
         and contact_html.count(discord_url) == 1
         and 'rel="noopener noreferrer"' in contact_html
     )
@@ -406,6 +422,13 @@ def main() -> int:
     collection_terms = ["8/20(木)", "0:00〜20:00", "8/23(日・最終日)", "0:00〜21:00"]
     collection_ok = all(term in rules_text for term in collection_terms) and all(
         term in schedule_text for term in collection_terms
+    )
+    rules_notice_match = re.search(r'<p class="notice">(.*?)</p>', section_block(text, "rules"), re.S)
+    rules_notice_text = visible_text(rules_notice_match.group(1)) if rules_notice_match else ""
+    collection_ok = (
+        collection_ok
+        and "8/20は20:00締め" in rules_notice_text
+        and "8/23は21:00締め" in rules_notice_text
     )
     ok &= print_result(
         "集計時間: デイリーミッションとスケジュール",
