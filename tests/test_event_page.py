@@ -429,6 +429,26 @@ def main() -> int:
         ", ".join(toggle_config_failures),
     )
 
+    toggle_navigation_terms = [
+        "const openSection = (sectionId, options = {}) =>",
+        "const openSectionFromHash = () =>",
+        "sectionToggles.get(sectionId)",
+        "details.open = true",
+        "section.scrollIntoView",
+        'window.addEventListener("hashchange", openSectionFromHash)',
+        "openSectionFromHash()",
+        "const targetId = link.hash.slice(1)",
+        "openSection(targetId",
+    ]
+    missing_toggle_navigation = [
+        term for term in toggle_navigation_terms if term not in text
+    ]
+    ok &= print_result(
+        "メニュー・ハッシュ・トグル連動",
+        "PASS" if not missing_toggle_navigation else "FAIL",
+        ", ".join(missing_toggle_navigation),
+    )
+
     contact_html = section_block(text, "contact")
     discord_url = "https://discord.com/channels/1138387287986679879/1475808380453916682"
     contact_ok = (

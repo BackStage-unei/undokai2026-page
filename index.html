@@ -4921,6 +4921,40 @@
       };
 
       const sectionToggles = enhanceSectionToggles();
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const openSection = (sectionId, options = {}) => {
+        const { scroll = false, focus = false } = options;
+        const details = sectionToggles.get(sectionId);
+        const section = document.getElementById(sectionId);
+
+        if (!details || !section) {
+          return false;
+        }
+
+        details.open = true;
+
+        if (scroll) {
+          requestAnimationFrame(() => {
+            section.scrollIntoView({
+              block: "start",
+              behavior: reduceMotion.matches ? "auto" : "smooth",
+            });
+            if (focus) {
+              details.querySelector(".section-toggle-summary")?.focus({
+                preventScroll: true,
+              });
+            }
+          });
+        }
+
+        return true;
+      };
+
+      const openSectionFromHash = () => {
+        const sectionId = window.location.hash.slice(1);
+        return sectionId ? openSection(sectionId, { scroll: true }) : false;
+      };
 
       const openMenu = () => {
         menuDialog.showModal();
@@ -4944,7 +4978,19 @@
 
       menuButton.addEventListener("click", openMenu);
       closeButton.addEventListener("click", closeMenu);
-      menuLinks.forEach((link) => link.addEventListener("click", closeMenu));
+      menuLinks.forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const targetId = link.hash.slice(1);
+          if (!sectionToggles.has(targetId)) {
+            return;
+          }
+
+          event.preventDefault();
+          closeMenu();
+          window.history.replaceState(null, "", link.hash);
+          openSection(targetId, { scroll: true, focus: true });
+        });
+      });
       menuDialog.addEventListener("click", (event) => {
         if (event.target === menuDialog) {
           closeMenu();
@@ -4955,6 +5001,8 @@
         menuButton.setAttribute("aria-expanded", "false");
         menuButton.focus();
       });
+      window.addEventListener("hashchange", openSectionFromHash);
+      openSectionFromHash();
     })();
   </script>
 </body>
