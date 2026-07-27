@@ -433,13 +433,18 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
       const openedSummary = points.querySelector("summary");
       openedSummary.focus();
       const openedSummaryStyle = getComputedStyle(openedSummary);
+      const everyOpenedToggleHasTransparentBorder = toggles.every((details) => {
+        details.open = true;
+        const style = getComputedStyle(details.querySelector("summary"));
+        return [
+          style.borderTopColor,
+          style.borderRightColor,
+          style.borderBottomColor,
+          style.borderLeftColor,
+        ].every((color) => color === "rgba(0, 0, 0, 0)");
+      });
       results.openToggleBorderAndFocusInset = points.open
-        && [
-          openedSummaryStyle.borderTopColor,
-          openedSummaryStyle.borderRightColor,
-          openedSummaryStyle.borderBottomColor,
-          openedSummaryStyle.borderLeftColor,
-        ].every((color) => color === "rgba(0, 0, 0, 0)")
+        && everyOpenedToggleHasTransparentBorder
         && openedSummary.matches(":focus-visible")
         && openedSummaryStyle.outlineStyle === "solid"
         && parseFloat(openedSummaryStyle.outlineOffset) < 0;
