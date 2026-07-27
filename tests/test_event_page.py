@@ -446,11 +446,17 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
           style.borderLeftColor,
         ].every((color) => color === "rgba(0, 0, 0, 0)");
       });
+      const everyOpenedSectionFrameIsRemoved = toggles.every((details) => {
+        const style = getComputedStyle(details.closest(".section"));
+        return parseFloat(style.borderTopLeftRadius) === 0
+          && style.boxShadow === "none";
+      });
       results.openToggleBorderlessWithTextFocus = points.open
         && everyOpenedToggleHasTransparentBorder
         && openedSummary.matches(":focus-visible")
         && openedSummaryStyle.outlineStyle === "none"
         && openedSummaryTitleStyle.textDecorationLine.includes("underline");
+      results.openSectionFrameRemoved = everyOpenedSectionFrameIsRemoved;
       results.multipleToggles = teams.open && points.open
         && document.querySelector('[data-section-id="about"]').open;
 
@@ -1508,6 +1514,7 @@ def main() -> int:
                 "keyboardNativeDetails",
                 "nativeSummaryActivation",
                 "openToggleBorderlessWithTextFocus",
+                "openSectionFrameRemoved",
                 "multipleToggles",
                 "menuOpened",
                 "menuNavigation",
