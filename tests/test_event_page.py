@@ -447,6 +447,7 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
         && everyOpenedToggleHasTransparentBorder
         && openedSummary.matches(":focus-visible")
         && openedSummaryStyle.outlineStyle === "solid"
+        && parseFloat(openedSummaryStyle.outlineWidth) === 3
         && parseFloat(openedSummaryStyle.outlineOffset) < 0;
       results.multipleToggles = teams.open && points.open
         && document.querySelector('[data-section-id="about"]').open;
