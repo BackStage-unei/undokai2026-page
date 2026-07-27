@@ -78,20 +78,39 @@ def run_focused_browser_check() -> tuple[bool, dict[str, bool] | str]:
       const completionControlLayouts = checks.map((check) => {
         const label = check.closest(".pv-completion-label");
         const head = check.closest(".pv-say-head");
-        const firstHeadingItem = head?.querySelector(".pv-say-num");
+        const card = check.closest(".pv-say-card");
+        const headingItems = [
+          ...head.querySelectorAll(".pv-say-num, .pv-say-title, .pv-say-time"),
+        ];
         const labelRect = label?.getBoundingClientRect();
         const headRect = head?.getBoundingClientRect();
-        const firstHeadingItemRect = firstHeadingItem?.getBoundingClientRect();
+        const cardRect = card?.getBoundingClientRect();
+        const headingItemRects = headingItems.map((item) =>
+          item.getBoundingClientRect()
+        );
+        const headingContentLeft = Math.min(...headingItemRects.map((rect) => rect.left));
+        const headingContentRight = Math.max(...headingItemRects.map((rect) => rect.right));
+        const headingContentCenter = (headingContentLeft + headingContentRight) / 2;
         return {
           inputOnly:
             label?.children.length === 1
             && label?.textContent.trim() === "",
-          atRight:
+          stickyTab:
             getComputedStyle(label).position === "absolute"
-            && Math.abs(headRect.right - labelRect.right) <= 16,
-          contentAtLeft:
-            getComputedStyle(head).justifyContent === "flex-start"
-            && Math.abs(firstHeadingItemRect.left - headRect.left) <= 18,
+            && labelRect.left < cardRect.right
+            && labelRect.right > cardRect.right
+            && labelRect.top >= headRect.top
+            && labelRect.top <= headRect.top + 16
+            && headingItemRects.every((rect) =>
+              rect.right <= labelRect.left - 4
+              || rect.bottom <= labelRect.top
+              || rect.top >= labelRect.bottom
+            )
+            && getComputedStyle(label).backgroundColor !== "rgba(0, 0, 0, 0)",
+          originalHeadingPlacement:
+            getComputedStyle(head).justifyContent === "center"
+            && getComputedStyle(head).flexWrap === "wrap"
+            && Math.abs(headingContentCenter - (headRect.left + headRect.width / 2)) <= 5,
         };
       });
       const results = {
@@ -100,7 +119,9 @@ def run_focused_browser_check() -> tuple[bool, dict[str, bool] | str]:
           && JSON.stringify(lines) === JSON.stringify(["1", "2", "3", "4", "5"]),
         completionControlIsSecondary:
           completionControlLayouts.every((layout) =>
-            layout.inputOnly && layout.atRight && layout.contentAtLeft
+            layout.inputOnly
+            && layout.stickyTab
+            && layout.originalHeadingPlacement
           ),
         completionTurnsGreen:
           checks[0]?.checked === true

@@ -3121,11 +3121,14 @@
     }
 
     #pv-voice .pv-say-card {
+      position: relative;
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       align-content: start;
       gap: 12px;
+      min-width: 0;
       width: 100%;
-      overflow: hidden;
+      overflow: visible;
       padding: 0 0 18px;
       background: var(--white);
       border: 2px solid var(--card-line);
@@ -3147,30 +3150,44 @@
       background: linear-gradient(90deg, #237A4D 0%, #45A66F 100%);
     }
 
+    #pv-voice .pv-say-card.is-complete .pv-completion-label {
+      background: #E5F5EB;
+      border-color: #2B7A4C;
+    }
+
     #pv-voice .pv-say-head {
       position: relative;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       gap: 8px 12px;
+      min-width: 0;
       width: 100%;
-      padding: 11px 48px 11px 14px;
+      padding: 11px 14px;
       background: linear-gradient(90deg, var(--royal) 0%, #7A8CFF 100%);
+      border-radius: 16px 16px 0 0;
     }
 
     #pv-voice .pv-completion-label {
       position: absolute;
-      top: 50%;
-      right: 10px;
+      top: 8px;
+      right: -26px;
+      z-index: 2;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 34px;
       padding: 0;
-      transform: translateY(-50%);
+      background: var(--white);
+      border: 2px solid var(--card-line);
+      border-radius: 4px 9px 9px 4px;
+      box-shadow: 0 5px 12px rgba(31, 56, 110, 0.18);
       cursor: pointer;
+      transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease;
     }
 
     #pv-voice .pv-completion-check {
@@ -4093,6 +4110,7 @@
         margin-bottom: 4px;
       }
     }
+
   </style>
 </head>
 <body>
