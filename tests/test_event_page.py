@@ -16,13 +16,6 @@ SCRATCHPAD = Path(
     "bb78e0a7-a76e-437b-954a-05c7adc6dd90/scratchpad"
 )
 CHROME = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-CAST_ONLY_PV_EXPECTED = True
-CAST_ONLY_PV_START = "<!-- CAST-ONLY:PV-VOICE START"
-CAST_ONLY_PV_END = "<!-- CAST-ONLY:PV-VOICE END -->"
-CAST_ONLY_PV_PATTERN = re.compile(
-    r"<!-- CAST-ONLY:PV-VOICE START.*?CAST-ONLY:PV-VOICE END -->",
-    re.S,
-)
 REQUIRED_IDS = [
     "about",
     "teams",
@@ -92,7 +85,16 @@ def strip_media_blocks(css: str) -> str:
 
 def css_rule_failures(css: str) -> list[str]:
     failures: list[str] = []
-    left_allowed = {"#points .rule-table td:nth-child(3)", ".timeline-item-text"}
+    left_allowed = {
+        "#points .rule-table td:nth-child(3)",
+        ".timeline-item-text",
+        "#pv-voice .pv-route-card",
+        "#pv-voice .pv-route-card p",
+        "#pv-voice .pv-route-card li",
+        "#pv-voice .pv-steps",
+        "#pv-voice .pv-detail-box",
+        "#pv-voice .pv-recording-tips",
+    }
     base_css = strip_media_blocks(css)
 
     if re.search(r"justify-content\s*:\s*flex-start\b", base_css):
@@ -143,6 +145,17 @@ def chrome_probe() -> tuple[bool, str]:
             message = f"Chrome headless returned {result.returncode}"
         return False, message[:500]
     return True, "ok"
+
+
+def dump_rendered_dom() -> tuple[bool, str]:
+    result = subprocess.run(
+        [str(CHROME), "--headless", "--disable-gpu", "--dump-dom", HTML_PATH.as_uri()],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    return result.returncode == 0, result.stdout
 
 
 def run_chrome(width: int, height: int, output: Path) -> tuple[str, bool, str]:
@@ -219,65 +232,65 @@ def main() -> int:
         ", ".join(unexpected_urls),
     )
 
-    pv_matches = CAST_ONLY_PV_PATTERN.findall(text)
-    pv_block = next((m for m in pv_matches if 'id="pv-voice"' in m), "")
-    pv_nav_block = next((m for m in pv_matches if 'href="#pv-voice"' in m), "")
+    pv_block = section_block(text, "pv-voice")
+    pv_text = visible_text(pv_block)
     pv_form_url = "https://forms.gle/SMoTKsQ16n4mtEuE9"
     pv_email = "h_sawa@virtualidol.info"
-    pv_team_shouts = [
-        "よっしゃ行くぞ〜！",
-        "最高のイベントにしよう！",
-        "みんな、お祭りだー！！",
-        "全力で楽しもう〜！",
-        "ぜったい勝つぞ〜！",
-        "準備はいいか〜！？",
+    pv_required = [
+        "イベントのPVを現在作成中です",
+        "参加は強制ではありません",
+        "8/1(土) 13:00ごろ",
+        "この日の13:00ごろから本格的に作業を始める予定です",
+        "全員共通の3つ＋自分のチームの2つ、あわせて5つです",
+        "TitleCall01_ORG.wav",
+        "TitleCall02_ORG.wav",
+        "Start01_ORG.wav",
+        "Start02_ORG.wav",
+        "Cheering01_ORG.wav",
+        "Cheering02_ORG.wav",
+        "TeamName01_ORG.wav",
+        "TeamName02_ORG.wav",
+        "TeamShout01_ORG.wav",
+        "TeamShout02_ORG.wav",
     ]
-    if CAST_ONLY_PV_EXPECTED:
-        pv_failures = []
-        if text.count(CAST_ONLY_PV_START) != 2:
-            pv_failures.append(f"START={text.count(CAST_ONLY_PV_START)}（本体＋ナビの2ペア想定）")
-        if text.count(CAST_ONLY_PV_END) != 2:
-            pv_failures.append(f"END={text.count(CAST_ONLY_PV_END)}（本体＋ナビの2ペア想定）")
-        if 'id="pv-voice"' not in pv_block:
-            pv_failures.append("pv-voiceなし")
-        if 'href="#pv-voice"' not in pv_nav_block:
-            pv_failures.append("ナビのPV収録リンクなし（CAST-ONLY内）")
-        if pv_block.count(pv_form_url) != 1 or text.count(pv_form_url) != 1:
-            pv_failures.append(f"フォームURL={pv_block.count(pv_form_url)}/{text.count(pv_form_url)}")
-        for phrase in ["8/1", "13:00", "有志", *pv_team_shouts]:
-            if phrase not in pv_block:
-                pv_failures.append(f"{phrase}なし")
-        for heading in ["録音方法", "提出方法"]:
-            if f'<h3 class="pv-section-heading">{heading}</h3>' not in pv_block:
-                pv_failures.append(f"見出し{heading}なし")
-        for route in ["ROUTE A", "ROUTE B"]:
-            if route not in pv_block:
-                pv_failures.append(f"{route}なし")
-        for phrase in ["セリフは4つ", "収録は強制ではありません", "＋α（余裕があればぜひ！）"]:
-            if phrase not in pv_block:
-                pv_failures.append(f"{phrase}なし")
-        if "1人5つ" in pv_block:
-            pv_failures.append("旧文言「1人5つ」が残存")
-        if pv_email not in pv_block or text.count(pv_email) != 1:
-            pv_failures.append(f"メール={pv_block.count(pv_email)}/{text.count(pv_email)}")
-    else:
-        pv_forbidden = [
-            CAST_ONLY_PV_START,
-            CAST_ONLY_PV_END,
-            'id="pv-voice"',
-            'href="#pv-voice"',
-            pv_form_url,
-            pv_email,
-        ]
-        pv_failures = [
-            f"{item}={text.count(item)}"
-            for item in pv_forbidden
-            if text.count(item) != 0
-        ]
+    pv_forbidden = [
+        "収録をお願いしたいセリフは4つ",
+        "全員共通の2つ",
+        "＋α（余裕があればぜひ！）",
+        "こちらは必須ではありません",
+    ]
+    pv_ok = (
+        all(term in pv_text for term in pv_required)
+        and not any(term in pv_text for term in pv_forbidden)
+        and "CAST-ONLY:PV-VOICE" not in text
+        and pv_block.count(pv_form_url) == 1
+        and pv_email in pv_block
+    )
     ok &= print_result(
-        "PV収録セクション（キャスト向け・公開前削除）",
-        "PASS" if not pv_failures else "FAIL",
-        ", ".join(pv_failures),
+        "PV音声: 必須5セリフとファイル名",
+        "PASS" if pv_ok else "FAIL",
+    )
+
+    team_color_prefixes = ["Red", "Blue", "Yellow", "Green", "Orange", "Purple"]
+    pv_team_contract = all(
+        f'data-team-index="{index}"' in pv_block
+        and f"{prefix}_{{CastName}}_TeamName01_ORG.wav" in pv_block
+        and f"{prefix}_{{CastName}}_TeamName02_ORG.wav" in pv_block
+        and f"{prefix}_{{CastName}}_TeamShout01_ORG.wav" in pv_block
+        and f"{prefix}_{{CastName}}_TeamShout02_ORG.wav" in pv_block
+        for index, prefix in enumerate(team_color_prefixes)
+    )
+    clone_script_ok = all(
+        term in text
+        for term in [
+            'document.querySelectorAll("#teams .team-card")',
+            'document.querySelectorAll("#pv-voice [data-team-index]")',
+            "cloneNode(true)",
+        ]
+    )
+    ok &= print_result(
+        "PV音声: 6チームの命名と既存画像再利用",
+        "PASS" if pv_team_contract and clone_script_ok else "FAIL",
     )
 
     nav_match = re.search(r'<nav class="anchor-nav".*?</nav>', text, re.S)
@@ -409,6 +422,21 @@ def main() -> int:
     )
 
     css_compact = re.sub(r"\s+", " ", css)
+    pv_alignment_ok = all(
+        re.search(
+            rf"{re.escape(selector)}\s*\{{[^}}]*text-align\s*:\s*left\b",
+            css,
+            re.S,
+        )
+        for selector in [
+            "#pv-voice .pv-route-card",
+            "#pv-voice .pv-steps",
+            "#pv-voice .pv-detail-box",
+            "#pv-voice .pv-recording-tips",
+        ]
+    )
+    ok &= print_result("PV音声: 録音方法の左揃え", "PASS" if pv_alignment_ok else "FAIL")
+
     auto_phrase_ok = "word-break: auto-phrase" in css_compact
     pretty_ok = "text-wrap: pretty" in css_compact
     ok &= print_result(
@@ -745,11 +773,31 @@ def main() -> int:
 
     if not CHROME.exists():
         ok &= print_result("Chromeヘッドレスレンダリング", "SKIP", f"Chromeなし: {CHROME}")
+        ok &= print_result("PV音声: 描画後6チーム×9画像", "SKIP", f"Chromeなし: {CHROME}")
     else:
         chrome_ok, chrome_detail = chrome_probe()
         if not chrome_ok:
             ok &= print_result("Chromeヘッドレスレンダリング", "SKIP", chrome_detail)
+            ok &= print_result("PV音声: 描画後6チーム×9画像", "SKIP", chrome_detail)
         else:
+            render_ok, render_html = dump_rendered_dom()
+            if not render_ok:
+                raise RuntimeError("Chrome DOM dump failed")
+            rendered_pv = section_block(render_html, "pv-voice")
+            pv_member_groups = re.findall(
+                r'<div class="pv-team-members"[^>]*>(.*?)</div>',
+                rendered_pv,
+                re.S,
+            )
+            pv_member_counts = [
+                len(re.findall(r"<img\b", group, re.I)) for group in pv_member_groups
+            ]
+            ok &= print_result(
+                "PV音声: 描画後6チーム×9画像",
+                "PASS" if pv_member_counts == [9, 9, 9, 9, 9, 9] else "FAIL",
+                str(pv_member_counts),
+            )
+
             screenshot_dir = SCRATCHPAD
             try:
                 screenshot_dir.mkdir(parents=True, exist_ok=True)

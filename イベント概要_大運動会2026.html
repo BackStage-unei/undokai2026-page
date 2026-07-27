@@ -2678,6 +2678,12 @@
       line-height: 1.25;
     }
 
+    #pv-voice .pv-deadline-note {
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+
     #pv-voice .pv-section-heading {
       margin: 32px auto 10px;
       text-wrap: balance;
@@ -2691,7 +2697,10 @@
     }
 
     #pv-voice .pv-common-grid {
-      margin: 0 auto 28px;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+      max-width: 1100px;
+      margin: 18px auto 28px;
     }
 
     #pv-voice .pv-card-line {
@@ -2760,20 +2769,14 @@
     #pv-voice .pv-steps {
       display: grid;
       gap: 8px;
-      margin: 0 auto 14px;
+      margin: 0 0 14px;
       padding: 0;
       list-style: none;
+      text-align: left;
     }
 
     #pv-voice .pv-steps li {
       text-wrap: balance;
-    }
-
-    #pv-voice .pv-say-grid {
-      grid-template-columns: minmax(0, 1fr);
-      align-items: stretch;
-      max-width: 880px;
-      margin: 18px auto 8px;
     }
 
     #pv-voice .pv-say-card {
@@ -2900,6 +2903,44 @@
       text-wrap: balance;
     }
 
+    #pv-voice .pv-team-line p {
+      margin: 0 auto;
+      font-weight: 800;
+    }
+
+    #pv-voice .pv-team-members {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      width: min(180px, 100%);
+      margin: 0 auto 14px;
+    }
+
+    #pv-voice .pv-team-members img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border: 2px solid var(--tc);
+      border-radius: 50%;
+    }
+
+    #pv-voice .pv-file-names {
+      display: grid;
+      gap: 4px;
+      margin: 10px 14px 0;
+    }
+
+    #pv-voice .pv-file-names code {
+      overflow-wrap: anywhere;
+      color: var(--royal-deep);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.5;
+      white-space: normal;
+      word-break: break-word;
+    }
+
     #pv-voice .pv-say-badge {
       display: inline-flex;
       align-items: center;
@@ -2994,6 +3035,17 @@
       padding-top: 30px;
       border: 2px solid var(--card-line);
       box-shadow: var(--shadow-card);
+      text-align: left;
+    }
+
+    #pv-voice .pv-route-card p {
+      margin-left: 0;
+      margin-right: 0;
+      text-align: left;
+    }
+
+    #pv-voice .pv-route-card li {
+      text-align: left;
     }
 
     #pv-voice .pv-route-card::before {
@@ -3071,11 +3123,12 @@
     }
 
     #pv-voice .pv-detail-box {
-      margin: 14px auto 0;
+      margin: 14px 0 0;
       padding: 14px 14px 12px;
       background: rgba(64, 70, 196, 0.06);
       border: 1.5px dashed var(--royal);
       border-radius: 14px;
+      text-align: left;
     }
 
     #pv-voice .pv-route-b .pv-detail-box {
@@ -3105,6 +3158,7 @@
       display: block;
       max-width: 760px;
       margin: 0 auto 28px;
+      text-align: left;
     }
 
     #pv-voice .pv-submit {
@@ -3202,8 +3256,8 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      #pv-voice .pv-say-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      #pv-voice .pv-common-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       #pv-voice .pv-team-grid {
@@ -3568,9 +3622,7 @@
           <a href="#survival">脱落ルール</a>
           <a href="#schedule">スケジュール</a>
           <a href="#prize">特典</a>
-          <!-- CAST-ONLY:PV-VOICE START（ナビリンク。公開デプロイ前にこのSTART〜ENDも削除） -->
           <a href="#pv-voice">PV音声収録</a>
-          <!-- CAST-ONLY:PV-VOICE END -->
           <a href="#faq">FAQ</a>
           <a href="#contact">お問い合わせ</a>
         </nav>
@@ -4417,21 +4469,21 @@
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
 
-      <!-- CAST-ONLY:PV-VOICE START（キャスト向け一時セクション。公開デプロイ前にこのSTART〜ENDブロックを丸ごと削除） -->
       <section class="section" id="pv-voice" aria-labelledby="pv-voice-title">
         <p class="mini-kicker">PV VOICE</p>
         <h2 class="bar-title" id="pv-voice-title">PV音声収録</h2>
-        <p class="lead">イベントPVで、キャストのみなさんの声を映像内で使用する予定です。下記のセリフを収録して、期限までに提出してください。</p>
-        <p class="notice pv-notice">参加はご協力いただける方による<strong>有志</strong>で、<strong>収録は強制ではありません</strong>。お時間に余裕のある方は、ぜひご協力をお願いします！期日までに提出された音声を映像内で使用します。（このセクションはキャスト向けの案内です）</p>
+        <p class="lead">イベントのPVを現在作成中です。その中で、キャストのみなさんの声を映像内で使用したいと考えています。<br>もし参加可能な方がいらっしゃいましたら、下記セリフを期限までにご提出いただけると嬉しいです！</p>
+        <p class="notice pv-notice"><strong>参加は強制ではありません。</strong>お時間に余裕のある方は、ぜひご協力をお願いします！</p>
 
-        <div class="pv-deadline" aria-label="提出期限 8月1日土曜日 13時">
+        <div class="pv-deadline" aria-label="提出期限 8月1日土曜日 13時ごろ">
           <span class="pv-deadline-label">提出期限</span>
-          <span class="pv-deadline-time">8/1(土) 13:00</span>
+          <span class="pv-deadline-time">8/1(土) 13:00ごろ</span>
+          <span class="pv-deadline-note">この日の13:00ごろから本格的に作業を始める予定です。</span>
         </div>
 
-        <h3 class="pv-section-heading">収録をお願いしたいセリフは4つ</h3>
-        <p class="pv-structure">全員共通の2つ＋自分のチームの2つ、あわせて4つです。<br>さらに余裕があれば「＋α 応援の声」もぜひ！</p>
-        <div class="cards pv-say-grid">
+        <h3 class="pv-section-heading">収録をお願いしたいセリフは5つ</h3>
+        <p class="pv-structure">全員共通の3つ＋自分のチームの2つ、あわせて5つです。</p>
+        <div class="cards pv-common-grid">
           <article class="pv-say-card">
             <div class="pv-say-head">
               <span class="pv-say-num">セリフ 1</span>
@@ -4440,6 +4492,10 @@
             </div>
             <p class="pv-say-quote">「BackStage大運動会！」</p>
             <p class="pv-say-note">イベントロゴが大きく出るタイミングで使用。元気よく勢いのあるテンションで！</p>
+            <div class="pv-file-names" aria-label="タイトルコールのファイル名">
+              <code>{TeamColor}_{CastName}_TitleCall01_ORG.wav</code>
+              <code>{TeamColor}_{CastName}_TitleCall02_ORG.wav</code>
+            </div>
           </article>
           <article class="pv-say-card">
             <div class="pv-say-head">
@@ -4449,60 +4505,113 @@
             </div>
             <p class="pv-say-quote">「よーい、どん！」</p>
             <p class="pv-say-note">運動会のピストルを撃つタイミングで使用します。</p>
+            <div class="pv-file-names" aria-label="スタートのファイル名">
+              <code>{TeamColor}_{CastName}_Start01_ORG.wav</code>
+              <code>{TeamColor}_{CastName}_Start02_ORG.wav</code>
+            </div>
+          </article>
+          <article class="pv-say-card">
+            <div class="pv-say-head">
+              <span class="pv-say-num">セリフ 3</span>
+              <span class="pv-say-title">応援の声</span>
+              <span class="pv-say-time">目安なし</span>
+            </div>
+            <p class="pv-say-note">「○○組がんばれー！」「いけー！！！」など、自分のチームを応援する元気な掛け声をお願いします。</p>
+            <div class="pv-file-names" aria-label="応援の声のファイル名">
+              <code>{TeamColor}_{CastName}_Cheering01_ORG.wav</code>
+              <code>{TeamColor}_{CastName}_Cheering02_ORG.wav</code>
+            </div>
           </article>
         </div>
 
-        <h3 class="pv-section-heading">セリフ 3・4 — チーム別セリフ</h3>
+        <h3 class="pv-section-heading">セリフ4・5 — チーム別セリフ</h3>
         <div class="pv-team-grid">
-          <div class="pv-team-say" style="--tc: #E53935;">
+          <div class="pv-team-say" style="--tc: #E53935;" data-team-index="0">
             <p class="pv-team-name">赤組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「赤組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「よっしゃ行くぞ〜！」</p>
+            <div class="pv-team-members" aria-label="赤組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「赤組！」</p>
+              <div class="pv-file-names"><code>Red_{CastName}_TeamName01_ORG.wav</code><code>Red_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「よっしゃ行くぞ〜！」</p>
+              <div class="pv-file-names"><code>Red_{CastName}_TeamShout01_ORG.wav</code><code>Red_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #1E88E5;">
+          <div class="pv-team-say" style="--tc: #1E88E5;" data-team-index="1">
             <p class="pv-team-name">青組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「青組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「最高のイベントにしよう！」</p>
+            <div class="pv-team-members" aria-label="青組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「青組！」</p>
+              <div class="pv-file-names"><code>Blue_{CastName}_TeamName01_ORG.wav</code><code>Blue_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「最高のイベントにしよう！」</p>
+              <div class="pv-file-names"><code>Blue_{CastName}_TeamShout01_ORG.wav</code><code>Blue_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #FDD835;">
+          <div class="pv-team-say" style="--tc: #FDD835;" data-team-index="2">
             <p class="pv-team-name">黄組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「黄組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「みんな、お祭りだー！！」</p>
+            <div class="pv-team-members" aria-label="黄組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「黄組！」</p>
+              <div class="pv-file-names"><code>Yellow_{CastName}_TeamName01_ORG.wav</code><code>Yellow_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「みんな、お祭りだー！！」</p>
+              <div class="pv-file-names"><code>Yellow_{CastName}_TeamShout01_ORG.wav</code><code>Yellow_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #43A047;">
+          <div class="pv-team-say" style="--tc: #43A047;" data-team-index="3">
             <p class="pv-team-name">緑組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「緑組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「全力で楽しもう〜！」</p>
+            <div class="pv-team-members" aria-label="緑組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「緑組！」</p>
+              <div class="pv-file-names"><code>Green_{CastName}_TeamName01_ORG.wav</code><code>Green_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「全力で楽しもう〜！」</p>
+              <div class="pv-file-names"><code>Green_{CastName}_TeamShout01_ORG.wav</code><code>Green_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #FB8C00;">
+          <div class="pv-team-say" style="--tc: #FB8C00;" data-team-index="4">
             <p class="pv-team-name">橙組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「橙組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「ぜったい勝つぞ〜！」</p>
+            <div class="pv-team-members" aria-label="橙組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「橙組！」</p>
+              <div class="pv-file-names"><code>Orange_{CastName}_TeamName01_ORG.wav</code><code>Orange_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「ぜったい勝つぞ〜！」</p>
+              <div class="pv-file-names"><code>Orange_{CastName}_TeamShout01_ORG.wav</code><code>Orange_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
-          <div class="pv-team-say" style="--tc: #8E24AA;">
+          <div class="pv-team-say" style="--tc: #8E24AA;" data-team-index="5">
             <p class="pv-team-name">紫組</p>
-            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「紫組！」</p>
-            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「準備はいいか〜！？」</p>
+            <div class="pv-team-members" aria-label="紫組のキャスト"></div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ4・組名コール（約1秒）</span>
+              <p>「紫組！」</p>
+              <div class="pv-file-names"><code>Purple_{CastName}_TeamName01_ORG.wav</code><code>Purple_{CastName}_TeamName02_ORG.wav</code></div>
+            </div>
+            <div class="pv-team-line">
+              <span class="pv-team-label">セリフ5・チームの掛け声（約2秒）</span>
+              <p>「準備はいいか〜！？」</p>
+              <div class="pv-file-names"><code>Purple_{CastName}_TeamShout01_ORG.wav</code><code>Purple_{CastName}_TeamShout02_ORG.wav</code></div>
+            </div>
           </div>
         </div>
         <p class="pv-table-note">各セリフは<strong>別データ</strong>で収録。テイクは2つ以上あると助かります（音割れ時の予備）。目安秒数に合わせて収録してください。</p>
-
-        <div class="pv-extra-card">
-          <p class="pv-say-badge pv-say-extra">＋α（余裕があればぜひ！）</p>
-          <div class="card-head">
-            <span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 10v4"></path>
-                <path d="M7 9l10-4v14L7 15z"></path>
-                <path d="M8 15l2 5h3l-2-6"></path>
-                <path d="M20 9v6"></path>
-              </svg>
-            </span>
-            <h3>応援の声（内容自由）</h3>
-          </div>
-          <p class="pv-card-line">目安なし</p>
-          <p class="pv-card-note">チームを車に見立てて競争するシーンで使用。「◯◯組がんばれー！」「いけー！！！」など、自分のチームを応援する元気な掛け声を1つ。<strong>こちらは必須ではありません</strong>が、最高な応援ボイスをお待ちしています！</p>
-        </div>
 
         <h3 class="pv-section-heading">録音方法</h3>
         <div class="cards support-grid pv-submit-grid">
@@ -4565,8 +4674,6 @@
           <p class="pv-submit-note">収録は元気よく、明るい声で！ポップで楽しい映像になります</p>
         </div>
       </section>
-      <!-- CAST-ONLY:PV-VOICE END -->
-
       <section class="section" id="faq" aria-labelledby="faq-title">
         <p class="mini-kicker">FAQ</p>
         <h2 class="bar-title" id="faq-title">FAQ</h2>
@@ -4621,6 +4728,15 @@
       const menuDialog = document.getElementById("mobile-menu");
       const closeButton = document.getElementById("menu-close");
       const menuLinks = menuDialog.querySelectorAll(".mobile-menu-link");
+      const teamCards = document.querySelectorAll("#teams .team-card");
+      const pvTeamCards = document.querySelectorAll("#pv-voice [data-team-index]");
+
+      pvTeamCards.forEach((pvTeamCard) => {
+        const teamIndex = Number(pvTeamCard.dataset.teamIndex);
+        const sourceImages = teamCards[teamIndex]?.querySelectorAll(".member img") ?? [];
+        const target = pvTeamCard.querySelector(".pv-team-members");
+        sourceImages.forEach((image) => target.append(image.cloneNode(true)));
+      });
 
       const openMenu = () => {
         menuDialog.showModal();
