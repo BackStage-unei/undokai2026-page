@@ -272,6 +272,34 @@ def main() -> int:
         ", ".join(pv_failures),
     )
 
+    nav_match = re.search(r'<nav class="anchor-nav".*?</nav>', text, re.S)
+    nav_html = nav_match.group(0) if nav_match else ""
+    nav_expected = [
+        ('#teams', "チーム発表"),
+        ('#rules', "デイリーミッション"),
+        ('#points', "ポイントのしくみ"),
+        ('#half-time', "中間発表クイズ"),
+        ('#survival', "脱落ルール"),
+        ('#schedule', "スケジュール"),
+        ('#prize', "特典"),
+        ('#pv-voice', "PV音声収録"),
+        ('#faq', "FAQ"),
+    ]
+    nav_missing = [label for href, label in nav_expected if f'<a href="{href}">{label}</a>' not in nav_html]
+    ok &= print_result(
+        "目次: セクションタイトルと一致（9リンク）",
+        "PASS" if not nav_missing else "FAIL",
+        ", ".join(nav_missing),
+    )
+
+    teams_block = section_block(text, "teams")
+    leader_ok = (
+        "運営リーダーの割り当ては後日発表" in teams_block
+        and "運営リーダー：（仮）" not in text
+        and "チーム発表" in teams_block
+    )
+    ok &= print_result("チーム発表: リーダー後日発表の注記", "PASS" if leader_ok else "FAIL")
+
     prize_block = section_block(text, "prize")
     prize_needed = ["自遊空間", "掲出予定", "調整中", "優勝チーム", "準優勝チーム", "パネル設置", "ブースPOP", "集合立ち絵ポスター"]
     prize_missing = [term for term in prize_needed if term not in prize_block]
@@ -360,8 +388,8 @@ def main() -> int:
     actual_members = [m for m in actual_members if m]
     leader_count = teams_html.count("運営リーダー：")
     ok &= print_result(
-        "チームごとの運営リーダー行 6件",
-        "PASS" if leader_count == 6 else "FAIL",
+        "チームごとの運営リーダー行 0件（注記に集約・7/28）",
+        "PASS" if leader_count == 0 else "FAIL",
         f"{leader_count}件",
     )
     ok &= print_result(
