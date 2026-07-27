@@ -2554,6 +2554,27 @@
       line-height: 1.6;
     }
 
+    .prize-detail-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      margin-top: 12px;
+      padding: 10px 16px;
+      border: 2px solid var(--royal);
+      border-radius: 999px;
+      color: var(--royal-deep);
+      background: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .prize-detail-link:hover,
+    .prize-detail-link:focus-visible {
+      color: var(--white);
+      background: var(--royal);
+    }
+
     .prize-confetti {
       position: absolute;
       width: 76px;
@@ -4468,6 +4489,14 @@
         <div class="prize-content">
           <p class="prize-main">賞品は<strong>優勝・準優勝の2種類</strong>です。</p>
           <p class="prize-sub">さらに、上位チームのイラストをネットカフェ「<strong><span class="nw">自遊空間</span></strong>」の店舗に掲出予定！<br>東京都内の店舗にて、今秋・約1ヶ月間を予定しています。</p>
+          <a
+            class="prize-detail-link"
+            href="https://discord.com/channels/1138387287986679879/1528011762572595231/1529844197350309939"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            優勝賞品の詳細をDiscordで確認
+          </a>
           <div class="prize-rank-grid">
             <div class="prize-rank-card prize-rank-gold">
               <p class="prize-rank-label">優勝賞品</p>

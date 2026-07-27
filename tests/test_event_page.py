@@ -33,6 +33,10 @@ REQUIRED_IDS = [
     "prize",
     "faq",
 ]
+PRIZE_DETAIL_URL = (
+    "https://discord.com/channels/1138387287986679879/"
+    "1528011762572595231/1529844197350309939"
+)
 
 
 def strip_data_uris(text: str) -> str:
@@ -238,6 +242,7 @@ def main() -> int:
     allowed_urls = {
         "https://forms.gle/SMoTKsQ16n4mtEuE9",
         "https://discord.com/channels/1138387287986679879/1475808380453916682",
+        PRIZE_DETAIL_URL,
     }
     found_urls = set(re.findall(r'https?://[^"\s<]+', strip_data_uris(text)))
     unexpected_urls = sorted(found_urls - allowed_urls)
@@ -463,6 +468,17 @@ def main() -> int:
         "特典: 自遊空間掲出（優勝/準優勝の内訳）",
         "PASS" if not prize_missing else "FAIL",
         ", ".join(prize_missing),
+    )
+
+    prize_detail_ok = (
+        prize_block.count(PRIZE_DETAIL_URL) == 1
+        and "優勝賞品の詳細をDiscordで確認" in visible_text(prize_block)
+        and 'target="_blank"' in prize_block
+        and 'rel="noopener noreferrer"' in prize_block
+    )
+    ok &= print_result(
+        "優勝賞品: Discord詳細リンク",
+        "PASS" if prize_detail_ok else "FAIL",
     )
 
     css_compact = re.sub(r"\s+", " ", css)
