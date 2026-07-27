@@ -69,7 +69,13 @@ PRESERVED_SECTION_TERMS = {
     "half-time": ["早押しクイズ大会", "+8pt", "+6pt", "+4pt", "+2pt"],
     "survival": ["累積10pt以上ある？", "10pt未満", "3pt×4日＝12pt"],
     "schedule": ["8/20", "集計 0:00〜20:00", "8/23", "集計 0:00〜21:00"],
-    "prize": ["優勝賞品", "準優勝賞品", "集合SDイラスト", "集合立ち絵ポスター"],
+    "prize": [
+        "優勝",
+        "準優勝",
+        "オリジナル描き下ろし集合SDイラスト",
+        "最大 約1,800mm × 900mm",
+        "最大 A4ポスター or 卓上POP",
+    ],
     "pv-voice": [
         "全員共通の3つ＋自分のチームの2つ、あわせて5つです",
         "TitleCall01_ORG.wav",
@@ -567,19 +573,24 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
             );
 
           const rankGrid = prizeSection.querySelector(".prize-rank-grid");
-          const prizeSub = prizeSection.querySelector(".prize-sub");
           const prizeLink = prizeSection.querySelector(".prize-detail-link");
+          const goldBenefits = [
+            ...prizeSection.querySelectorAll(".prize-rank-gold .prize-benefit-item"),
+          ];
+          const silverBenefits = [
+            ...prizeSection.querySelectorAll(".prize-rank-silver .prize-benefit-item"),
+          ];
           results.prizeSummaryFirst =
-            prizeSection.querySelector(".prize-rank-gold .prize-rank-summary")
-              ?.textContent.includes("描き下ろし集合SDイラスト")
-            && prizeSection.querySelector(".prize-rank-silver .prize-rank-summary")
-              ?.textContent.includes("集合立ち絵ポスター")
-            && Boolean(
-              rankGrid.compareDocumentPosition(prizeSub)
-                & Node.DOCUMENT_POSITION_FOLLOWING
+            goldBenefits.length === 3
+            && silverBenefits.length === 1
+            && goldBenefits[0].textContent.includes(
+              "チームメンバー全員のオリジナル描き下ろし集合SDイラストを制作"
             )
+            && goldBenefits[1].textContent.includes("最大 約1,800mm × 900mm")
+            && goldBenefits[2].textContent.includes("最大 A4ポスター or 卓上POP")
+            && silverBenefits[0].textContent.includes("最大 A4ポスター or 卓上POP")
             && Boolean(
-              prizeSub.compareDocumentPosition(prizeLink)
+              rankGrid.compareDocumentPosition(prizeLink)
                 & Node.DOCUMENT_POSITION_FOLLOWING
             );
 
@@ -1050,11 +1061,14 @@ def main() -> int:
 
     prize_text = visible_text(section_block(text, "prize"))
     prize_terms = [
-        "賞品は優勝・準優勝の2種類",
-        "優勝賞品",
-        "準優勝賞品",
-        "集合SDイラスト",
-        "集合立ち絵ポスター",
+        "優勝",
+        "準優勝",
+        "特典①",
+        "特典②",
+        "特典③",
+        "最大 約1,800mm × 900mm",
+        "最大 A4ポスター or 卓上POP",
+        "高田馬場で調整中",
     ]
     ok &= print_result(
         "賞品2種類の明示",
@@ -1070,7 +1084,15 @@ def main() -> int:
     ok &= print_result("チーム発表: リーダー後日発表の注記", "PASS" if leader_ok else "FAIL")
 
     prize_block = section_block(text, "prize")
-    prize_needed = ["自遊空間", "掲出予定", "調整中", "優勝賞品", "準優勝賞品", "パネル設置", "ブースPOP", "集合立ち絵ポスター"]
+    prize_needed = [
+        "自遊空間",
+        "優勝",
+        "準優勝",
+        "オリジナル描き下ろし集合SDイラスト",
+        "等身大パネル",
+        "ブースPOP",
+        "高田馬場で調整中",
+    ]
     prize_missing = [term for term in prize_needed if term not in prize_block]
     ok &= print_result(
         "特典: 自遊空間掲出（優勝/準優勝の内訳）",
