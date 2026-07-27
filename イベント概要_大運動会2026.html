@@ -1327,17 +1327,34 @@
     }
 
     .mission-example-card {
+      position: relative;
+      overflow: hidden;
       display: grid;
       justify-items: center;
-      gap: 14px;
+      align-content: start;
+      gap: 10px;
       width: 100%;
-      padding: 22px 20px;
+      padding: 20px 14px 16px;
       background: var(--white);
       border: 1.5px solid var(--card-line);
       border-radius: 18px;
       box-shadow: 0 6px 16px rgba(31, 56, 110, 0.10);
       text-align: center;
     }
+
+    .mission-example-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--mx, var(--royal));
+    }
+
+    .mission-example-card:nth-child(1) { --mx: var(--royal); }
+    .mission-example-card:nth-child(2) { --mx: #2F9E63; }
+    .mission-example-card:nth-child(3) { --mx: #F08A2E; }
 
     .mission-example-head {
       display: grid;
@@ -1373,16 +1390,29 @@
 
     .mission-result-row {
       display: grid;
-      /* 4 columns fit desktop/tablet; the 560px media rule below switches rows to 2 columns. */
-      grid-template-columns: minmax(120px, 0.9fr) minmax(108px, 0.9fr) minmax(128px, 1.1fr) minmax(96px, 0.8fr);
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      justify-items: center;
-      gap: 8px;
-      min-height: 52px;
-      padding: 10px 12px;
+      gap: 5px 10px;
+      padding: 9px 12px;
       background: rgba(64, 70, 196, 0.04);
       border: 1px solid var(--card-line);
-      border-radius: 14px;
+      border-radius: 12px;
+    }
+
+    .mission-result-row .mission-team {
+      justify-self: start;
+    }
+
+    .mission-result-row .mission-value {
+      justify-self: end;
+    }
+
+    .mission-result-row .mission-status {
+      justify-self: start;
+    }
+
+    .mission-result-row .mission-bonus {
+      justify-self: end;
     }
 
     .mission-result-row.top {
@@ -1395,9 +1425,9 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      gap: 7px;
+      gap: 6px;
       color: var(--royal-deep);
-      font-size: 15px;
+      font-size: 13.5px;
       font-weight: 800;
       line-height: 1.3;
     }
@@ -1406,11 +1436,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 42px;
-      min-height: 30px;
-      padding: 6px 10px 5px;
+      min-width: 36px;
+      min-height: 24px;
+      padding: 4px 8px 3px;
       border-radius: 999px;
-      font-size: 12.5px;
+      font-size: 11.5px;
       font-weight: 900;
       line-height: 1;
       white-space: nowrap;
@@ -1434,7 +1464,7 @@
     .mission-value {
       font-family: "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
       color: var(--royal-deep);
-      font-size: 20px;
+      font-size: 15px;
       font-weight: 900;
       letter-spacing: 0;
       line-height: 1.2;
@@ -1444,12 +1474,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 28px;
-      padding: 6px 10px;
+      min-height: 22px;
+      padding: 3px 9px;
       color: var(--royal-deep); /* #2E339B on #FFD84B = 7.36:1 */
       background: var(--yellow);
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       line-height: 1.2;
       text-wrap: balance;
@@ -1468,14 +1498,14 @@
     .mission-bonus {
       font-family: "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
       color: var(--orange-text); /* #B4590E on rgba(64,70,196,.04)=#F7F8FD = 4.52:1, AAぎりぎり。行背景のtintを濃くする場合はこのペアを再検証すること */
-      font-size: 15px;
+      font-size: 12.5px;
       font-weight: 900;
       line-height: 1.3;
       white-space: nowrap;
     }
 
     .mission-bonus-points {
-      font-size: 17px;
+      font-size: 15px;
       line-height: 1;
     }
 
@@ -2550,6 +2580,137 @@
       text-wrap: balance;
     }
 
+    #pv-voice .pv-say-grid {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+      max-width: 880px;
+      margin: 18px auto 8px;
+    }
+
+    #pv-voice .pv-say-card {
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      width: 100%;
+      overflow: hidden;
+      padding: 0 0 18px;
+      background: var(--white);
+      border: 2px solid var(--card-line);
+      border-radius: 18px;
+      box-shadow: var(--shadow-card);
+    }
+
+    #pv-voice .pv-say-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px 12px;
+      width: 100%;
+      padding: 11px 14px;
+      background: linear-gradient(90deg, var(--royal) 0%, #7A8CFF 100%);
+    }
+
+    #pv-voice .pv-say-num {
+      color: var(--yellow);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
+
+    #pv-voice .pv-say-title {
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    #pv-voice .pv-say-time {
+      padding: 3px 10px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.20);
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 800;
+    }
+
+    #pv-voice .pv-say-quote {
+      margin: 6px auto 0;
+      padding: 0 16px;
+      color: var(--royal-deep);
+      font-size: clamp(21px, 2.4vw, 27px);
+      font-weight: 900;
+      line-height: 1.4;
+      text-wrap: balance;
+    }
+
+    #pv-voice .pv-say-note {
+      max-width: 30em;
+      margin: 0 auto;
+      padding: 0 18px;
+      color: var(--muted);
+      font-size: 12.5px;
+      font-weight: 700;
+      line-height: 1.7;
+      text-wrap: balance;
+    }
+
+    #pv-voice .pv-team-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+      max-width: 980px;
+      margin: 14px auto 6px;
+    }
+
+    #pv-voice .pv-team-say {
+      display: grid;
+      align-content: start;
+      gap: 9px;
+      padding: 14px 12px 16px;
+      background: var(--white);
+      border: 1.5px solid var(--card-line);
+      border-top: 6px solid var(--tc, var(--royal));
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(31, 56, 110, 0.10);
+    }
+
+    #pv-voice .pv-team-name {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin: 0 auto;
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    #pv-voice .pv-team-name::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border: 1px solid rgba(34, 48, 74, 0.18);
+      border-radius: 50%;
+      background: var(--tc, var(--royal));
+    }
+
+    #pv-voice .pv-team-label {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    #pv-voice .pv-team-line {
+      margin: 0 auto;
+      color: var(--royal-deep);
+      font-size: 15.5px;
+      font-weight: 800;
+      line-height: 1.4;
+      text-wrap: balance;
+    }
+
     #pv-voice .pv-say-badge {
       display: inline-flex;
       align-items: center;
@@ -2843,6 +3004,14 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      #pv-voice .pv-say-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #pv-voice .pv-team-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
       .hero {
         padding: 64px 0 44px;
       }
@@ -2923,6 +3092,12 @@
     }
 
     @media (min-width: 1000px) {
+      .mission-example-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: stretch;
+        max-width: 1040px;
+      }
+
       .topbar-inner {
         padding-top: 18px;
         padding-bottom: 18px;
@@ -2943,11 +3118,8 @@
     }
 
     @media (max-width: 620px) {
-      /* 4-column min widths (452px + gaps + padding) need ~500px of card innerspace,
-         which is only available above ~612px viewport. Switch to 2 columns early. */
       .mission-result-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 7px;
+        gap: 5px 7px;
       }
     }
 
@@ -3147,11 +3319,10 @@
           <a href="#rules">ルール</a>
           <a href="#points">ポイント</a>
           <a href="#half-time">中間発表</a>
-          <a href="#support">応援ガイド</a>
           <a href="#schedule">スケジュール</a>
           <a href="#prize">特典</a>
           <!-- CAST-ONLY:PV-VOICE START（ナビリンク。公開デプロイ前にこのSTART〜ENDも削除） -->
-          <a href="#pv-voice">PV収録</a>
+          <a href="#pv-voice">PV音声収録</a>
           <!-- CAST-ONLY:PV-VOICE END -->
           <a href="#faq">FAQ</a>
         </nav>
@@ -3430,19 +3601,19 @@
               <div class="mission-result-row top">
                 <span class="mission-team"><span class="mission-rank first">1位</span> <span class="mission-team-name">チームB</span></span>
                 <span class="mission-value">14時間30分</span>
-                <span class="mission-status">基準値突破でクリア！</span>
+                <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>1位</span> <span class="mission-bonus-points">+3pt</span></span>
               </div>
               <div class="mission-result-row">
                 <span class="mission-team"><span class="mission-rank second">2位</span> <span class="mission-team-name">チームA</span></span>
                 <span class="mission-value">13時間50分</span>
-                <span class="mission-status">基準値突破でクリア！</span>
+                <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>2位</span> <span class="mission-bonus-points">+2pt</span></span>
               </div>
               <div class="mission-result-row">
                 <span class="mission-team"><span class="mission-rank third">3位</span> <span class="mission-team-name">チームC</span></span>
                 <span class="mission-value">12時間10分</span>
-                <span class="mission-status">基準値突破でクリア！</span>
+                <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>3位</span> <span class="mission-bonus-points">+1pt</span></span>
               </div>
             </div>
@@ -3466,19 +3637,19 @@
               <div class="mission-result-row top">
                 <span class="mission-team"><span class="mission-rank first">1位</span> <span class="mission-team-name">チームA</span></span>
                 <span class="mission-value">14人</span>
-                <span class="mission-status">基準値突破でクリア！</span>
+                <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>1位</span> <span class="mission-bonus-points">+3pt</span></span>
               </div>
               <div class="mission-result-row">
                 <span class="mission-team"><span class="mission-rank second">2位</span> <span class="mission-team-name">チームB</span></span>
                 <span class="mission-value">13人</span>
-                <span class="mission-status">基準値突破でクリア！</span>
+                <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>2位</span> <span class="mission-bonus-points">+2pt</span></span>
               </div>
               <div class="mission-result-row">
                 <span class="mission-team"><span class="mission-rank third">3位</span> <span class="mission-team-name">チームC</span></span>
                 <span class="mission-value">12人</span>
-                <span class="mission-status">基準値突破でクリア！</span>
+                <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>3位</span> <span class="mission-bonus-points">+1pt</span></span>
               </div>
             </div>
@@ -3499,7 +3670,7 @@
               <div class="mission-result-row top">
                 <span class="mission-team"><span class="mission-rank first">1位</span> <span class="mission-team-name">チームA</span></span>
                 <span class="mission-value">3人</span>
-                <span class="mission-status">基準値突破でクリア！</span>
+                <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>1位</span> <span class="mission-bonus-points">+3pt</span></span>
               </div>
               <div class="mission-result-row">
@@ -3515,9 +3686,9 @@
                 <span class="mission-bonus"><span>3位</span> <span class="mission-bonus-points">+1pt</span></span>
               </div>
             </div>
-            <p class="mission-example-note">最難関ミッションはAが基準値突破でクリア。基準に届かなくても、実数値の順位でボーナスは入ります。</p>
           </article>
         </div>
+        <p class="mission-example-note">「クリア」＝基準値突破。基準に届かなくても、実数値の順位でボーナスは入ります。</p>
         <h4>この日の合計</h4>
         <p class="notice">この例は重点ミッションがない日の例です。重点の日は追加ボーナス（最大+3）が加算されます。</p>
         <div class="score-legend" aria-label="スコアバー凡例">
@@ -3763,70 +3934,8 @@
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
 
-      <section class="section" id="support" aria-labelledby="support-title">
-        <p class="mini-kicker">SUPPORT 05</p>
-        <h2 class="bar-title" id="support-title">応援ガイド</h2>
-        <p class="lead">このイベントの主役は、キャストと、応援するあなたです。</p>
-        <div class="cards support-grid">
-          <article class="support-card">
-            <div class="card-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 13v-2l10-4v10L4 13z"></path>
-                  <path d="M6 13l2 6h3l-2-5"></path>
-                  <path d="M18 9a4 4 0 0 1 0 6"></path>
-                </svg>
-              </span>
-              <h3>推しと通話する</h3>
-            </div>
-            <p>1分の通話からチームの数字になります。</p>
-          </article>
-          <article class="support-card">
-            <div class="card-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="8"></circle>
-                  <path d="M12 7v5l3 2"></path>
-                </svg>
-              </span>
-              <h3>毎日顔を出す</h3>
-            </div>
-            <p>ミッションは毎日リセット。毎日の通話がいちばんの援護です。</p>
-          </article>
-          <article class="support-card">
-            <div class="card-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M16 19v-1.5a3.5 3.5 0 0 0-7 0V19"></path>
-                  <circle cx="12.5" cy="9" r="3.2"></circle>
-                  <path d="M5.5 18v-1a3 3 0 0 1 3-3"></path>
-                  <path d="M18.5 18v-1a3 3 0 0 0-3-3"></path>
-                </svg>
-              </span>
-              <h3>友だちを誘う</h3>
-            </div>
-            <p>初めての友だちも、しばらく離れていた友だちも。その通話が「<span class="nw">はじめまして・おかえり</span>」ミッションに直結、最大の貢献です。</p>
-          </article>
-          <article class="support-card">
-            <div class="card-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 17l5-5 4 3 7-8"></path>
-                  <path d="M15 7h5v5"></path>
-                  <path d="M4 21h16"></path>
-                </svg>
-              </span>
-              <h3>結果発表を追いかける</h3>
-            </div>
-            <p>毎日のポイントと順位をSNSで発表します。チェックして盛り上げてください。</p>
-          </article>
-        </div>
-      </section>
-
-      <div class="track-divider" aria-hidden="true"><span></span></div>
-
       <section class="section" id="schedule" aria-labelledby="schedule-title">
-        <p class="mini-kicker">SCHEDULE 06</p>
+        <p class="mini-kicker">SCHEDULE 05</p>
         <div class="inline-head">
           <span class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -3981,7 +4090,7 @@
         <svg class="puff" viewBox="0 0 90 62" aria-hidden="true">
           <path d="M17 37C7 35 4 24 11 17c5-5 13-4 17 1C31 8 43 4 52 11c5 4 7 9 6 15 10-2 20 5 20 16 0 10-8 17-18 17H20C10 59 3 51 6 43c2-4 6-6 11-6z" fill="currentColor" stroke="#FFFFFF" stroke-width="4"></path>
         </svg>
-        <p class="mini-kicker">PRIZE 07</p>
+        <p class="mini-kicker">PRIZE 06</p>
         <div class="trophy-badge" aria-hidden="true">
           <svg class="trophy-rays" viewBox="0 0 150 150">
             <g stroke="currentColor" stroke-width="5" stroke-linecap="round">
@@ -4051,84 +4160,59 @@
 
         <h3 class="pv-section-heading">収録をお願いしたいセリフは4つ</h3>
         <p class="pv-structure">全員共通の2つ＋自分のチームの2つ、あわせて4つです。<br>さらに余裕があれば「＋α 応援の声」もぜひ！</p>
-        <div class="cards support-grid pv-common-grid">
-          <article class="support-card">
-            <p class="pv-say-badge">セリフ 1</p>
-            <div class="card-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="8" y="3" width="8" height="12" rx="4"></rect>
-                  <path d="M5 11a7 7 0 0 0 14 0"></path>
-                  <path d="M12 18v3"></path>
-                  <path d="M9 21h6"></path>
-                </svg>
-              </span>
-              <h3>タイトルコール</h3>
+        <div class="cards pv-say-grid">
+          <article class="pv-say-card">
+            <div class="pv-say-head">
+              <span class="pv-say-num">セリフ 1</span>
+              <span class="pv-say-title">タイトルコール</span>
+              <span class="pv-say-time">目安 約3秒</span>
             </div>
-            <p class="pv-card-line">「BackStage大運動会！」</p>
-            <p class="pv-card-line">目安 約3秒</p>
-            <p class="pv-card-note">イベントロゴが大きく出るタイミングで使用。元気よく勢いのあるテンションで収録してください。</p>
+            <p class="pv-say-quote">「BackStage大運動会！」</p>
+            <p class="pv-say-note">イベントロゴが大きく出るタイミングで使用。元気よく勢いのあるテンションで！</p>
           </article>
-          <article class="support-card">
-            <p class="pv-say-badge">セリフ 2</p>
-            <div class="card-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 21V4"></path>
-                  <path d="M7 5h10l-2 3 2 3H7z"></path>
-                </svg>
-              </span>
-              <h3>スタートの掛け声</h3>
+          <article class="pv-say-card">
+            <div class="pv-say-head">
+              <span class="pv-say-num">セリフ 2</span>
+              <span class="pv-say-title">スタートの掛け声</span>
+              <span class="pv-say-time">目安 約2秒</span>
             </div>
-            <p class="pv-card-line">「よーい、どん！」</p>
-            <p class="pv-card-line">目安 約2秒</p>
-            <p class="pv-card-note">運動会のピストルを撃つタイミングで使用します。</p>
+            <p class="pv-say-quote">「よーい、どん！」</p>
+            <p class="pv-say-note">運動会のピストルを撃つタイミングで使用します。</p>
           </article>
         </div>
 
         <h3 class="pv-section-heading">セリフ 3・4 — チーム別セリフ</h3>
-        <div class="table-wrap pv-table-wrap">
-          <table class="rule-table pv-team-table">
-            <thead>
-              <tr>
-                <th scope="col">チーム</th>
-                <th scope="col">組名コール（約1秒）</th>
-                <th scope="col">チームの掛け声（約2秒）</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="team-swatch pv-team-red" aria-hidden="true"></span>赤組</td>
-                <td>「赤組！」</td>
-                <td>「よっしゃ行くぞ〜！」</td>
-              </tr>
-              <tr>
-                <td><span class="team-swatch pv-team-blue" aria-hidden="true"></span>青組</td>
-                <td>「青組！」</td>
-                <td>「最高のイベントにしよう！」</td>
-              </tr>
-              <tr>
-                <td><span class="team-swatch pv-team-yellow" aria-hidden="true"></span>黄組</td>
-                <td>「黄組！」</td>
-                <td>「みんな、お祭りだー！！」</td>
-              </tr>
-              <tr>
-                <td><span class="team-swatch pv-team-green" aria-hidden="true"></span>緑組</td>
-                <td>「緑組！」</td>
-                <td>「全力で楽しもう〜！」</td>
-              </tr>
-              <tr>
-                <td><span class="team-swatch pv-team-orange" aria-hidden="true"></span>橙組</td>
-                <td>「橙組！」</td>
-                <td>「ぜったい勝つぞ〜！」</td>
-              </tr>
-              <tr>
-                <td><span class="team-swatch pv-team-purple" aria-hidden="true"></span>紫組</td>
-                <td>「紫組！」</td>
-                <td>「準備はいいか〜！？」</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="pv-team-grid">
+          <div class="pv-team-say" style="--tc: #E53935;">
+            <p class="pv-team-name">赤組</p>
+            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「赤組！」</p>
+            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「よっしゃ行くぞ〜！」</p>
+          </div>
+          <div class="pv-team-say" style="--tc: #1E88E5;">
+            <p class="pv-team-name">青組</p>
+            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「青組！」</p>
+            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「最高のイベントにしよう！」</p>
+          </div>
+          <div class="pv-team-say" style="--tc: #FDD835;">
+            <p class="pv-team-name">黄組</p>
+            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「黄組！」</p>
+            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「みんな、お祭りだー！！」</p>
+          </div>
+          <div class="pv-team-say" style="--tc: #43A047;">
+            <p class="pv-team-name">緑組</p>
+            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「緑組！」</p>
+            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「全力で楽しもう〜！」</p>
+          </div>
+          <div class="pv-team-say" style="--tc: #FB8C00;">
+            <p class="pv-team-name">橙組</p>
+            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「橙組！」</p>
+            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「ぜったい勝つぞ〜！」</p>
+          </div>
+          <div class="pv-team-say" style="--tc: #8E24AA;">
+            <p class="pv-team-name">紫組</p>
+            <p class="pv-team-line"><span class="pv-team-label">組名コール（約1秒）</span>「紫組！」</p>
+            <p class="pv-team-line"><span class="pv-team-label">チームの掛け声（約2秒）</span>「準備はいいか〜！？」</p>
+          </div>
         </div>
         <p class="pv-table-note">各セリフは<strong>別データ</strong>で収録。テイクは2つ以上あると助かります（音割れ時の予備）。目安秒数に合わせて収録してください。</p>
 

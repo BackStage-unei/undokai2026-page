@@ -30,7 +30,6 @@ REQUIRED_IDS = [
     "points",
     "half-time",
     "survival",
-    "support",
     "schedule",
     "prize",
     "faq",
