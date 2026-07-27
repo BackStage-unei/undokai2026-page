@@ -351,6 +351,46 @@ def main() -> int:
     )
     ok &= print_result("お問い合わせ: Discord窓口", "PASS" if contact_ok else "FAIL")
 
+    cast_copy_required = [
+        "日々の待機・通話実績が、チームの得点になります",
+        "チームで力を合わせて勝利を目指しましょう",
+        "自分のチームとメンバーを確認してください",
+        "本ページは参加キャスト向けの案内です",
+    ]
+    cast_copy_forbidden = [
+        "あなたの通話が、チームの得点になる",
+        "キャストと共に勝利をつかめ",
+        "推しのチームを応援しよう",
+    ]
+    copy_ok = all(item in rendered_text for item in cast_copy_required) and not any(
+        item in rendered_text for item in cast_copy_forbidden
+    )
+    ok &= print_result("参加キャスト向け文言", "PASS" if copy_ok else "FAIL")
+
+    rules_text = visible_text(section_block(text, "rules"))
+    schedule_text = visible_text(section_block(text, "schedule"))
+    collection_terms = ["8/20(木)", "0:00〜20:00", "8/23(日・最終日)", "0:00〜21:00"]
+    collection_ok = all(term in rules_text for term in collection_terms) and all(
+        term in schedule_text for term in collection_terms
+    )
+    ok &= print_result(
+        "集計時間: デイリーミッションとスケジュール",
+        "PASS" if collection_ok else "FAIL",
+    )
+
+    prize_text = visible_text(section_block(text, "prize"))
+    prize_terms = [
+        "賞品は優勝・準優勝の2種類",
+        "優勝賞品",
+        "準優勝賞品",
+        "集合SDイラスト",
+        "集合立ち絵ポスター",
+    ]
+    ok &= print_result(
+        "賞品2種類の明示",
+        "PASS" if all(term in prize_text for term in prize_terms) else "FAIL",
+    )
+
     teams_block = section_block(text, "teams")
     leader_ok = (
         "運営リーダーの割り当ては後日発表" in teams_block
@@ -360,7 +400,7 @@ def main() -> int:
     ok &= print_result("チーム発表: リーダー後日発表の注記", "PASS" if leader_ok else "FAIL")
 
     prize_block = section_block(text, "prize")
-    prize_needed = ["自遊空間", "掲出予定", "調整中", "優勝チーム", "準優勝チーム", "パネル設置", "ブースPOP", "集合立ち絵ポスター"]
+    prize_needed = ["自遊空間", "掲出予定", "調整中", "優勝賞品", "準優勝賞品", "パネル設置", "ブースPOP", "集合立ち絵ポスター"]
     prize_missing = [term for term in prize_needed if term not in prize_block]
     ok &= print_result(
         "特典: 自遊空間掲出（優勝/準優勝の内訳）",

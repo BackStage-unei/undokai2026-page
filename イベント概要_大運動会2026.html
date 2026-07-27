@@ -2220,6 +2220,46 @@
       text-align: left;
     }
 
+    .collection-window-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      max-width: 840px;
+      margin: 18px auto 0;
+    }
+
+    .collection-window-card {
+      display: grid;
+      gap: 3px;
+      padding: 14px 16px;
+      color: var(--royal-deep);
+      background: rgba(255, 216, 75, 0.25);
+      border: 2px solid var(--yellow);
+      border-radius: 14px;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+    }
+
+    .collection-window-card strong,
+    .collection-window-card span {
+      font-weight: 800;
+    }
+
+    .collection-window-card small {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .collection-window-note {
+      max-width: 840px;
+      margin: 8px auto 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
     .tally-table {
       display: grid;
       gap: 10px;
@@ -3154,6 +3194,10 @@
         width: min(1120px, calc(100% - 56px));
       }
 
+      .collection-window-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .prize-rank-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -3512,7 +3556,7 @@
             <path d="M17 37C7 35 4 24 11 17c5-5 13-4 17 1C31 8 43 4 52 11c5 4 7 9 6 15 10-2 20 5 20 16 0 10-8 17-18 17H20C10 59 3 51 6 43c2-4 6-6 11-6z" fill="currentColor" stroke="#FFFFFF" stroke-width="4"></path>
           </svg>
         </div>
-        <p class="lead">チームで挑む、7日間の本気の運動会。あなたの通話が、チームの得点になる。</p>
+        <p class="lead">チームで挑む、7日間の大運動会。日々の待機・通話実績が、チームの得点になります。</p>
         <div class="date-pill">イベント開催期間：8/17(月) 〜 8/23(日)</div>
         <p class="date-sub">全7日間</p>
         <nav class="anchor-nav" aria-label="ページ内ナビゲーション">
@@ -3535,12 +3579,12 @@
 
     <main class="wrap">
       <section class="section with-checker" id="about" aria-label="このイベントについて">
-        <div class="catch">待機も通話も全部が勝負！キャストと共に勝利をつかめ！</div>
+        <div class="catch">待機も通話もすべてが勝負。チームで力を合わせて勝利を目指しましょう！</div>
         <p class="mini-kicker">ABOUT</p>
         <ol class="about-lines">
           <li><span class="zekken">01</span><span>前回大好評だった<span class="nw">BackStage</span>大運動会、<strong class="kw">待望の第2回</strong>。</span></li>
           <li><span class="zekken">02</span><span>キャストがチームに分かれ、7日間、毎日の「<strong class="kw"><span class="nw">デイリーミッション</span></strong>」で競い合うチーム対抗戦。</span></li>
-          <li><span class="zekken">03</span><span>ユーザーのみなさんの通話と応援が、<strong class="kw">そのままチームの得点に</strong>なります。</span></li>
+          <li><span class="zekken">03</span><span>ユーザーのみなさんとの通話と応援が、<strong class="kw">そのままチームの得点に</strong>なります。</span></li>
         </ol>
         <ul class="about-chips" aria-label="チーム編成の補足">
           <li>
@@ -3559,7 +3603,7 @@
       <section class="section" id="teams" aria-labelledby="teams-title">
         <p class="mini-kicker">TEAMS</p>
         <h2 class="bar-title" id="teams-title">チーム発表</h2>
-        <p>全6チーム・各9名。チームカラーを覚えて、推しのチームを応援しよう！</p>
+        <p>全6チーム・各9名。自分のチームとメンバーを確認してください。</p>
         <!-- 画像差し込み時: .member-photo 内の svg を <img src="data:..." alt="キャスト名"> に差し替え -->
         <div class="team-roster">
           <article class="team-card" style="--team-color: #E53935;">
@@ -3656,6 +3700,19 @@
         <p class="mini-kicker">RULE 01</p>
         <h2 class="bar-title" id="rules-title">デイリーミッション</h2>
         <p><span class="nw">デイリーミッション</span>は、<strong class="kw">毎日同じこの3つ</strong>。1日ごとに集計・リセットされ、チームで3つのクリアを目指します。</p>
+        <div class="collection-window-grid" aria-label="通常と異なる集計時間">
+          <div class="collection-window-card">
+            <strong>8/20(木)</strong>
+            <span>集計 0:00〜20:00</span>
+            <small>20:00締め／21:00中間発表</small>
+          </div>
+          <div class="collection-window-card">
+            <strong>8/23(日・最終日)</strong>
+            <span>集計 0:00〜21:00</span>
+            <small>21:00締め／21:00最終結果発表</small>
+          </div>
+        </div>
+        <p class="collection-window-note">通常日は0:00〜23:59で集計します。8/20と最終日のみ締め時間が異なります。</p>
         <div class="cards">
           <article class="mission-card">
             <div class="card-head">
@@ -4157,17 +4214,30 @@
           </li>
           <li>
             <span class="timeline-date">8.20 THU</span>
-            <span class="timeline-item-text"><span class="nw">中間発表</span>クイズ配信（21:00〜）</span>
+            <span class="timeline-item-text">20:00集計締め／21:00〜<span class="nw">中間発表</span>クイズ配信</span>
           </li>
           <li>
             <span class="timeline-date">8.23 SUN</span>
-            <span class="timeline-item-text">最終日・21:00〜<span class="nw">最終結果発表</span></span>
+            <span class="timeline-item-text">最終日・21:00集計締め／21:00〜<span class="nw">最終結果発表</span></span>
           </li>
           <li>
             <span class="timeline-date">後日</span>
             <span class="timeline-item-text">表彰・特典のお届け</span>
           </li>
         </ol>
+        <div class="collection-window-grid" aria-label="通常と異なる集計時間">
+          <div class="collection-window-card">
+            <strong>8/20(木)</strong>
+            <span>集計 0:00〜20:00</span>
+            <small>20:00締め／21:00中間発表</small>
+          </div>
+          <div class="collection-window-card">
+            <strong>8/23(日・最終日)</strong>
+            <span>集計 0:00〜21:00</span>
+            <small>21:00締め／21:00最終結果発表</small>
+          </div>
+        </div>
+        <p class="collection-window-note">通常日は0:00〜23:59で集計します。8/20と最終日のみ締め時間が異なります。</p>
         <div class="tally-table" aria-label="日別の集計タイムテーブル">
           <h3 class="tally-title">日別の集計タイムテーブル</h3>
           <div class="tally-axis" aria-hidden="true">
@@ -4322,20 +4392,22 @@
           <h2 class="bar-title" id="prize-title">特典</h2>
         </div>
         <div class="prize-content">
-          <p class="prize-main">優勝チームには、チームメンバー全員の描き下ろし「<strong><span class="nw">集合SDイラスト</span></strong>」を制作します。</p>
+          <p class="prize-main">賞品は<strong>優勝・準優勝の2種類</strong>です。</p>
           <p class="prize-sub">さらに、上位チームのイラストをネットカフェ「<strong><span class="nw">自遊空間</span></strong>」の店舗に掲出予定！<br>東京都内の店舗にて、今秋・約1ヶ月間を予定しています。</p>
           <div class="prize-rank-grid">
             <div class="prize-rank-card prize-rank-gold">
-              <p class="prize-rank-label">優勝チーム</p>
+              <p class="prize-rank-label">優勝賞品</p>
               <ul class="prize-rank-list">
+                <li>チームメンバー全員の描き下ろし<strong>集合SDイラスト</strong>を制作</li>
                 <li>集合SDイラストを店舗に<strong>パネル設置</strong></li>
                 <li>店内ブース席に<strong>チームのブースPOPを掲出</strong></li>
               </ul>
             </div>
             <div class="prize-rank-card prize-rank-silver">
-              <p class="prize-rank-label">準優勝チーム</p>
+              <p class="prize-rank-label">準優勝賞品</p>
               <ul class="prize-rank-list">
-                <li>チームの<strong>集合立ち絵ポスター</strong>（既存立ち絵使用）を<br>ブースPOPとして店内ブース席に掲出</li>
+                <li>既存立ち絵を使用した<strong>集合立ち絵ポスター</strong>を制作</li>
+                <li>ブースPOPとして店内ブース席に掲出</li>
               </ul>
             </div>
           </div>
@@ -4539,7 +4611,7 @@
     <footer class="site-footer">
       <div class="wrap footer-inner">
         <p class="footer-title">大運動会2026 — <span class="nw">BackStage</span></p>
-        <p class="footer-note">本ページの内容は一部調整中の項目を含みます。最新情報は公式のお知らせをご確認ください。</p>
+        <p class="footer-note">本ページは参加キャスト向けの案内です。一部調整中の項目がありますので、最新情報は運営からの連絡をご確認ください。</p>
       </div>
     </footer>
   </div>
