@@ -3148,35 +3148,34 @@
     }
 
     #pv-voice .pv-say-head {
+      position: relative;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
       gap: 8px 12px;
       width: 100%;
-      padding: 11px 14px;
+      padding: 11px 48px;
       background: linear-gradient(90deg, var(--royal) 0%, #7A8CFF 100%);
     }
 
     #pv-voice .pv-completion-label {
+      position: absolute;
+      top: 50%;
+      right: 10px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      min-height: 34px;
-      padding: 5px 10px;
-      color: var(--white);
-      background: rgba(255, 255, 255, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.72);
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 900;
-      line-height: 1;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      transform: translateY(-50%);
       cursor: pointer;
     }
 
     #pv-voice .pv-completion-check {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       margin: 0;
       accent-color: #237A4D;
       cursor: pointer;
@@ -5582,7 +5581,6 @@
 
           const label = document.createElement("label");
           const checkbox = document.createElement("input");
-          const labelText = document.createElement("span");
           const updateCardState = () => {
             card.classList.toggle("is-complete", checkbox.checked);
           };
@@ -5592,8 +5590,9 @@
           checkbox.type = "checkbox";
           checkbox.dataset.pvLine = lineNumber;
           checkbox.checked = completionState[lineNumber] === true;
-          labelText.textContent = "完了";
-          label.append(checkbox, labelText);
+          checkbox.setAttribute("aria-label", `セリフ${lineNumber}を完了にする`);
+          label.title = "完了チェック";
+          label.append(checkbox);
           head.append(label);
           updateCardState();
 

@@ -75,10 +75,28 @@ def run_focused_browser_check() -> tuple[bool, dict[str, bool] | str]:
       const firstCard = checks[0]?.closest(".pv-say-card");
       const firstCardStyle = firstCard ? getComputedStyle(firstCard) : null;
       const lines = checks.map((check) => check.dataset.pvLine);
+      const completionControlLayouts = checks.map((check) => {
+        const label = check.closest(".pv-completion-label");
+        const head = check.closest(".pv-say-head");
+        const labelRect = label?.getBoundingClientRect();
+        const headRect = head?.getBoundingClientRect();
+        return {
+          inputOnly:
+            label?.children.length === 1
+            && label?.textContent.trim() === "",
+          atRight:
+            getComputedStyle(label).position === "absolute"
+            && Math.abs(headRect.right - labelRect.right) <= 16,
+        };
+      });
       const results = {
         fiveCompletionChecks:
           checks.length === 5
           && JSON.stringify(lines) === JSON.stringify(["1", "2", "3", "4", "5"]),
+        completionControlIsSecondary:
+          completionControlLayouts.every((layout) =>
+            layout.inputOnly && layout.atRight
+          ),
         completionTurnsGreen:
           checks[0]?.checked === true
           && firstCard?.classList.contains("is-complete") === true
