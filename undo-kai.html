@@ -2831,6 +2831,143 @@
       margin: 0 auto 22px;
     }
 
+    #pv-voice .pv-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto 10px;
+    }
+
+    #pv-voice .pv-preview-link {
+      position: relative;
+      display: block;
+      overflow: hidden;
+      aspect-ratio: 1270 / 724;
+      background: var(--white);
+      border: 2px solid var(--royal-deep);
+      border-radius: 12px;
+      box-shadow: 0 5px 14px rgba(31, 56, 110, 0.16);
+    }
+
+    #pv-voice .pv-preview-link::after {
+      content: "拡大";
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      padding: 4px 9px;
+      color: var(--white);
+      background: rgba(17, 29, 84, 0.82);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.16s ease, transform 0.16s ease;
+    }
+
+    #pv-voice .pv-preview-link:hover::after,
+    #pv-voice .pv-preview-link:focus-visible::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #pv-voice .pv-preview-link:focus-visible {
+      outline: 3px solid var(--royal);
+      outline-offset: 3px;
+    }
+
+    #pv-voice .pv-preview-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.18s ease;
+    }
+
+    #pv-voice .pv-preview-link:hover .pv-preview-image {
+      transform: scale(1.015);
+    }
+
+    #pv-voice .pv-preview-note {
+      max-width: 900px;
+      margin: 0 auto 22px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    body.pv-preview-open {
+      overflow: hidden;
+    }
+
+    #pv-preview-dialog {
+      inset: 0;
+      display: none;
+      width: 100vw;
+      max-width: none;
+      height: 100dvh;
+      max-height: none;
+      margin: 0;
+      padding: 56px 16px 20px;
+      place-items: center;
+      overflow: hidden;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    #pv-preview-dialog[open] {
+      display: grid;
+    }
+
+    #pv-preview-dialog::backdrop {
+      background: rgba(6, 12, 38, 0.90);
+      backdrop-filter: blur(4px);
+    }
+
+    #pv-preview-dialog .pv-preview-dialog-image {
+      display: block;
+      width: auto;
+      max-width: min(1320px, calc(100vw - 32px));
+      height: auto;
+      max-height: calc(100dvh - 76px);
+      margin: auto;
+      background: #080C26;
+      border-radius: 12px;
+      box-shadow: 0 18px 52px rgba(0, 0, 0, 0.46);
+      object-fit: contain;
+    }
+
+    #pv-preview-dialog .pv-preview-dialog-close {
+      position: fixed;
+      top: max(12px, env(safe-area-inset-top));
+      right: max(12px, env(safe-area-inset-right));
+      z-index: 1;
+      display: inline-grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      padding: 0;
+      color: var(--white);
+      background: rgba(17, 29, 84, 0.92);
+      border: 2px solid rgba(255, 255, 255, 0.78);
+      border-radius: 50%;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.32);
+      cursor: pointer;
+      font: inherit;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    #pv-preview-dialog .pv-preview-dialog-close:focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 3px;
+    }
+
     #pv-voice .pv-deadline {
       display: grid;
       justify-items: center;
@@ -3955,6 +4092,10 @@
         </nav>
       </div>
     </dialog>
+    <dialog id="pv-preview-dialog" aria-label="制作途中PV画像の拡大表示">
+      <button class="pv-preview-dialog-close" id="pv-preview-dialog-close" type="button" aria-label="拡大画像を閉じる">×</button>
+      <img class="pv-preview-dialog-image" id="pv-preview-dialog-image" alt="">
+    </dialog>
     <span class="cloud cloud-one" aria-hidden="true"></span>
     <span class="cloud cloud-two" aria-hidden="true"></span>
     <span class="cloud cloud-three" aria-hidden="true"></span>
@@ -4825,6 +4966,21 @@
       <section class="section" id="pv-voice" aria-labelledby="pv-voice-title">
         <p class="mini-kicker">PV VOICE</p>
         <h2 class="bar-title" id="pv-voice-title">PV音声収録のお願い</h2>
+        <div class="pv-preview-grid" aria-label="制作途中PVのスクリーンショット">
+          <a class="pv-preview-link" href="assets/pv-preview/pv-preview-01.png" target="_blank" rel="noopener noreferrer" data-pv-preview>
+            <img class="pv-preview-image" src="assets/pv-preview/pv-preview-01.png" alt="制作途中PVの黄色い運動会フレーム" width="1270" height="724" loading="lazy" decoding="async">
+          </a>
+          <a class="pv-preview-link" href="assets/pv-preview/pv-preview-02.png" target="_blank" rel="noopener noreferrer" data-pv-preview>
+            <img class="pv-preview-image" src="assets/pv-preview/pv-preview-02.png" alt="制作途中PVの赤組集合シーン" width="1270" height="724" loading="lazy" decoding="async">
+          </a>
+          <a class="pv-preview-link" href="assets/pv-preview/pv-preview-03.png" target="_blank" rel="noopener noreferrer" data-pv-preview>
+            <img class="pv-preview-image" src="assets/pv-preview/pv-preview-03.png" alt="制作途中PVの赤組コールシーン" width="1270" height="724" loading="lazy" decoding="async">
+          </a>
+          <a class="pv-preview-link" href="assets/pv-preview/pv-preview-04.png" target="_blank" rel="noopener noreferrer" data-pv-preview>
+            <img class="pv-preview-image" src="assets/pv-preview/pv-preview-04.png" alt="制作途中PVの競技場シーン" width="1270" height="724" loading="lazy" decoding="async">
+          </a>
+        </div>
+        <p class="pv-preview-note">（※画像は制作途中の映像のスクリーンショットです。制作したいPVのイメージとしてご覧ください。使用している立ち絵素材などは仮置きのものです。）</p>
         <p class="lead">イベントのPVを現在作成中です。その中で、キャストのみなさんの声を映像内で使用したいと考えています。<br>もし参加可能な方がいらっしゃいましたら、下記セリフを期限までにご提出いただけると嬉しいです！</p>
         <p class="notice pv-notice"><strong>参加は強制ではありません。</strong>お時間に余裕のある方は、ぜひご協力をお願いします！</p>
 
@@ -5154,8 +5310,46 @@
       const menuDialog = document.getElementById("mobile-menu");
       const closeButton = document.getElementById("menu-close");
       const menuLinks = menuDialog.querySelectorAll(".mobile-menu-link");
+      const pvPreviewDialog = document.getElementById("pv-preview-dialog");
+      const pvPreviewDialogImage = document.getElementById("pv-preview-dialog-image");
+      const pvPreviewDialogClose = document.getElementById("pv-preview-dialog-close");
+      const pvPreviewLinks = document.querySelectorAll("[data-pv-preview]");
       const teamCards = document.querySelectorAll("#teams .team-card");
       const pvTeamCards = document.querySelectorAll("#pv-voice [data-team-index]");
+      let lastPvPreviewTrigger = null;
+
+      pvPreviewLinks.forEach((link) => {
+        link.addEventListener("click", (event) => {
+          if (!pvPreviewDialog || !pvPreviewDialogImage) {
+            return;
+          }
+
+          event.preventDefault();
+          lastPvPreviewTrigger = link;
+          pvPreviewDialogImage.src = link.href;
+          pvPreviewDialogImage.alt =
+            link.querySelector("img")?.alt ?? "制作途中PVの拡大画像";
+          pvPreviewDialog.showModal();
+          document.body.classList.add("pv-preview-open");
+          pvPreviewDialogClose?.focus();
+        });
+      });
+
+      pvPreviewDialogClose?.addEventListener("click", () => {
+        pvPreviewDialog?.close();
+      });
+
+      pvPreviewDialog?.addEventListener("click", (event) => {
+        if (event.target === pvPreviewDialog) {
+          pvPreviewDialog.close();
+        }
+      });
+
+      pvPreviewDialog?.addEventListener("close", () => {
+        document.body.classList.remove("pv-preview-open");
+        pvPreviewDialogImage?.removeAttribute("src");
+        lastPvPreviewTrigger?.focus();
+      });
 
       pvTeamCards.forEach((pvTeamCard) => {
         const teamIndex = Number(pvTeamCard.dataset.teamIndex);
