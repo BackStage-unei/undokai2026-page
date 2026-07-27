@@ -2201,7 +2201,13 @@
     }
 
     .flow-branch.drop {
+      flex-wrap: wrap;
+      gap: 0 0.35em;
       background: #B73434;
+    }
+
+    .flow-branch.drop > span {
+      white-space: nowrap;
     }
 
     .flow-arrow {
@@ -3125,6 +3131,20 @@
       border: 2px solid var(--card-line);
       border-radius: 18px;
       box-shadow: var(--shadow-card);
+      transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+
+    #pv-voice .pv-say-card.is-complete {
+      background: #EFFAF3;
+      border-color: #2B7A4C;
+      box-shadow: 0 8px 20px rgba(43, 122, 76, 0.18);
+    }
+
+    #pv-voice .pv-say-card.is-complete .pv-say-head {
+      background: linear-gradient(90deg, #237A4D 0%, #45A66F 100%);
     }
 
     #pv-voice .pv-say-head {
@@ -3136,6 +3156,35 @@
       width: 100%;
       padding: 11px 14px;
       background: linear-gradient(90deg, var(--royal) 0%, #7A8CFF 100%);
+    }
+
+    #pv-voice .pv-completion-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      padding: 5px 10px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    #pv-voice .pv-completion-check {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: #237A4D;
+      cursor: pointer;
+    }
+
+    #pv-voice .pv-completion-check:focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 2px;
     }
 
     #pv-voice .pv-say-num {
@@ -4709,7 +4758,7 @@
           </svg>
           <div class="flow-branches">
             <div class="flow-node flow-branch keep">10pt以上 → レース続行</div>
-            <div class="flow-node flow-branch drop"><span class="nw">10pt未満</span> → 脱落（<span class="nw">中間発表</span>に不参加）</div>
+            <div class="flow-node flow-branch drop"><span>10pt未満 → 脱落</span><span>（中間発表に不参加）</span></div>
           </div>
         </div>
         <div class="survival-panels">
@@ -5291,7 +5340,7 @@
     <footer class="site-footer">
       <div class="wrap footer-inner">
         <p class="footer-title">大運動会2026 — <span class="nw">BackStage</span></p>
-        <p class="footer-note">本ページは参加キャスト向けの案内です。一部調整中の項目がありますので、最新情報は運営からの連絡をご確認ください。</p>
+        <p class="footer-note">本ページは参加キャスト向けの案内です。外部への共有はしないでください。<br>一部調整中の項目がありますので、最新情報は運営からの連絡をご確認ください。適宜本ページも更新します。</p>
       </div>
     </footer>
   </div>
@@ -5307,6 +5356,7 @@
       const pvPreviewLinks = document.querySelectorAll("[data-pv-preview]");
       const teamCards = document.querySelectorAll("#teams .team-card");
       const pvTeamCards = document.querySelectorAll("#pv-voice [data-team-index]");
+      const pvCompletionStorageKey = "backstage-undokai-2026-pv-completion";
       let lastPvPreviewTrigger = null;
 
       pvPreviewLinks.forEach((link) => {
@@ -5510,6 +5560,59 @@
       };
 
       enhancePvTeamBranches();
+
+      const enhancePvCompletionChecks = () => {
+        const cards = [...document.querySelectorAll("#pv-voice .pv-say-card")];
+        let completionState = {};
+
+        try {
+          completionState =
+            JSON.parse(window.localStorage.getItem(pvCompletionStorageKey) ?? "{}");
+        } catch {
+          completionState = {};
+        }
+
+        cards.forEach((card) => {
+          const head = card.querySelector(".pv-say-head");
+          const numberText = card.querySelector(".pv-say-num")?.textContent ?? "";
+          const lineNumber = numberText.match(/\d+/)?.[0];
+          if (!head || !lineNumber) {
+            return;
+          }
+
+          const label = document.createElement("label");
+          const checkbox = document.createElement("input");
+          const labelText = document.createElement("span");
+          const updateCardState = () => {
+            card.classList.toggle("is-complete", checkbox.checked);
+          };
+
+          label.className = "pv-completion-label";
+          checkbox.className = "pv-completion-check";
+          checkbox.type = "checkbox";
+          checkbox.dataset.pvLine = lineNumber;
+          checkbox.checked = completionState[lineNumber] === true;
+          labelText.textContent = "完了";
+          label.append(checkbox, labelText);
+          head.append(label);
+          updateCardState();
+
+          checkbox.addEventListener("change", () => {
+            completionState[lineNumber] = checkbox.checked;
+            updateCardState();
+            try {
+              window.localStorage.setItem(
+                pvCompletionStorageKey,
+                JSON.stringify(completionState)
+              );
+            } catch {
+              // 保存できない環境でも、ページ内のチェック操作は継続する。
+            }
+          });
+        });
+      };
+
+      enhancePvCompletionChecks();
       enhanceTeamRosterToggles();
 
       const sectionToggleConfig = [
