@@ -501,14 +501,103 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
           window.dispatchEvent(new HashChangeEvent("hashchange"));
           results.hashNavigation =
             document.querySelector('[data-section-id="faq"]').open;
-          const rosters = [...document.querySelectorAll(".pv-team-members")];
-          results.enhancedRosters = rosters.length === 6
+          const teamRosterToggles = [
+            ...document.querySelectorAll("#teams details.team-card-toggle"),
+          ];
+          results.teamRosterToggles = teamRosterToggles.length === 6
+            && teamRosterToggles.every((details) =>
+              !details.open
+              && details.querySelector(":scope > summary.team-card-summary")
+              && details.querySelectorAll(".member img").length === 9
+            );
+          teamRosterToggles[0]?.querySelector("summary")?.click();
+          results.teamRosterToggleInteraction =
+            teamRosterToggles[0]?.open === true
+            && teamRosterToggles[0].querySelectorAll(".member img").length === 9;
+
+          const branchCards = [
+            ...document.querySelectorAll("#pv-voice .pv-branch-card"),
+          ];
+          results.pvTeamBranches = branchCards.length === 2
+            && branchCards.every((card) => {
+              const buttons = [...card.querySelectorAll(".pv-team-choice")];
+              const panels = [...card.querySelectorAll('[role="region"]')];
+              const visiblePanels = panels.filter((panel) => !panel.hidden);
+              return buttons.length === 6
+                && panels.length === 6
+                && visiblePanels.length === 1
+                && visiblePanels[0].querySelectorAll(".pv-team-members img").length === 9
+                && buttons[0].getAttribute("aria-pressed") === "true";
+            });
+          branchCards[0]?.querySelectorAll(".pv-team-choice")[1]?.click();
+          results.pvTeamBranchInteraction =
+            branchCards[0]?.querySelectorAll(".pv-team-choice")[1]
+              ?.getAttribute("aria-pressed") === "true"
+            && branchCards[0]?.querySelectorAll('[role="region"]')[1]
+              ?.hidden === false;
+
+          const rosters = [
+            ...document.querySelectorAll(
+              '#pv-voice .pv-branch-card [role="region"]:not([hidden]) .pv-team-members'
+            ),
+          ];
+          results.enhancedRosters = rosters.length === 2
             && rosters.every((roster) =>
               roster.querySelectorAll("img").length === 9
-              && roster.querySelectorAll(
-                ".pv-team-members-fallback:not([hidden]) li"
-              ).length === 0
             );
+
+          const rulesSection = document.getElementById("rules");
+          const scheduleSection = document.getElementById("schedule");
+          const prizeSection = document.getElementById("prize");
+          const rulesText = rulesSection.textContent.replace(/\s+/g, " ");
+          const scheduleText = scheduleSection.textContent.replace(/\s+/g, " ");
+          const fourthDay = [...scheduleSection.querySelectorAll(".tally-row")]
+            .find((row) => row.textContent.includes("8/20"));
+          results.collectionCopyStructure =
+            !rulesSection.querySelector(".collection-window-grid")
+            && rulesText.includes(
+              "中間発表・最終結果発表の都合により、8/20は0:00〜20:00、8/23は0:00〜21:00で集計します。"
+            )
+            && !scheduleSection.querySelector(".collection-window-grid")
+            && !scheduleSection.querySelector(".collection-window-note")
+            && !scheduleSection.querySelector(".tally-note")
+            && fourthDay?.textContent.includes("20:00締め")
+            && !scheduleText.includes(
+              "集計の締め時間は、配信スケジュールに合わせて変わります。"
+            );
+
+          const rankGrid = prizeSection.querySelector(".prize-rank-grid");
+          const prizeSub = prizeSection.querySelector(".prize-sub");
+          const prizeLink = prizeSection.querySelector(".prize-detail-link");
+          results.prizeSummaryFirst =
+            prizeSection.querySelector(".prize-rank-gold .prize-rank-summary")
+              ?.textContent.includes("描き下ろし集合SDイラスト")
+            && prizeSection.querySelector(".prize-rank-silver .prize-rank-summary")
+              ?.textContent.includes("集合立ち絵ポスター")
+            && Boolean(
+              rankGrid.compareDocumentPosition(prizeSub)
+                & Node.DOCUMENT_POSITION_FOLLOWING
+            )
+            && Boolean(
+              prizeSub.compareDocumentPosition(prizeLink)
+                & Node.DOCUMENT_POSITION_FOLLOWING
+            );
+
+          const recordingTips = document.querySelector("#pv-voice .pv-recording-tips");
+          const routeA = document.querySelector("#pv-voice .pv-route-a");
+          const routeB = document.querySelector("#pv-voice .pv-route-b");
+          results.recordingMethodOrder =
+            Boolean(
+              recordingTips.compareDocumentPosition(routeA)
+                & Node.DOCUMENT_POSITION_FOLLOWING
+            )
+            && Boolean(
+              routeA.compareDocumentPosition(routeB)
+                & Node.DOCUMENT_POSITION_FOLLOWING
+            )
+            && routeA.querySelector(".pv-submit-btn")
+            && !document.querySelector("#pv-voice .section-toggle-content > .pv-submit");
+
           toggles.forEach((details) => {
             details.open = true;
           });
@@ -938,16 +1027,21 @@ def main() -> int:
 
     rules_text = visible_text(section_block(text, "rules"))
     schedule_text = visible_text(section_block(text, "schedule"))
-    collection_terms = ["8/20(木)", "0:00〜20:00", "8/23(日・最終日)", "0:00〜21:00"]
-    collection_ok = all(term in rules_text for term in collection_terms) and all(
-        term in schedule_text for term in collection_terms
-    )
     rules_notice_match = re.search(r'<p class="notice">(.*?)</p>', section_block(text, "rules"), re.S)
     rules_notice_text = visible_text(rules_notice_match.group(1)) if rules_notice_match else ""
+    collection_notice = (
+        "中間発表・最終結果発表の都合により、"
+        "8/20は0:00〜20:00、8/23は0:00〜21:00で集計します。"
+    )
     collection_ok = (
-        collection_ok
-        and "8/20は20:00締め" in rules_notice_text
-        and "8/23は21:00締め" in rules_notice_text
+        collection_notice in rules_notice_text
+        and 'class="collection-window-grid"' not in section_block(text, "rules")
+        and 'class="collection-window-grid"' not in section_block(text, "schedule")
+        and 'class="collection-window-note"' not in section_block(text, "schedule")
+        and 'class="tally-note"' not in section_block(text, "schedule")
+        and "20:00締め" in schedule_text
+        and "最終日・21:00集計締め" in schedule_text
+        and "集計の締め時間は、配信スケジュールに合わせて変わります。" not in schedule_text
     )
     ok &= print_result(
         "集計時間: デイリーミッションとスケジュール",
@@ -1522,8 +1616,10 @@ def main() -> int:
                 len(re.findall(r"<img\b", group, re.I)) for group in pv_member_groups
             ]
             ok &= print_result(
-                "PV音声: 描画後6チーム×9画像",
-                "PASS" if pv_member_counts == [9, 9, 9, 9, 9, 9] else "FAIL",
+                "PV音声: セリフ4・5の選択チーム各9画像",
+                "PASS"
+                if pv_member_counts == [9, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0]
+                else "FAIL",
                 str(pv_member_counts),
             )
 
@@ -1539,7 +1635,14 @@ def main() -> int:
                 "menuNavigation",
                 "menuDismissalFocus",
                 "hashNavigation",
+                "teamRosterToggles",
+                "teamRosterToggleInteraction",
+                "pvTeamBranches",
+                "pvTeamBranchInteraction",
                 "enhancedRosters",
+                "collectionCopyStructure",
+                "prizeSummaryFirst",
+                "recordingMethodOrder",
                 "mobileType",
                 "noHorizontalOverflow",
             }

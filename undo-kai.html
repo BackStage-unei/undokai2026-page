@@ -975,6 +975,42 @@
       font-weight: 900;
     }
 
+    details.team-card-toggle {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .team-card-summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 60px;
+      margin: 0;
+      padding: 14px 48px;
+      color: var(--ink);
+      background: var(--white);
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .team-card-summary::after {
+      right: 20px;
+      border-top-color: var(--team-color);
+    }
+
+    .team-card-toggle[open] > .team-card-summary {
+      border-bottom: 1px solid var(--card-line);
+    }
+
+    .team-card-content {
+      padding: 18px 18px 20px;
+    }
+
     .team-swatch {
       width: 18px;
       height: 18px;
@@ -3118,6 +3154,79 @@
       border-radius: 50%;
     }
 
+    #pv-voice .pv-branch-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+      max-width: 900px;
+      margin: 18px auto 28px;
+    }
+
+    #pv-voice .pv-branch-card {
+      padding-bottom: 20px;
+    }
+
+    #pv-voice .pv-team-switcher {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 0 14px;
+    }
+
+    #pv-voice .pv-team-choice {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 0;
+      min-height: 44px;
+      padding: 8px 6px;
+      color: var(--royal-deep);
+      background: var(--white);
+      border: 2px solid var(--tc, var(--royal));
+      border-radius: 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.3;
+      cursor: pointer;
+    }
+
+    #pv-voice .pv-team-choice::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      flex: 0 0 10px;
+      background: var(--tc, var(--royal));
+      border: 1px solid rgba(34, 48, 74, 0.18);
+      border-radius: 50%;
+    }
+
+    #pv-voice .pv-team-choice[aria-pressed="true"] {
+      color: var(--ink);
+      background: color-mix(in srgb, var(--tc, var(--royal)) 14%, white);
+      box-shadow: inset 0 0 0 2px var(--tc, var(--royal));
+    }
+
+    #pv-voice .pv-team-choice:focus-visible {
+      outline: 3px solid var(--royal);
+      outline-offset: 2px;
+    }
+
+    #pv-voice .pv-team-panel {
+      margin: 2px 14px 0;
+      padding: 16px 12px 0;
+      border-top: 1px solid var(--card-line);
+    }
+
+    #pv-voice .pv-team-panel[hidden] {
+      display: none;
+    }
+
+    #pv-voice .pv-team-panel .pv-team-members {
+      margin-bottom: 12px;
+    }
+
     #pv-voice .pv-file-names {
       display: grid;
       gap: 4px;
@@ -3204,6 +3313,15 @@
 
     .prize-rank-silver .prize-rank-label {
       background: #7E8DA6;
+    }
+
+    .prize-rank-summary {
+      margin: 0 auto 10px;
+      color: var(--royal-deep);
+      font-size: clamp(18px, 4.8vw, 22px);
+      font-weight: 900;
+      line-height: 1.45;
+      text-wrap: balance;
     }
 
     .prize-rank-list {
@@ -3350,8 +3468,12 @@
     #pv-voice .pv-recording-tips {
       display: block;
       max-width: 760px;
-      margin: 0 auto 28px;
+      margin: 0 auto 18px;
       text-align: left;
+    }
+
+    #pv-voice .pv-submit-detail .pv-submit {
+      margin-top: 12px;
     }
 
     #pv-voice .pv-submit {
@@ -3461,6 +3583,10 @@
 
       #pv-voice .pv-team-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      #pv-voice .pv-branch-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .hero {
@@ -3979,19 +4105,6 @@
         <p class="mini-kicker">RULE 01</p>
         <h2 class="bar-title" id="rules-title">デイリーミッション</h2>
         <p><span class="nw">デイリーミッション</span>は、<strong class="kw">毎日同じこの3つ</strong>。1日ごとに集計・リセットされ、チームで3つのクリアを目指します。</p>
-        <div class="collection-window-grid" aria-label="通常と異なる集計時間">
-          <div class="collection-window-card">
-            <strong>8/20(木)</strong>
-            <span>集計 0:00〜20:00</span>
-            <small>20:00締め／21:00中間発表</small>
-          </div>
-          <div class="collection-window-card">
-            <strong>8/23(日・最終日)</strong>
-            <span>集計 0:00〜21:00</span>
-            <small>21:00締め／21:00最終結果発表</small>
-          </div>
-        </div>
-        <p class="collection-window-note">通常日は0:00〜23:59で集計します。8/20と最終日のみ締め時間が異なります。</p>
         <div class="cards">
           <article class="mission-card">
             <div class="card-head">
@@ -4055,7 +4168,7 @@
             </dl>
           </article>
         </div>
-        <p class="notice">ミッションの種類は期間中この3つで固定。毎日0時にリセットされ、また新しい1日の勝負が始まります。ただし、8/20は20:00締め、8/23は21:00締めです。目標値は変更になる場合があります。</p>
+        <p class="notice">ミッションの種類は期間中この3つで固定。毎日0時にリセットされ、また新しい1日の勝負が始まります。目標値は変更になる場合があります。<br><strong>中間発表・最終結果発表の都合により、8/20は0:00〜20:00、8/23は0:00〜21:00で集計します。</strong></p>
       </section>
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
@@ -4504,19 +4617,6 @@
             <span class="timeline-item-text">表彰・特典のお届け</span>
           </li>
         </ol>
-        <div class="collection-window-grid" aria-label="通常と異なる集計時間">
-          <div class="collection-window-card">
-            <strong>8/20(木)</strong>
-            <span>集計 0:00〜20:00</span>
-            <small>20:00締め／21:00中間発表</small>
-          </div>
-          <div class="collection-window-card">
-            <strong>8/23(日・最終日)</strong>
-            <span>集計 0:00〜21:00</span>
-            <small>21:00締め／21:00最終結果発表</small>
-          </div>
-        </div>
-        <p class="collection-window-note">通常日は0:00〜23:59で集計します。8/20と最終日のみ締め時間が異なります。</p>
         <div class="tally-table" aria-label="日別の集計タイムテーブル">
           <h3 class="tally-title">日別の集計タイムテーブル</h3>
           <div class="tally-axis" aria-hidden="true">
@@ -4557,7 +4657,7 @@
             </div>
           </div>
           <div class="tally-row special has-broadcast" aria-label="8/20 集計 0:00〜20:00">
-            <span class="tally-date"><strong>8/20(木)</strong><small>4日目</small></span>
+            <span class="tally-date"><strong>8/20(木)</strong><small>4日目<br><strong>20:00締め</strong></small></span>
             <div class="tally-track">
               <span class="tally-fill" style="--fill: 83.33%;"></span>
               <span class="tally-line" style="left: 25%;"></span>
@@ -4600,7 +4700,6 @@
             <span>集計時間</span>
             <span class="broadcast">配信（21:00〜）</span>
           </div>
-          <p class="tally-note">集計の締め時間は、配信スケジュールに合わせて変わります。</p>
         </div>
       </section>
 
@@ -4671,8 +4770,26 @@
           <h2 class="bar-title" id="prize-title">特典</h2>
         </div>
         <div class="prize-content">
-          <p class="prize-main">賞品は<strong>優勝・準優勝の2種類</strong>です。</p>
-          <p class="prize-sub">さらに、上位チームのイラストをネットカフェ「<strong><span class="nw">自遊空間</span></strong>」の店舗に掲出予定！<br>東京都内の店舗にて、今秋・約1ヶ月間を予定しています。</p>
+          <div class="prize-rank-grid">
+            <div class="prize-rank-card prize-rank-gold">
+              <p class="prize-rank-label">優勝賞品</p>
+              <p class="prize-rank-summary">描き下ろし集合SDイラスト</p>
+              <ul class="prize-rank-list">
+                <li>チームメンバー全員を描き下ろし</li>
+                <li>集合SDイラストを店舗に<strong>パネル設置</strong></li>
+                <li>店内ブース席に<strong>チームのブースPOPを掲出</strong></li>
+              </ul>
+            </div>
+            <div class="prize-rank-card prize-rank-silver">
+              <p class="prize-rank-label">準優勝賞品</p>
+              <p class="prize-rank-summary">既存立ち絵を使用した集合立ち絵ポスター</p>
+              <ul class="prize-rank-list">
+                <li>チームメンバー全員の既存立ち絵を使用</li>
+                <li>ブースPOPとして店内ブース席に掲出</li>
+              </ul>
+            </div>
+          </div>
+          <p class="prize-sub">上位チームのイラストをネットカフェ「<strong><span class="nw">自遊空間</span></strong>」の店舗に掲出予定です。<br>東京都内の店舗にて、今秋・約1ヶ月間を予定しています。</p>
           <a
             class="prize-detail-link"
             href="https://discord.com/channels/1138387287986679879/1528011762572595231/1529844197350309939"
@@ -4681,23 +4798,6 @@
           >
             優勝賞品の詳細をDiscordで確認
           </a>
-          <div class="prize-rank-grid">
-            <div class="prize-rank-card prize-rank-gold">
-              <p class="prize-rank-label">優勝賞品</p>
-              <ul class="prize-rank-list">
-                <li>チームメンバー全員の描き下ろし<strong>集合SDイラスト</strong>を制作</li>
-                <li>集合SDイラストを店舗に<strong>パネル設置</strong></li>
-                <li>店内ブース席に<strong>チームのブースPOPを掲出</strong></li>
-              </ul>
-            </div>
-            <div class="prize-rank-card prize-rank-silver">
-              <p class="prize-rank-label">準優勝賞品</p>
-              <ul class="prize-rank-list">
-                <li>既存立ち絵を使用した<strong>集合立ち絵ポスター</strong>を制作</li>
-                <li>ブースPOPとして店内ブース席に掲出</li>
-              </ul>
-            </div>
-          </div>
           <p class="prize-note">掲出店舗・時期など詳細は調整中です。続報をお待ちください。</p>
         </div>
       </section>
@@ -4922,6 +5022,7 @@
         <p class="pv-table-note">各セリフは<strong>別データ</strong>で収録。テイクは2つ以上あると助かります（音割れ時の予備）。目安秒数に合わせて収録してください。</p>
 
         <h3 class="pv-section-heading">録音方法</h3>
+        <p class="notice pv-recording-tips"><strong>録音のコツ</strong><br>クローゼットの中など音が反響しない場所が理想／マイクからこぶし1つ分ほど離す／「これでOK！」のテイクを複数送ってOK</p>
         <div class="cards support-grid pv-submit-grid">
           <article class="support-card pv-route-card pv-route-a">
             <p class="pv-route-ribbon">ROUTE A</p>
@@ -4947,6 +5048,14 @@
               <p class="pv-card-note">チーム色英語: 赤=Red／青=Blue／黄=Yellow／緑=Green／橙=Orange／紫=Purple</p>
               <p class="pv-card-note">セリフ種別: タイトルコール=TitleCall／スタート=Start／応援=Cheering／組名コール=TeamName／掛け声=TeamShout</p>
             </div>
+            <div class="pv-detail-box pv-submit-detail">
+              <p class="pv-detail-title">提出方法</p>
+              <p class="pv-card-line">録音できたら、ギガファイル便などへアップロードし、音声ファイルのURLを提出フォームから送信してください。</p>
+              <div class="pv-submit">
+                <a class="pv-submit-btn" href="https://forms.gle/SMoTKsQ16n4mtEuE9" target="_blank" rel="noopener noreferrer">提出フォームはこちら</a>
+                <p class="pv-submit-note">収録は元気よく、明るい声で！ポップで楽しい映像になります</p>
+              </div>
+            </div>
           </article>
           <article class="support-card pv-route-card pv-route-b">
             <p class="pv-route-ribbon">ROUTE B</p>
@@ -4971,15 +5080,6 @@
               <p class="pv-card-note">メールで送る場合、提出フォームへの入力は不要です</p>
             </div>
           </article>
-        </div>
-
-        <p class="notice pv-recording-tips"><strong>録音のコツ</strong><br>クローゼットの中など音が反響しない場所が理想／マイクからこぶし1つ分ほど離す／「これでOK！」のテイクを複数送ってOK</p>
-
-        <h3 class="pv-section-heading">提出方法</h3>
-        <p class="pv-structure">録音できたら、下の提出フォームから音声ファイルのURLを送信してください。<br>（ROUTE B・ボイスメモの方はメール送付でOK、フォームは不要です）</p>
-        <div class="pv-submit">
-          <a class="pv-submit-btn" href="https://forms.gle/SMoTKsQ16n4mtEuE9" target="_blank" rel="noopener noreferrer">提出フォームはこちら</a>
-          <p class="pv-submit-note">収録は元気よく、明るい声で！ポップで楽しい映像になります</p>
         </div>
       </section>
       <section class="section" id="faq" aria-labelledby="faq-title">
@@ -5052,6 +5152,162 @@
         }
         sourceImages.forEach((image) => target.append(image.cloneNode(true)));
       });
+
+      const enhancePvTeamBranches = () => {
+        const sourceGrid = document.querySelector("#pv-voice .pv-team-grid");
+        const sourceCards = [...pvTeamCards];
+        const sourceHeading = sourceGrid?.previousElementSibling;
+        if (
+          !sourceGrid
+          || sourceCards.length !== 6
+          || !sourceHeading?.classList.contains("pv-section-heading")
+        ) {
+          return;
+        }
+
+        const branchGrid = document.createElement("div");
+        const lineConfigs = [
+          { lineIndex: 0, number: 4, title: "組名コール", time: "目安 約1秒" },
+          { lineIndex: 1, number: 5, title: "チームの掛け声", time: "目安 約2秒" },
+        ];
+        branchGrid.className = "pv-branch-grid";
+
+        lineConfigs.forEach(({ lineIndex, number, title, time }) => {
+          const card = document.createElement("article");
+          const head = document.createElement("div");
+          const numberLabel = document.createElement("span");
+          const titleLabel = document.createElement("span");
+          const timeLabel = document.createElement("span");
+          const switcher = document.createElement("div");
+          const panels = document.createElement("div");
+          const choiceButtons = [];
+          const teamPanels = [];
+          const teamMemberSources = [];
+
+          const selectTeam = (selectedIndex) => {
+            choiceButtons.forEach((button, index) => {
+              const selected = index === selectedIndex;
+              const memberTarget = teamPanels[index].querySelector(".pv-team-members");
+              button.setAttribute("aria-pressed", String(selected));
+              teamPanels[index].hidden = !selected;
+              memberTarget.replaceChildren();
+              if (selected) {
+                teamMemberSources[index].forEach((image) => {
+                  memberTarget.append(image.cloneNode(true));
+                });
+              }
+            });
+          };
+
+          card.className = "pv-say-card pv-branch-card";
+          head.className = "pv-say-head";
+          numberLabel.className = "pv-say-num";
+          titleLabel.className = "pv-say-title";
+          timeLabel.className = "pv-say-time";
+          numberLabel.textContent = `セリフ ${number}`;
+          titleLabel.textContent = title;
+          timeLabel.textContent = time;
+          head.append(numberLabel, titleLabel, timeLabel);
+
+          switcher.className = "pv-team-switcher";
+          switcher.setAttribute("aria-label", `セリフ${number}のチームを選択`);
+          panels.className = "pv-team-panels";
+
+          sourceCards.forEach((sourceCard, teamIndex) => {
+            const sourceTeamName = sourceCard.querySelector(".pv-team-name");
+            const sourceMembers = sourceCard.querySelector(".pv-team-members");
+            const sourceLine = sourceCard.querySelectorAll(".pv-team-line")[lineIndex];
+            if (!sourceTeamName || !sourceMembers || !sourceLine) {
+              return;
+            }
+
+            const teamName = sourceTeamName.textContent.trim();
+            const teamColor = sourceCard.style.getPropertyValue("--tc");
+            const choice = document.createElement("button");
+            const panel = document.createElement("div");
+            const memberTarget = document.createElement("div");
+            const choiceId = `pv-line-${number}-team-${teamIndex + 1}`;
+            const panelId = `${choiceId}-panel`;
+
+            choice.className = "pv-team-choice";
+            choice.type = "button";
+            choice.id = choiceId;
+            choice.textContent = teamName;
+            choice.style.setProperty("--tc", teamColor);
+            choice.setAttribute("aria-controls", panelId);
+            choice.setAttribute("aria-pressed", String(teamIndex === 0));
+
+            panel.className = "pv-team-panel";
+            panel.id = panelId;
+            panel.hidden = teamIndex !== 0;
+            panel.style.setProperty("--tc", teamColor);
+            panel.setAttribute("role", "region");
+            panel.setAttribute("aria-labelledby", choiceId);
+            memberTarget.className = "pv-team-members";
+            memberTarget.setAttribute(
+              "aria-label",
+              sourceMembers.getAttribute("aria-label") ?? `${teamName}のキャスト`
+            );
+            panel.append(
+              sourceTeamName.cloneNode(true),
+              memberTarget,
+              sourceLine.cloneNode(true)
+            );
+
+            choice.addEventListener("click", () => {
+              selectTeam(teamIndex);
+            });
+
+            choiceButtons.push(choice);
+            teamPanels.push(panel);
+            teamMemberSources.push([...sourceMembers.querySelectorAll("img")]);
+            switcher.append(choice);
+            panels.append(panel);
+          });
+
+          if (choiceButtons.length === 6 && teamPanels.length === 6) {
+            selectTeam(0);
+            card.append(head, switcher, panels);
+            branchGrid.append(card);
+          }
+        });
+
+        if (branchGrid.children.length !== 2) {
+          return;
+        }
+        sourceHeading.replaceWith(branchGrid);
+        sourceGrid.remove();
+      };
+
+      const enhanceTeamRosterToggles = () => {
+        [...teamCards].forEach((card) => {
+          const heading = card.querySelector("h3");
+          if (!heading) {
+            return;
+          }
+
+          const details = document.createElement("details");
+          const summary = document.createElement("summary");
+          const content = document.createElement("div");
+
+          details.className = `${card.className} team-card-toggle`;
+          details.style.cssText = card.style.cssText;
+          summary.className = "team-card-summary";
+          content.className = "team-card-content";
+          while (heading.firstChild) {
+            summary.append(heading.firstChild);
+          }
+          heading.remove();
+          while (card.firstChild) {
+            content.append(card.firstChild);
+          }
+          details.append(summary, content);
+          card.replaceWith(details);
+        });
+      };
+
+      enhancePvTeamBranches();
+      enhanceTeamRosterToggles();
 
       const sectionToggleConfig = [
         { id: "about", label: "イベント概要", open: true },
