@@ -349,6 +349,79 @@
       overflow: hidden;
     }
 
+    .section-toggle-host {
+      scroll-margin-top: 84px;
+    }
+
+    .section-toggle {
+      width: 100%;
+    }
+
+    .section-toggle-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 64px;
+      padding: 14px 18px;
+      border: 2px solid var(--card-line);
+      border-radius: 18px;
+      color: var(--royal-deep);
+      background: var(--white);
+      cursor: pointer;
+      font-weight: 900;
+      list-style: none;
+    }
+
+    .section-toggle-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .section-toggle-summary::after {
+      content: "＋";
+      flex: 0 0 auto;
+      margin-left: 12px;
+      color: var(--royal);
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .section-toggle[open] > .section-toggle-summary {
+      border-color: var(--royal);
+      border-bottom-right-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+
+    .section-toggle[open] > .section-toggle-summary::after {
+      content: "−";
+    }
+
+    .section-toggle-title {
+      margin: 0;
+      color: inherit;
+      font-size: clamp(1.2rem, 5vw, 1.65rem);
+      line-height: 1.35;
+      text-align: left;
+    }
+
+    .section-toggle-content {
+      padding-top: 24px;
+    }
+
+    .section-toggle-original-heading,
+    .section-toggle-original-kicker {
+      display: none;
+    }
+
+    .section.inverse .section-toggle-summary {
+      border-color: rgba(255, 255, 255, 0.72);
+      color: var(--white);
+      background: var(--royal-deep);
+    }
+
+    .section.inverse .section-toggle-summary::after {
+      color: var(--yellow);
+    }
+
     .contact-link {
       display: inline-flex;
       min-height: 44px;
@@ -4789,6 +4862,65 @@
         const target = pvTeamCard.querySelector(".pv-team-members");
         sourceImages.forEach((image) => target.append(image.cloneNode(true)));
       });
+
+      const sectionToggleConfig = [
+        { id: "about", label: "イベント概要", open: true },
+        { id: "teams", label: "チーム発表", open: false },
+        { id: "rules", label: "デイリーミッション", open: false },
+        { id: "points", label: "ポイントのしくみ", open: false },
+        { id: "half-time", label: "中間発表クイズ", open: false },
+        { id: "survival", label: "脱落ルール", open: false },
+        { id: "schedule", label: "スケジュール", open: false },
+        { id: "prize", label: "優勝・準優勝賞品", open: false },
+        { id: "pv-voice", label: "PV音声収録", open: false },
+        { id: "faq", label: "FAQ", open: false },
+        { id: "contact", label: "お問い合わせ", open: false },
+      ];
+
+      const enhanceSectionToggles = () => {
+        const toggles = new Map();
+
+        sectionToggleConfig.forEach(({ id, label, open }) => {
+          const section = document.getElementById(id);
+          if (!section) {
+            return;
+          }
+
+          const details = document.createElement("details");
+          const summary = document.createElement("summary");
+          const summaryTitle = document.createElement("h2");
+          const content = document.createElement("div");
+          const originalHeading = section.querySelector("h2");
+          const originalHeadingGroup =
+            originalHeading?.closest(".inline-head, .prize-heading-row")
+            ?? originalHeading;
+          const originalKicker = section.querySelector(".mini-kicker");
+
+          details.className = "section-toggle";
+          details.dataset.sectionId = id;
+          details.open = open;
+          summary.className = "section-toggle-summary";
+          summaryTitle.className = "section-toggle-title";
+          summaryTitle.textContent = label;
+          content.className = "section-toggle-content";
+          originalHeadingGroup?.classList.add("section-toggle-original-heading");
+          originalKicker?.classList.add("section-toggle-original-kicker");
+
+          while (section.firstChild) {
+            content.append(section.firstChild);
+          }
+
+          summary.append(summaryTitle);
+          details.append(summary, content);
+          section.append(details);
+          section.classList.add("section-toggle-host");
+          toggles.set(id, details);
+        });
+
+        return toggles;
+      };
+
+      const sectionToggles = enhanceSectionToggles();
 
       const openMenu = () => {
         menuDialog.showModal();

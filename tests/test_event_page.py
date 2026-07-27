@@ -22,17 +22,20 @@ SCRATCHPAD = Path(
     "bb78e0a7-a76e-437b-954a-05c7adc6dd90/scratchpad"
 )
 CHROME = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-REQUIRED_IDS = [
-    "about",
-    "teams",
-    "rules",
-    "points",
-    "half-time",
-    "survival",
-    "schedule",
-    "prize",
-    "faq",
+TOGGLE_SECTIONS = [
+    ("about", "イベント概要"),
+    ("teams", "チーム発表"),
+    ("rules", "デイリーミッション"),
+    ("points", "ポイントのしくみ"),
+    ("half-time", "中間発表クイズ"),
+    ("survival", "脱落ルール"),
+    ("schedule", "スケジュール"),
+    ("prize", "優勝・準優勝賞品"),
+    ("pv-voice", "PV音声収録"),
+    ("faq", "FAQ"),
+    ("contact", "お問い合わせ"),
 ]
+REQUIRED_IDS = [section_id for section_id, _ in TOGGLE_SECTIONS]
 PRIZE_DETAIL_URL = (
     "https://discord.com/channels/1138387287986679879/"
     "1528011762572595231/1529844197350309939"
@@ -104,6 +107,7 @@ def css_rule_failures(css: str) -> list[str]:
         "#pv-voice .pv-steps",
         "#pv-voice .pv-detail-box",
         "#pv-voice .pv-recording-tips",
+        ".section-toggle-title",
     }
     base_css = strip_media_blocks(css)
 
@@ -395,6 +399,34 @@ def main() -> int:
         "モバイルメニュー: dialog・11リンク・閉じる操作",
         "PASS" if not mobile_nav_failures else "FAIL",
         ", ".join(mobile_nav_failures),
+    )
+
+    toggle_script_terms = [
+        "const sectionToggleConfig =",
+        "const enhanceSectionToggles = () =>",
+        'document.createElement("details")',
+        'document.createElement("summary")',
+        'document.createElement("h2")',
+        'details.className = "section-toggle"',
+        'summary.className = "section-toggle-summary"',
+        'content.className = "section-toggle-content"',
+        "while (section.firstChild)",
+        "content.append(section.firstChild)",
+        "details.open = open",
+    ]
+    toggle_config_failures = [
+        section_id
+        for section_id, label in TOGGLE_SECTIONS
+        if f'id: "{section_id}", label: "{label}"' not in text
+    ]
+    toggle_contract_ok = (
+        all(term in text for term in toggle_script_terms)
+        and not toggle_config_failures
+    )
+    ok &= print_result(
+        "セクショントグル: 既存DOMを保持する11分類",
+        "PASS" if toggle_contract_ok else "FAIL",
+        ", ".join(toggle_config_failures),
     )
 
     contact_html = section_block(text, "contact")
@@ -843,6 +875,21 @@ def main() -> int:
             render_ok, render_html = dump_rendered_dom()
             if not render_ok:
                 raise RuntimeError("Chrome DOM dump failed")
+            rendered_toggle_ids = re.findall(
+                r'<details class="section-toggle" data-section-id="([^"]+)"',
+                render_html,
+            )
+            rendered_open_ids = re.findall(
+                r'<details class="section-toggle" data-section-id="([^"]+)" open',
+                render_html,
+            )
+            ok &= print_result(
+                "セクショントグル: 描画後11件・概要のみ初期展開",
+                "PASS"
+                if rendered_toggle_ids == REQUIRED_IDS and rendered_open_ids == ["about"]
+                else "FAIL",
+                f"all={rendered_toggle_ids}, open={rendered_open_ids}",
+            )
             rendered_pv = section_block(render_html, "pv-voice")
             pv_member_groups = re.findall(
                 r'<div class="pv-team-members"[^>]*>(.*?)</div>',
