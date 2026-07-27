@@ -3108,9 +3108,9 @@
 
     #pv-voice .pv-team-members {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 6px;
-      width: min(180px, 100%);
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      gap: 4px;
+      width: min(360px, 100%);
       margin: 0 auto 14px;
     }
 
@@ -3522,6 +3522,13 @@
       text-wrap: balance;
     }
 
+    #pv-voice .pv-energy-note {
+      margin-bottom: 20px;
+      color: var(--orange-deep);
+      font-size: 13.5px;
+      font-weight: 800;
+    }
+
     .site-footer {
       position: relative;
       margin-top: 54px;
@@ -3584,15 +3591,15 @@
       }
 
       #pv-voice .pv-common-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
       }
 
       #pv-voice .pv-team-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
       }
 
       #pv-voice .pv-branch-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .hero {
@@ -3613,7 +3620,7 @@
       }
 
       #pv-voice .pv-common-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .about-lines {
@@ -4824,6 +4831,7 @@
 
         <h3 class="pv-section-heading">収録をお願いしたいセリフは5つ</h3>
         <p class="pv-structure">全員共通の3つ＋自分のチームの2つ、あわせて5つです。</p>
+        <p class="pv-submit-note pv-energy-note">収録は元気よく、明るい声で！ポップで楽しい映像になります</p>
         <p class="pv-filename-guide">ファイル名の<code>{TeamColor}</code>は自分のチーム色（赤組なら<code>Red</code>）、<code>{CastName}</code>は可能であれば半角英字のキャスト名に置き換えてください。</p>
         <div class="cards pv-common-grid">
           <article class="pv-say-card">
@@ -5059,7 +5067,6 @@
               <p class="pv-card-line">録音できたら、ギガファイル便などへアップロードし、音声ファイルのURLを提出フォームから送信してください。</p>
               <div class="pv-submit">
                 <a class="pv-submit-btn" href="https://forms.gle/SMoTKsQ16n4mtEuE9" target="_blank" rel="noopener noreferrer">提出フォームはこちら</a>
-                <p class="pv-submit-note">収録は元気よく、明るい声で！ポップで楽しい映像になります</p>
               </div>
             </div>
           </article>
