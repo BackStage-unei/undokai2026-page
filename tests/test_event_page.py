@@ -430,6 +430,19 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
       teams.querySelector("summary").click();
       points.querySelector("summary").click();
       results.nativeSummaryActivation = teams.open && points.open;
+      const openedSummary = points.querySelector("summary");
+      openedSummary.focus();
+      const openedSummaryStyle = getComputedStyle(openedSummary);
+      results.openToggleBorderAndFocusInset = points.open
+        && [
+          openedSummaryStyle.borderTopColor,
+          openedSummaryStyle.borderRightColor,
+          openedSummaryStyle.borderBottomColor,
+          openedSummaryStyle.borderLeftColor,
+        ].every((color) => color === "rgba(0, 0, 0, 0)")
+        && openedSummary.matches(":focus-visible")
+        && openedSummaryStyle.outlineStyle === "solid"
+        && parseFloat(openedSummaryStyle.outlineOffset) < 0;
       results.multipleToggles = teams.open && points.open
         && document.querySelector('[data-section-id="about"]').open;
 
@@ -1486,6 +1499,7 @@ def main() -> int:
             expected_runtime_keys = {
                 "keyboardNativeDetails",
                 "nativeSummaryActivation",
+                "openToggleBorderAndFocusInset",
                 "multipleToggles",
                 "menuOpened",
                 "menuNavigation",
