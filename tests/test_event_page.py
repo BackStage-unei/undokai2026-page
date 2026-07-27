@@ -433,6 +433,9 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
       const openedSummary = points.querySelector("summary");
       openedSummary.focus();
       const openedSummaryStyle = getComputedStyle(openedSummary);
+      const openedSummaryTitleStyle = getComputedStyle(
+        openedSummary.querySelector(".section-toggle-title")
+      );
       const everyOpenedToggleHasTransparentBorder = toggles.every((details) => {
         details.open = true;
         const style = getComputedStyle(details.querySelector("summary"));
@@ -443,12 +446,11 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
           style.borderLeftColor,
         ].every((color) => color === "rgba(0, 0, 0, 0)");
       });
-      results.openToggleBorderAndFocusInset = points.open
+      results.openToggleBorderlessWithTextFocus = points.open
         && everyOpenedToggleHasTransparentBorder
         && openedSummary.matches(":focus-visible")
-        && openedSummaryStyle.outlineStyle === "solid"
-        && parseFloat(openedSummaryStyle.outlineWidth) === 3
-        && parseFloat(openedSummaryStyle.outlineOffset) < 0;
+        && openedSummaryStyle.outlineStyle === "none"
+        && openedSummaryTitleStyle.textDecorationLine.includes("underline");
       results.multipleToggles = teams.open && points.open
         && document.querySelector('[data-section-id="about"]').open;
 
@@ -1505,7 +1507,7 @@ def main() -> int:
             expected_runtime_keys = {
                 "keyboardNativeDetails",
                 "nativeSummaryActivation",
-                "openToggleBorderAndFocusInset",
+                "openToggleBorderlessWithTextFocus",
                 "multipleToggles",
                 "menuOpened",
                 "menuNavigation",
