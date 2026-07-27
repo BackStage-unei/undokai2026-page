@@ -350,6 +350,10 @@ def main() -> int:
     for selector in ['id="menu-toggle"', 'id="mobile-menu"', 'id="menu-close"']:
         if selector not in text:
             mobile_nav_failures.append(selector)
+    close_button_match = re.search(r'<button\b[^>]*\bid="menu-close"[^>]*>(.*?)</button>', text, re.S)
+    close_button_html = close_button_match.group(1) if close_button_match else ""
+    if 'fill="none"' not in close_button_html or 'stroke="currentColor"' not in close_button_html:
+        mobile_nav_failures.append("閉じるアイコンの線")
     for href in mobile_nav_hrefs:
         if f'href="{href}"' not in mobile_nav_html:
             mobile_nav_failures.append(href)
