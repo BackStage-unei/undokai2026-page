@@ -362,6 +362,9 @@ def main() -> int:
         "menuDialog.close()",
         'menuDialog.addEventListener("close"',
         "event.target === menuDialog",
+        'window.matchMedia("(min-width: 720px)")',
+        'desktopMedia.addEventListener("change"',
+        "if (event.matches)",
     ]:
         if js_term not in text:
             mobile_nav_failures.append(js_term)

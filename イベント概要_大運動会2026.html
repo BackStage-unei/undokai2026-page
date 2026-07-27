@@ -4751,6 +4751,13 @@
         }
       };
 
+      const desktopMedia = window.matchMedia("(min-width: 720px)");
+      desktopMedia.addEventListener("change", (event) => {
+        if (event.matches) {
+          closeMenu();
+        }
+      });
+
       menuButton.addEventListener("click", openMenu);
       closeButton.addEventListener("click", closeMenu);
       menuLinks.forEach((link) => link.addEventListener("click", closeMenu));
