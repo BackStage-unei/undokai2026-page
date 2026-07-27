@@ -358,11 +358,6 @@
       scroll-margin-top: 84px;
     }
 
-    .section-toggle-host:has(> .section-toggle[open]) {
-      border-radius: 0;
-      box-shadow: none;
-    }
-
     .section-toggle {
       width: 100%;
     }
@@ -373,7 +368,7 @@
       justify-content: space-between;
       min-height: 64px;
       padding: 14px 18px;
-      border: 2px solid var(--card-line);
+      border: 2px solid transparent;
       border-radius: 18px;
       color: var(--royal-deep);
       background: var(--white);
@@ -456,7 +451,7 @@
     }
 
     .section.inverse .section-toggle-summary {
-      border-color: rgba(255, 255, 255, 0.72);
+      border-color: transparent;
       color: var(--white);
       background: var(--royal-deep);
     }

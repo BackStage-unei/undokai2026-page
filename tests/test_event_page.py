@@ -436,6 +436,15 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
       const openedSummaryTitleStyle = getComputedStyle(
         openedSummary.querySelector(".section-toggle-title")
       );
+      const everyClosedToggleHasTransparentBorder = toggles.every((details) => {
+        const style = getComputedStyle(details.querySelector("summary"));
+        return [
+          style.borderTopColor,
+          style.borderRightColor,
+          style.borderBottomColor,
+          style.borderLeftColor,
+        ].every((color) => color === "rgba(0, 0, 0, 0)");
+      });
       const everyOpenedToggleHasTransparentBorder = toggles.every((details) => {
         details.open = true;
         const style = getComputedStyle(details.querySelector("summary"));
@@ -446,17 +455,18 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
           style.borderLeftColor,
         ].every((color) => color === "rgba(0, 0, 0, 0)");
       });
-      const everyOpenedSectionFrameIsRemoved = toggles.every((details) => {
+      const everyOpenedSectionFrameIsPresent = toggles.every((details) => {
         const style = getComputedStyle(details.closest(".section"));
-        return parseFloat(style.borderTopLeftRadius) === 0
-          && style.boxShadow === "none";
+        return parseFloat(style.borderTopLeftRadius) > 0
+          && style.boxShadow !== "none";
       });
       results.openToggleBorderlessWithTextFocus = points.open
+        && everyClosedToggleHasTransparentBorder
         && everyOpenedToggleHasTransparentBorder
         && openedSummary.matches(":focus-visible")
         && openedSummaryStyle.outlineStyle === "none"
         && openedSummaryTitleStyle.textDecorationLine.includes("underline");
-      results.openSectionFrameRemoved = everyOpenedSectionFrameIsRemoved;
+      results.openSectionFramePresent = everyOpenedSectionFrameIsPresent;
       results.multipleToggles = teams.open && points.open
         && document.querySelector('[data-section-id="about"]').open;
 
@@ -1514,7 +1524,7 @@ def main() -> int:
                 "keyboardNativeDetails",
                 "nativeSummaryActivation",
                 "openToggleBorderlessWithTextFocus",
-                "openSectionFrameRemoved",
+                "openSectionFramePresent",
                 "multipleToggles",
                 "menuOpened",
                 "menuNavigation",
