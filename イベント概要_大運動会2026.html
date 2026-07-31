@@ -947,37 +947,6 @@
       color: var(--royal);
     }
 
-    .closing-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      max-width: none;
-      margin: 4px auto 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .closing-list li {
-      display: inline-flex;
-      align-items: center;
-      min-height: 30px;
-      padding: 6px 14px;
-      color: var(--royal);
-      background: var(--white);
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.35;
-    }
-
-    .closing-list a {
-      color: inherit;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
     .team-roster {
       display: grid;
       gap: 18px;
@@ -4176,7 +4145,6 @@
             <li><a class="mobile-menu-link" href="#points">ポイントのしくみ</a></li>
             <li><a class="mobile-menu-link" href="#half-time">中間発表クイズ</a></li>
             <li><a class="mobile-menu-link" href="#survival">脱落ルール</a></li>
-            <li><a class="mobile-menu-link" href="#closing">閉会式</a></li>
             <li><a class="mobile-menu-link" href="#schedule">スケジュール</a></li>
             <li><a class="mobile-menu-link" href="#prize">優勝・準優勝賞品</a></li>
             <li><a class="mobile-menu-link" href="#pv-voice">PV音声収録のお願い</a></li>
@@ -4226,7 +4194,6 @@
           <a href="#points">ポイントのしくみ</a>
           <a href="#half-time">中間発表クイズ</a>
           <a href="#survival">脱落ルール</a>
-          <a href="#closing">閉会式</a>
           <a href="#schedule">スケジュール</a>
           <a href="#prize">特典</a>
           <a href="#pv-voice">PV音声収録のお願い</a>
@@ -4393,12 +4360,12 @@
             </div>
             <div class="goal-badge">
               <span class="goal-label">毎日の目標（チーム合計）</span>
-              <span class="goal-value"><strong>30人</strong><span>/日</span></span>
+              <span class="goal-value"><strong>12人</strong><span>/日</span></span>
             </div>
-            <p>各チームメンバーの<strong class="kw">合計接客人数</strong>で競うミッションです。</p>
+            <p>その日、チームのキャストと通話したユーザーの人数で競うミッションです。</p>
             <dl class="definition">
               <dt>判定条件</dt>
-              <dd>1分以上の通話が対象／同じユーザーでも、チーム内の別のキャストとの通話は別カウント（同じキャストとは1日1カウント）</dd>
+              <dd>1分以上の通話が対象／同じユーザーは1日1カウント</dd>
             </dl>
           </article>
           <article class="mission-card">
@@ -4530,24 +4497,24 @@
               <h5><span class="tag">通話人数</span></h5>
             </div>
             <div class="goal-badge mission-goal-badge">
-              <span class="goal-label">基準 30人/日</span>
+              <span class="goal-label">基準 12人/日</span>
             </div>
             <div class="mission-result-list" aria-label="通話人数の結果">
               <div class="mission-result-row top">
                 <span class="mission-team"><span class="mission-rank first">1位</span> <span class="mission-team-name">チームA</span></span>
-                <span class="mission-value">34人</span>
+                <span class="mission-value">14人</span>
                 <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>1位</span> <span class="mission-bonus-points">+3pt</span></span>
               </div>
               <div class="mission-result-row">
                 <span class="mission-team"><span class="mission-rank second">2位</span> <span class="mission-team-name">チームB</span></span>
-                <span class="mission-value">32人</span>
+                <span class="mission-value">13人</span>
                 <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>2位</span> <span class="mission-bonus-points">+2pt</span></span>
               </div>
               <div class="mission-result-row">
                 <span class="mission-team"><span class="mission-rank third">3位</span> <span class="mission-team-name">チームC</span></span>
-                <span class="mission-value">30人</span>
+                <span class="mission-value">12人</span>
                 <span class="mission-status">クリア</span>
                 <span class="mission-bonus"><span>3位</span> <span class="mission-bonus-points">+1pt</span></span>
               </div>
@@ -4831,62 +4798,8 @@
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
 
-      <section class="section inverse" id="closing" aria-labelledby="closing-title">
-        <p class="mini-kicker">RULE 05</p>
-        <div class="inline-head">
-          <span class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 21V4"></path>
-              <path d="M5 4h9.5l-1.3 3.5L14.5 11H5"></path>
-              <path d="M14.5 11H19l-1.3 3.5L19 18h-8"></path>
-            </svg>
-          </span>
-          <h2 class="bar-title" id="closing-title">閉会式</h2>
-        </div>
-        <p>最終日・8/23(日) 21:00から、<span class="nw">閉会式</span>の配信を行います。7日間の<span class="nw">累積ポイント</span>をすべて締めて、<span class="nw">優勝チーム</span>を発表します。</p>
-        <p class="quiz-note">最終日の集計は 0:00〜<strong>21:00</strong> まで。締めたその日のうちに、配信で結果を発表します。</p>
-        <h3>閉会式で発表すること</h3>
-        <ul class="closing-list">
-          <li>7日間の<span class="nw">最終ポイント</span>と全チームの順位</li>
-          <li><span class="nw">優勝チーム</span>の発表</li>
-          <li>優勝・準優勝チームへの<a href="#prize">特典</a>のお知らせ</li>
-        </ul>
-        <h3>同点だったときの決め方</h3>
-        <div class="table-wrap">
-          <table class="rule-table">
-            <thead>
-              <tr>
-                <th>順番</th>
-                <th>くらべるもの</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td><span class="nw">はじめまして・おかえり</span>の7日間合計</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>通話人数の7日間合計</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>稼働タイムの7日間合計</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td><span class="nw">中間発表</span>クイズの順位</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="quiz-note">上から順にくらべて、先に差がついたところで順位が決まります。配信の詳しい内容は、決まりしだいお知らせします。</p>
-      </section>
-
-      <div class="track-divider" aria-hidden="true"><span></span></div>
-
       <section class="section" id="schedule" aria-labelledby="schedule-title">
-        <p class="mini-kicker">SCHEDULE 06</p>
+        <p class="mini-kicker">SCHEDULE 05</p>
         <div class="inline-head">
           <span class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -5040,7 +4953,7 @@
         <svg class="puff" viewBox="0 0 90 62" aria-hidden="true">
           <path d="M17 37C7 35 4 24 11 17c5-5 13-4 17 1C31 8 43 4 52 11c5 4 7 9 6 15 10-2 20 5 20 16 0 10-8 17-18 17H20C10 59 3 51 6 43c2-4 6-6 11-6z" fill="currentColor" stroke="#FFFFFF" stroke-width="4"></path>
         </svg>
-        <p class="mini-kicker">PRIZE 07</p>
+        <p class="mini-kicker">PRIZE 06</p>
         <div class="trophy-badge" aria-hidden="true">
           <svg class="trophy-rays" viewBox="0 0 150 150">
             <g stroke="currentColor" stroke-width="5" stroke-linecap="round">
@@ -5421,10 +5334,6 @@
             <p>A. されます。「通話人数」「<span class="nw">はじめまして・おかえり</span>」は1分以上の通話が対象です。</p>
           </details>
           <details>
-            <summary>Q. 同じユーザーが複数のキャストと話したら？</summary>
-            <p>A. 「通話人数」は、チーム内の別のキャストとの通話ならそれぞれカウントされます（のべ人数）。同じキャストとの通話は1日1カウントです。</p>
-          </details>
-          <details>
             <summary>Q. 重点ミッションはいつわかりますか？</summary>
             <p>A. 前日の夜〜当日の朝に、運営から発表します。4日目（中間発表の日）は重点なしです。</p>
           </details>
@@ -5730,7 +5639,6 @@
         { id: "points", label: "ポイントのしくみ", open: false },
         { id: "half-time", label: "中間発表クイズ", open: false },
         { id: "survival", label: "脱落ルール", open: false },
-        { id: "closing", label: "閉会式", open: false },
         { id: "schedule", label: "スケジュール", open: false },
         { id: "prize", label: "優勝・準優勝賞品", open: false },
         { id: "pv-voice", label: "PV音声収録のお願い", open: false },

@@ -169,8 +169,6 @@ def run_focused_browser_check() -> tuple[bool, dict[str, bool] | str]:
                 "--no-sandbox",
                 "--disable-gpu",
                 "--disable-dev-shm-usage",
-        "--use-mock-keychain",
-        "--password-store=basic",
                 f"--user-data-dir={temp_root / 'profile'}",
                 "--window-size=320,700",
                 "--virtual-time-budget=4000",
