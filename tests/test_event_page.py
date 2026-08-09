@@ -302,6 +302,8 @@ def css_rule_failures(css: str) -> list[str]:
         ".section-toggle-title",
         ".quiz-detail-card",
         ".quiz-detail-card li",
+        ".update-history-list",
+        ".update-history-list li",
     }
     base_css = strip_media_blocks(css)
 
