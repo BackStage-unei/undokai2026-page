@@ -71,7 +71,7 @@ PRESERVED_SECTION_TERMS = {
         "特設サイトで確認",
     ],
     "closing": ["8/23", "21:00", "優勝チーム", "特設サイト"],
-    "schedule": ["8/20", "20:00集計締め", "8/23", "21:00集計締め"],
+    "schedule": ["特設サイトでスケジュールを確認する", "表彰と特典のお届け"],
     "prize": [
         "優勝チームには",
         "優勝チーム",
@@ -578,15 +578,12 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
           const prizeSection = document.getElementById("prize");
           const rulesText = rulesSection.textContent.replace(/\s+/g, " ");
           const scheduleText = scheduleSection.textContent.replace(/\s+/g, " ");
-          const fourthDay = [...scheduleSection.querySelectorAll(".tally-row")]
-            .find((row) => row.textContent.includes("8/20"));
           results.collectionCopyStructure =
             !rulesSection.querySelector(".collection-window-grid")
             && rulesText.includes("特設サイトでルールを確認する")
-            && !scheduleSection.querySelector(".collection-window-grid")
-            && !scheduleSection.querySelector(".collection-window-note")
-            && !scheduleSection.querySelector(".tally-note")
-            && fourthDay?.textContent.includes("20:00締め")
+            && !scheduleSection.querySelector(".tally-table")
+            && !scheduleSection.querySelector(".timeline")
+            && scheduleText.includes("特設サイトでスケジュールを確認する")
             && !scheduleText.includes(
               "集計の締め時間は、配信スケジュールに合わせて変わります。"
             );
@@ -635,15 +632,7 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
           toggles.forEach((details) => {
             details.open = true;
           });
-          const labelSelectors = [
-            ".tally-axis-labels",
-            ".tally-date small",
-            ".tally-broadcast-label",
-          ];
-          results.mobileType = parseFloat(getComputedStyle(document.body).fontSize) >= 16
-            && labelSelectors.every((selector) =>
-              parseFloat(getComputedStyle(document.querySelector(selector)).fontSize) >= 13
-            );
+          results.mobileType = parseFloat(getComputedStyle(document.body).fontSize) >= 16;
           results.noHorizontalOverflow =
             document.documentElement.scrollWidth <= window.innerWidth;
           output.textContent = JSON.stringify(results);
@@ -798,6 +787,7 @@ def main() -> int:
         "https://forms.gle/SMoTKsQ16n4mtEuE9",
         "https://discord.com/channels/1138387287986679879/1475808380453916682",
         "https://bs-undokai2026.web.app/",
+        "https://bs-undokai2026.web.app/#schedule",
         PRIZE_DETAIL_URL,
     }
     found_urls = set(re.findall(r'https?://[^"\s<]+', strip_data_uris(text)))
@@ -1068,15 +1058,13 @@ def main() -> int:
 
     schedule_text = visible_text(section_block(text, "schedule"))
     collection_ok = (
-        'class="collection-window-grid"' not in section_block(text, "schedule")
-        and 'class="collection-window-note"' not in section_block(text, "schedule")
-        and 'class="tally-note"' not in section_block(text, "schedule")
-        and "20:00締め" in schedule_text
-        and "最終日・21:00集計締め" in schedule_text
-        and "集計の締め時間は、配信スケジュールに合わせて変わります。" not in schedule_text
+        'class="tally-table"' not in section_block(text, "schedule")
+        and 'class="timeline"' not in section_block(text, "schedule")
+        and "特設サイトでスケジュールを確認する" in schedule_text
+        and "特設サイトの記載が常に正式・最新" in schedule_text
     )
     ok &= print_result(
-        "集計時間: スケジュールの締め時刻",
+        "集計時間: スケジュールは特設サイトへ移管",
         "PASS" if collection_ok else "FAIL",
     )
 
@@ -1370,10 +1358,11 @@ def main() -> int:
         and 'target="_blank"' in rules_link_html
         and 'rel="noopener noreferrer"' in rules_link_html
         and "特設サイトでルールを確認する" in visible_text(rules_link_html)
-        and text.count("https://bs-undokai2026.web.app/") == 4
+        and text.count("https://bs-undokai2026.web.app/") == 5
+        and section_block(text, "schedule").count("https://bs-undokai2026.web.app/#schedule") == 1
     )
     ok &= print_result(
-        "公式ルール: 特設サイトへのリンク(rules/half-time/closing/faqの計4箇所)",
+        "公式ルール: 特設サイトへのリンク(rules/half-time/closing/schedule/faqの計5箇所)",
         "PASS" if official_link_ok else "FAIL",
         f"{text.count('https://bs-undokai2026.web.app/')}箇所",
     )
@@ -1425,29 +1414,13 @@ def main() -> int:
     )
 
     schedule_html = section_block(text, "schedule")
-    timeline_count_count = schedule_html.count("timeline-count")
-    ok &= print_result(
-        "#schedule ステッパー集計行 0件",
-        "PASS" if timeline_count_count == 0 else "FAIL",
-        f"{timeline_count_count}件",
+    schedule_moved_ok = all(
+        term not in schedule_html
+        for term in ["timeline-count", "tally-table", "tally-row", "集計 0:00〜20:00"]
     )
-
-    tally_table_ok = 'class="tally-table"' in schedule_html
-    tally_rows = len(re.findall(r'class="[^"]*\btally-row\b', schedule_html))
-    tally_widths_ok = bool(re.search(r"--fill\s*:\s*83\.3(?:3)?%", schedule_html)) and "--fill: 87.5%;" in schedule_html
-    tally_dates_ok = "8/20" in schedule_html and "8/23" in schedule_html
     ok &= print_result(
-        "#schedule 日別集計テーブル",
-        "PASS" if tally_table_ok and tally_rows == 7 and tally_dates_ok and tally_widths_ok else "FAIL",
-        f"rows={tally_rows}, dates={tally_dates_ok}, widths={tally_widths_ok}",
-    )
-
-    schedule_count_times = ["集計 0:00〜20:00", "集計 0:00〜21:00"]
-    missing_count_times = [item for item in schedule_count_times if item not in schedule_html]
-    ok &= print_result(
-        "#schedule 集計締め時間",
-        "PASS" if not missing_count_times else "FAIL",
-        ", ".join(missing_count_times),
+        "#schedule タイムライン・集計テーブルは特設サイトへ移管(0件)",
+        "PASS" if schedule_moved_ok else "FAIL",
     )
 
     old_threshold_terms = ["10pt以下", "10ptを超え", "14pt"]
