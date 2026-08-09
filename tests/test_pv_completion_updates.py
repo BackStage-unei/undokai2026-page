@@ -136,17 +136,9 @@ def run_focused_browser_check() -> tuple[bool, dict[str, bool] | str]:
             "本ページは参加キャスト向けの案内です。外部への共有はしないでください。 " +
             "一部調整中の項目がありますので、最新情報は運営からの連絡をご確認ください。適宜本ページも更新します。",
         mobileRuleGroups:
-          groups.length === 2
-          && groups[0].textContent.trim() === "10pt未満 → 脱落"
-          && groups[1].textContent.trim() === "（中間発表に不参加）"
-          && [...drop.childNodes].every((node) =>
-            node.nodeType === Node.ELEMENT_NODE
-            || node.textContent.trim() === ""
-          )
-          && groups.every((group) =>
-            getComputedStyle(group).whiteSpace === "nowrap"
-            && group.getClientRects().length === 1
-          ),
+          // 脱落ルールセクションは特設サイトへ一本化(2026-08-09)したため、
+          // フローチャートがページに存在しないことを確認する
+          drop === null && groups.length === 0,
         noHorizontalOverflow:
           document.documentElement.scrollWidth <= window.innerWidth,
       };

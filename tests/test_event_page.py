@@ -30,14 +30,12 @@ REQUIRE_BROWSER_TESTS = os.environ.get("REQUIRE_BROWSER_TESTS") == "1"
 TOGGLE_SECTIONS = [
     ("about", "イベント概要"),
     ("teams", "チーム発表"),
-    ("rules", "デイリーミッション"),
-    ("points", "ポイントのしくみ"),
+    ("rules", "公式ルール"),
     ("half-time", "中間発表クイズ"),
-    ("survival", "脱落ルール"),
     ("closing", "閉会式"),
     ("schedule", "スケジュール"),
     ("prize", "優勝・準優勝賞品"),
-    ("pv-voice", "PV音声収録"),
+    ("pv-voice", "PV音声収録のお願い"),
     ("faq", "FAQ"),
     ("contact", "お問い合わせ"),
 ]
@@ -53,24 +51,27 @@ PRESERVED_SECTION_TERMS = {
         "チーム分けは運営が実施",
     ],
     "teams": ["赤組", "青組", "黄組", "緑組", "橙組", "紫組"],
-    "rules": ["12時間", "30人", "3人", "1日12時間まで", "3ヶ月以上", "合計接客人数"],
-    "points": [
-        "1本クリア = 1pt",
-        "最大 12pt",
-        "重点ミッション",
-        "14時間30分",
-        "13時間50分",
-        "34人",
-        "32人",
-        "あと1人",
-        "11pt",
-        "9pt",
-        "5pt",
+    "rules": [
+        "公式ルール",
+        "特設サイトでルールを確認する",
+        "前日の夜〜当日の朝",
+        "重点なし",
     ],
-    "half-time": ["早押しクイズ大会", "+8pt", "+6pt", "+4pt", "+2pt"],
-    "closing": ["8/23", "21:00", "優勝チーム", "はじめまして・おかえり", "クイズの順位"],
-    "survival": ["累積10pt以上ある？", "10pt未満", "3pt×4日＝12pt"],
-    "schedule": ["8/20", "集計 0:00〜20:00", "8/23", "集計 0:00〜21:00"],
+    "half-time": [
+        "早押しクイズ大会",
+        "合計18名",
+        "各チームから3名が出場",
+        "前日の8/19(水)",
+        "運営リーダー経由で回収",
+        "リアルタイムで参加できること",
+        "20:00",
+        "1時間前から参加できること",
+        "BackStageにまつわるクイズ",
+        "サドンデス",
+        "特設サイトで確認",
+    ],
+    "closing": ["8/23", "21:00", "優勝チーム", "特設サイト"],
+    "schedule": ["特設サイトでスケジュールを確認する"],
     "prize": [
         "優勝チームには",
         "優勝チーム",
@@ -83,7 +84,15 @@ PRESERVED_SECTION_TERMS = {
         "TitleCall01_ORG.wav",
         "TeamShout02_ORG.wav",
     ],
-    "faq": ["ミッションは毎日変わりますか？", "最終結果が同点だったら？"],
+    "faq": [
+        "ルールの詳細はどこで確認できますか？",
+        "ミッションは毎日変わりますか？",
+        "実数値が同じだったら？",
+        "無料通話もカウントされますか？",
+        "同じユーザーが複数のキャストと話したら？",
+        "重点ミッションはいつわかりますか？",
+        "最終結果が同点だったら？",
+    ],
     "contact": ["運営への依頼窓口"],
 }
 EXPECTED_MEMBERS = [
@@ -291,6 +300,10 @@ def css_rule_failures(css: str) -> list[str]:
         "#pv-voice .pv-detail-box",
         "#pv-voice .pv-recording-tips",
         ".section-toggle-title",
+        ".quiz-detail-card",
+        ".quiz-detail-card li",
+        ".update-history-list",
+        ".update-history-list li",
     }
     base_css = strip_media_blocks(css)
 
@@ -436,10 +449,10 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
       const toggles = [...document.querySelectorAll(".section-toggle")];
       const summaries = toggles.map((details) => details.querySelector("summary"));
       const teams = document.querySelector('[data-section-id="teams"]');
-      const points = document.querySelector('[data-section-id="points"]');
+      const points = document.querySelector('[data-section-id="half-time"]');
 
       results.keyboardNativeDetails =
-        toggles.length === 12
+        toggles.length === 10
         && summaries.every((summary) => summary?.tagName === "SUMMARY" && summary.tabIndex === 0);
       teams.querySelector("summary").click();
       points.querySelector("summary").click();
@@ -565,17 +578,12 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
           const prizeSection = document.getElementById("prize");
           const rulesText = rulesSection.textContent.replace(/\s+/g, " ");
           const scheduleText = scheduleSection.textContent.replace(/\s+/g, " ");
-          const fourthDay = [...scheduleSection.querySelectorAll(".tally-row")]
-            .find((row) => row.textContent.includes("8/20"));
           results.collectionCopyStructure =
             !rulesSection.querySelector(".collection-window-grid")
-            && rulesText.includes(
-              "中間発表・最終結果発表の都合により、8/20は0:00〜20:00、8/23は0:00〜21:00で集計します。"
-            )
-            && !scheduleSection.querySelector(".collection-window-grid")
-            && !scheduleSection.querySelector(".collection-window-note")
-            && !scheduleSection.querySelector(".tally-note")
-            && fourthDay?.textContent.includes("20:00締め")
+            && rulesText.includes("特設サイトでルールを確認する")
+            && !scheduleSection.querySelector(".tally-table")
+            && !scheduleSection.querySelector(".timeline")
+            && scheduleText.includes("特設サイトでスケジュールを確認する")
             && !scheduleText.includes(
               "集計の締め時間は、配信スケジュールに合わせて変わります。"
             );
@@ -624,18 +632,7 @@ def run_runtime_assertions(source_html: str) -> tuple[bool, dict[str, bool] | st
           toggles.forEach((details) => {
             details.open = true;
           });
-          const labelSelectors = [
-            ".mission-rank",
-            ".mission-status",
-            ".score-scale",
-            ".tally-axis-labels",
-            ".tally-date small",
-            ".tally-broadcast-label",
-          ];
-          results.mobileType = parseFloat(getComputedStyle(document.body).fontSize) >= 16
-            && labelSelectors.every((selector) =>
-              parseFloat(getComputedStyle(document.querySelector(selector)).fontSize) >= 13
-            );
+          results.mobileType = parseFloat(getComputedStyle(document.body).fontSize) >= 16;
           results.noHorizontalOverflow =
             document.documentElement.scrollWidth <= window.innerWidth;
           output.textContent = JSON.stringify(results);
@@ -789,6 +786,8 @@ def main() -> int:
     allowed_urls = {
         "https://forms.gle/SMoTKsQ16n4mtEuE9",
         "https://discord.com/channels/1138387287986679879/1475808380453916682",
+        "https://bs-undokai2026.web.app/",
+        "https://bs-undokai2026.web.app/#schedule",
         PRIZE_DETAIL_URL,
     }
     found_urls = set(re.findall(r'https?://[^"\s<]+', strip_data_uris(text)))
@@ -883,19 +882,17 @@ def main() -> int:
     nav_html = nav_match.group(0) if nav_match else ""
     nav_expected = [
         ('#teams', "チーム発表"),
-        ('#rules', "デイリーミッション"),
-        ('#points', "ポイントのしくみ"),
+        ('#rules', "公式ルール"),
         ('#half-time', "中間発表クイズ"),
-        ('#survival', "脱落ルール"),
         ('#closing', "閉会式"),
         ('#schedule', "スケジュール"),
         ('#prize', "特典"),
-        ('#pv-voice', "PV音声収録"),
+        ('#pv-voice', "PV音声収録のお願い"),
         ('#faq', "FAQ"),
     ]
     nav_missing = [label for href, label in nav_expected if f'<a href="{href}">{label}</a>' not in nav_html]
     ok &= print_result(
-        "目次: セクションタイトルと一致（10リンク）",
+        "目次: セクションタイトルと一致（8リンク）",
         "PASS" if not nav_missing else "FAIL",
         ", ".join(nav_missing),
     )
@@ -910,9 +907,7 @@ def main() -> int:
         "#about",
         "#teams",
         "#rules",
-        "#points",
         "#half-time",
-        "#survival",
         "#closing",
         "#schedule",
         "#prize",
@@ -971,7 +966,7 @@ def main() -> int:
     if external_scripts:
         mobile_nav_failures.append("外部script")
     ok &= print_result(
-        "モバイルメニュー: dialog・12リンク・閉じる操作",
+        "モバイルメニュー: dialog・10リンク・閉じる操作",
         "PASS" if not mobile_nav_failures else "FAIL",
         ", ".join(mobile_nav_failures),
     )
@@ -999,7 +994,7 @@ def main() -> int:
         and not toggle_config_failures
     )
     ok &= print_result(
-        "セクショントグル: 既存DOMを保持する12分類",
+        "セクショントグル: 既存DOMを保持する10分類",
         "PASS" if toggle_contract_ok else "FAIL",
         ", ".join(toggle_config_failures),
     )
@@ -1061,26 +1056,15 @@ def main() -> int:
     )
     ok &= print_result("参加キャスト向け文言", "PASS" if copy_ok else "FAIL")
 
-    rules_text = visible_text(section_block(text, "rules"))
     schedule_text = visible_text(section_block(text, "schedule"))
-    rules_notice_match = re.search(r'<p class="notice">(.*?)</p>', section_block(text, "rules"), re.S)
-    rules_notice_text = visible_text(rules_notice_match.group(1)) if rules_notice_match else ""
-    collection_notice = (
-        "中間発表・最終結果発表の都合により、"
-        "8/20は0:00〜20:00、8/23は0:00〜21:00で集計します。"
-    )
     collection_ok = (
-        collection_notice in rules_notice_text
-        and 'class="collection-window-grid"' not in section_block(text, "rules")
-        and 'class="collection-window-grid"' not in section_block(text, "schedule")
-        and 'class="collection-window-note"' not in section_block(text, "schedule")
-        and 'class="tally-note"' not in section_block(text, "schedule")
-        and "20:00締め" in schedule_text
-        and "最終日・21:00集計締め" in schedule_text
-        and "集計の締め時間は、配信スケジュールに合わせて変わります。" not in schedule_text
+        'class="tally-table"' not in section_block(text, "schedule")
+        and 'class="timeline"' not in section_block(text, "schedule")
+        and "特設サイトでスケジュールを確認する" in schedule_text
+        and "特設サイトの記載が常に正式・最新" in schedule_text
     )
     ok &= print_result(
-        "集計時間: デイリーミッションとスケジュール",
+        "集計時間: スケジュールは特設サイトへ移管",
         "PASS" if collection_ok else "FAIL",
     )
 
@@ -1112,7 +1096,9 @@ def main() -> int:
         "調整中",
         "優勝チーム",
         "準優勝チーム",
-        "パネル設置",
+        "集団立ち絵パネルの",
+        "店頭設置",
+        "集合立ち絵 or 集合SDイラスト",
         "ブースPOP",
         "集合立ち絵ポスター",
     ]
@@ -1266,9 +1252,8 @@ def main() -> int:
         "早押しクイズ大会を開催",
         "集合SDイラスト",
         "デイリーミッション",
-        "中間発表前まで",
-        "累積ポイントが10pt未満",
-        "順位ボーナスの配点",
+        "公式ルール",
+        "特設サイト",
         "大運動会2026 — BackStage",
     ]
     missing_phrases = [phrase for phrase in required_phrases if phrase not in rendered_text]
@@ -1362,13 +1347,25 @@ def main() -> int:
 
     daily_limit_count = text.count("1日12時間まで")
     ok &= print_result(
-        "M1計上上限12h注記あり（7/27採用）",
-        "PASS" if daily_limit_count >= 1 else "FAIL",
+        "M1計上上限12h注記は特設サイトへ移管(0件)",
+        "PASS" if daily_limit_count == 0 else "FAIL",
         f"{daily_limit_count}件",
     )
 
-    spotlight_ok = 'class="spotlight-banner"' in text
-    ok &= print_result("重点ミッションバナー", "PASS" if spotlight_ok else "FAIL")
+    rules_link_html = section_block(text, "rules")
+    official_link_ok = (
+        rules_link_html.count("https://bs-undokai2026.web.app/") == 1
+        and 'target="_blank"' in rules_link_html
+        and 'rel="noopener noreferrer"' in rules_link_html
+        and "特設サイトでルールを確認する" in visible_text(rules_link_html)
+        and text.count("https://bs-undokai2026.web.app/") == 5
+        and section_block(text, "schedule").count("https://bs-undokai2026.web.app/#schedule") == 1
+    )
+    ok &= print_result(
+        "公式ルール: 特設サイトへのリンク(rules/half-time/closing/schedule/faqの計5箇所)",
+        "PASS" if official_link_ok else "FAIL",
+        f"{text.count('https://bs-undokai2026.web.app/')}箇所",
+    )
 
     team_names = ["赤組", "青組", "黄組", "緑組", "橙組", "紫組"]
     missing_team_names = [name for name in team_names if name not in rendered_text]
@@ -1402,48 +1399,6 @@ def main() -> int:
         f"{old_goal_notice_count}件",
     )
 
-    rules_html = section_block(text, "rules")
-    fixed_goals = ["12時間", "30人", "3人"]
-    missing_goals = [goal for goal in fixed_goals if goal not in rules_html]
-    ok &= print_result(
-        "#rules 固定目標値",
-        "PASS" if not missing_goals else "FAIL",
-        ", ".join(missing_goals),
-    )
-    goal_values = re.findall(r'<span class="goal-value">(.*?)</span>', rules_html, re.S)
-    goal_value_text = visible_text(" ".join(goal_values))
-    ok &= print_result(
-        "#rules goal-value内に8時間なし",
-        "PASS" if "8時間" not in goal_value_text else "FAIL",
-    )
-
-    welcome_back_count = rendered_text.count("はじめまして・おかえり")
-    ok &= print_result(
-        "はじめまして・おかえり 2件以上",
-        "PASS" if welcome_back_count >= 2 else "FAIL",
-        f"{welcome_back_count}件",
-    )
-
-    ok &= print_result(
-        "#rules 3ヶ月以上あり",
-        "PASS" if "3ヶ月以上" in visible_text(rules_html) else "FAIL",
-    )
-
-    survival_html = section_block(text, "survival")
-    survival_text = visible_text(survival_html)
-    ok &= print_result(
-        "#survival 10pt未満あり",
-        "PASS" if "10pt未満" in survival_html else "FAIL",
-    )
-    survival_half_time_block = (
-        "中間発表（クイズ大会）には参加できません" in survival_text
-        or "中間発表に不参加" in survival_text
-    )
-    ok &= print_result(
-        "#survival 脱落チームは中間発表不参加",
-        "PASS" if survival_half_time_block else "FAIL",
-    )
-
     old_survival_count = text.count("1位に届か")
     ok &= print_result(
         "旧脱落文言 0件",
@@ -1459,67 +1414,29 @@ def main() -> int:
     )
 
     schedule_html = section_block(text, "schedule")
-    timeline_count_count = schedule_html.count("timeline-count")
-    ok &= print_result(
-        "#schedule ステッパー集計行 0件",
-        "PASS" if timeline_count_count == 0 else "FAIL",
-        f"{timeline_count_count}件",
+    schedule_moved_ok = all(
+        term not in schedule_html
+        for term in ["timeline-count", "tally-table", "tally-row", "集計 0:00〜20:00"]
     )
-
-    tally_table_ok = 'class="tally-table"' in schedule_html
-    tally_rows = len(re.findall(r'class="[^"]*\btally-row\b', schedule_html))
-    tally_widths_ok = bool(re.search(r"--fill\s*:\s*83\.3(?:3)?%", schedule_html)) and "--fill: 87.5%;" in schedule_html
-    tally_dates_ok = "8/20" in schedule_html and "8/23" in schedule_html
     ok &= print_result(
-        "#schedule 日別集計テーブル",
-        "PASS" if tally_table_ok and tally_rows == 7 and tally_dates_ok and tally_widths_ok else "FAIL",
-        f"rows={tally_rows}, dates={tally_dates_ok}, widths={tally_widths_ok}",
-    )
-
-    schedule_count_times = ["集計 0:00〜20:00", "集計 0:00〜21:00"]
-    missing_count_times = [item for item in schedule_count_times if item not in schedule_html]
-    ok &= print_result(
-        "#schedule 集計締め時間",
-        "PASS" if not missing_count_times else "FAIL",
-        ", ".join(missing_count_times),
-    )
-
-    points_html = section_block(text, "points")
-    points_text = visible_text(points_html)
-    mission_example_terms = [
-        "14時間30分",
-        "13時間50分",
-        "34人",
-        "32人",
-        "あと1人",
-        "基準 12時間",
-        "基準 30人",
-        "基準 3人",
-    ]
-    missing_mission_example_terms = [term for term in mission_example_terms if term not in points_text]
-    ok &= print_result(
-        "#points ミッション別例示",
-        "PASS" if not missing_mission_example_terms else "FAIL",
-        ", ".join(missing_mission_example_terms),
+        "#schedule タイムライン・集計テーブルは特設サイトへ移管(0件)",
+        "PASS" if schedule_moved_ok else "FAIL",
     )
 
     old_threshold_terms = ["10pt以下", "10ptを超え", "14pt"]
-    threshold_ok = rendered_text.count("10pt") >= 2 and not any(
-        term in rendered_text for term in old_threshold_terms
-    )
+    threshold_ok = not any(term in rendered_text for term in old_threshold_terms)
     ok &= print_result(
-        "10pt閾値と旧文言",
+        "旧10pt閾値文言 0件",
         "PASS" if threshold_ok else "FAIL",
-        f"10pt={rendered_text.count('10pt')}件",
     )
 
     old_multipliers = ["×1.5", "×1.4", "×1.3", "×1.1"]
-    fixed_quiz_points = ["+8pt", "+6pt", "+4pt", "+2pt"]
-    quiz_points_ok = not any(term in rendered_text for term in old_multipliers) and all(
-        term in rendered_text for term in fixed_quiz_points
-    )
+    removed_quiz_points = ["+8pt", "+6pt", "+4pt", "+2pt"]
+    quiz_points_ok = not any(
+        term in rendered_text for term in old_multipliers + removed_quiz_points
+    ) and section_block(text, "half-time").count("https://bs-undokai2026.web.app/") == 1
     ok &= print_result(
-        "中間クイズ固定pt",
+        "中間クイズ: 配点は特設サイトに一本化(ページ内配点なし)",
         "PASS" if quiz_points_ok else "FAIL",
     )
 
@@ -1530,55 +1447,6 @@ def main() -> int:
         "重点ミッションあり・サポーターpt廃止",
         "PASS" if (not missing_new_point_terms and not forbidden_supporter) else "FAIL",
         ", ".join(missing_new_point_terms) + (" サポーターpt残存" if forbidden_supporter else ""),
-    )
-
-    mission_bonus_count = points_html.count('class="mission-bonus"')
-    missing_mission_bonus_terms = [
-        term for term in ["1位 +3pt", "2位 +2pt", "3位 +1pt"] if term not in points_text
-    ]
-    ok &= print_result(
-        "#points ミッション順位ボーナス",
-        "PASS" if mission_bonus_count == 9 and not missing_mission_bonus_terms else "FAIL",
-        f"mission-bonus={mission_bonus_count}; " + ", ".join(missing_mission_bonus_terms),
-    )
-
-    rules_text = visible_text(rules_html)
-    rules_notice_ok = "目標値は変更になる場合があります" in rules_text
-    points_notice_ok = "例に使っている数値は変更になる場合があります" in points_text
-    ok &= print_result(
-        "注記文言更新",
-        "PASS" if rules_notice_ok and points_notice_ok else "FAIL",
-        f"#rules={rules_notice_ok}, #points={points_notice_ok}",
-    )
-
-    score_scales = re.findall(r'<div class="score-scale"[^>]*>(.*?)</div>', points_html, re.S)
-    expected_score_labels = [str(i) for i in range(12)] + ["12pt"]
-    score_scale_failures = []
-    for index, scale_html in enumerate(score_scales, 1):
-        labels = re.findall(r'<span class="score-scale-mark"[^>]*>\s*([^<]+?)\s*</span>', scale_html)
-        if labels != expected_score_labels:
-            score_scale_failures.append(f"{index}: {labels}")
-    ok &= print_result(
-        "#points スコア目盛り 13個",
-        "PASS" if len(score_scales) == 3 and not score_scale_failures else "FAIL",
-        f"bars={len(score_scales)}; " + "; ".join(score_scale_failures[:2]),
-    )
-
-    score_bars = re.findall(r'<div class="score-bar">(.*?)</div>', points_html, re.S)
-    score_tick_failures = []
-    for index, bar_html in enumerate(score_bars, 1):
-        tick_count = len(re.findall(r'class="score-tick', bar_html))
-        major_count = len(re.findall(r'class="score-tick major"', bar_html))
-        required_positions = ["8.333%", "16.667%", "25%", "50%", "75%", "91.667%"]
-        missing_positions = [position for position in required_positions if position not in bar_html]
-        if tick_count != 11 or major_count != 3 or missing_positions:
-            score_tick_failures.append(
-                f"{index}: ticks={tick_count}, major={major_count}, missing={','.join(missing_positions)}"
-            )
-    ok &= print_result(
-        "#points スコアバー 1ptヘアライン",
-        "PASS" if len(score_bars) == 3 and not score_tick_failures else "FAIL",
-        f"bars={len(score_bars)}; " + "; ".join(score_tick_failures[:2]),
     )
 
     score_max_count = text.count("/ 12pt")
@@ -1645,7 +1513,7 @@ def main() -> int:
                 render_html,
             )
             ok &= print_result(
-                "セクショントグル: 描画後11件・概要のみ初期展開",
+                "セクショントグル: 描画後10件・概要のみ初期展開",
                 "PASS"
                 if rendered_toggle_ids == REQUIRED_IDS and rendered_open_ids == ["about"]
                 else "FAIL",
