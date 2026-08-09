@@ -2203,6 +2203,12 @@
       border-radius: 16px;
     }
 
+    .inverse .quiz-note a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     .quiz-details {
       display: grid;
       gap: 14px;
@@ -4250,10 +4256,8 @@
           <ul class="mobile-menu-links">
             <li><a class="mobile-menu-link" href="#about">イベント概要</a></li>
             <li><a class="mobile-menu-link" href="#teams">チーム発表</a></li>
-            <li><a class="mobile-menu-link" href="#rules">デイリーミッション</a></li>
-            <li><a class="mobile-menu-link" href="#points">ポイントのしくみ</a></li>
+            <li><a class="mobile-menu-link" href="#rules">公式ルール</a></li>
             <li><a class="mobile-menu-link" href="#half-time">中間発表クイズ</a></li>
-            <li><a class="mobile-menu-link" href="#survival">脱落ルール</a></li>
             <li><a class="mobile-menu-link" href="#closing">閉会式</a></li>
             <li><a class="mobile-menu-link" href="#schedule">スケジュール</a></li>
             <li><a class="mobile-menu-link" href="#prize">優勝・準優勝賞品</a></li>
@@ -4297,14 +4301,12 @@
         <p class="lead">チームで挑む、7日間の大運動会。日々の待機・通話実績が、チームの得点になります。</p>
         <div class="date-pill">イベント開催期間：8/17(月) 〜 8/23(日)</div>
         <p class="date-sub">全7日間</p>
-        <p class="page-updated">最終更新: 2026/8/8(土) 15:39 ／ 更新箇所: <a href="#half-time">中間発表クイズの詳細</a>・<a href="#points">順位ボーナスの条件</a>・<a href="#prize">特典の表記</a></p>
+        <p class="page-updated">最終更新: 2026/8/9(日) 21:05 ／ 更新箇所: <a href="#rules">公式ルールを特設サイトに一本化</a>・<a href="#half-time">中間発表クイズの詳細</a></p>
         <nav class="anchor-nav" aria-label="ページ内ナビゲーション">
           <a href="#about">イベント概要</a>
           <a href="#teams">チーム発表</a>
-          <a href="#rules">デイリーミッション</a>
-          <a href="#points">ポイントのしくみ</a>
+          <a href="#rules">公式ルール</a>
           <a href="#half-time">中間発表クイズ</a>
-          <a href="#survival">脱落ルール</a>
           <a href="#closing">閉会式</a>
           <a href="#schedule">スケジュール</a>
           <a href="#prize">特典</a>
@@ -4433,400 +4435,23 @@
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
 
+
+
       <section class="section" id="rules" aria-labelledby="rules-title">
         <p class="mini-kicker">RULE 01</p>
-        <h2 class="bar-title" id="rules-title">デイリーミッション</h2>
-        <p><span class="nw">デイリーミッション</span>は、<strong class="kw">毎日同じこの3つ</strong>。1日ごとに集計・リセットされ、チームで3つのクリアを目指します。</p>
-        <div class="cards">
-          <article class="mission-card">
-            <div class="card-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="8"></circle>
-                  <path d="M12 7v5l3 2"></path>
-                </svg>
-              </span>
-              <h3><span class="tag">稼働タイム</span></h3>
-            </div>
-            <div class="goal-badge">
-              <span class="goal-label">毎日の目標（チーム合計）</span>
-              <span class="goal-value"><strong>12時間</strong><span>/日</span></span>
-            </div>
-            <p>チーム合計の「通話時間＋待機時間」で競うミッションです。</p>
-            <dl class="definition">
-              <dt>判定条件</dt>
-              <dd>通話・待機の合計時間をチームで合算／1人あたりのカウントは1日12時間まで</dd>
-            </dl>
-          </article>
-          <article class="mission-card">
-            <div class="card-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M16 19v-1.5a3.5 3.5 0 0 0-7 0V19"></path>
-                  <circle cx="12.5" cy="9" r="3.2"></circle>
-                  <path d="M5.5 18v-1a3 3 0 0 1 3-3"></path>
-                  <path d="M18.5 18v-1a3 3 0 0 0-3-3"></path>
-                </svg>
-              </span>
-              <h3><span class="tag">通話人数</span></h3>
-            </div>
-            <div class="goal-badge">
-              <span class="goal-label">毎日の目標（チーム合計）</span>
-              <span class="goal-value"><strong>30人</strong><span>/日</span></span>
-            </div>
-            <p>各チームメンバーの<strong class="kw">合計接客人数</strong>で競うミッションです。</p>
-            <dl class="definition">
-              <dt>判定条件</dt>
-              <dd>1分以上の通話が対象／同じユーザーでも、チーム内の別のキャストとの通話は別カウント（同じキャストとは1日1カウント）</dd>
-            </dl>
-          </article>
-          <article class="mission-card">
-            <div class="card-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 3l1.7 5.1 5.3.1-4.2 3.1 1.5 5.2L12 13.4l-4.3 3.1 1.5-5.2L5 8.2l5.3-.1L12 3z"></path>
-                </svg>
-              </span>
-              <h3><span class="tag"><span class="nw">はじめまして・おかえり</span></span></h3>
-            </div>
-            <div class="goal-badge">
-              <span class="goal-label">毎日の目標（チーム合計）</span>
-              <span class="goal-value"><strong>3人</strong><span>/日</span></span>
-            </div>
-            <p><span class="nw">BackStage</span>で<strong class="kw">初めて通話する</strong>ユーザー、または<strong class="kw">3ヶ月以上ぶりに帰ってきた</strong>ユーザーの人数で競う、最難関ミッションです。</p>
-            <dl class="definition">
-              <dt>判定条件</dt>
-              <dd>1分以上の通話が対象／初通話 または 前回通話から3ヶ月以上の復帰</dd>
-            </dl>
-          </article>
+        <h2 class="bar-title" id="rules-title">公式ルール</h2>
+        <p>ミッションの目標値・ポイントの計算・<span class="nw">順位ボーナス</span>・脱落条件・クイズの配点など、大会ルールの正式な内容は<strong class="kw">ユーザー向け特設サイト</strong>にまとめています。ルールは特設サイトの記載が常に正式・最新です。</p>
+        <div class="highlight-card">
+          <p>ユーザーのみなさんにも公開しているページです。<br>チーム紹介や、期間中の結果発表もここに掲載されます。</p>
+          <a class="contact-link" href="https://bs-undokai2026.web.app/" target="_blank" rel="noopener noreferrer">特設サイトでルールを確認する</a>
         </div>
-        <p class="notice">ミッションの種類は期間中この3つで固定。毎日0時にリセットされ、また新しい1日の勝負が始まります。目標値は変更になる場合があります。<br><strong>中間発表・最終結果発表の都合により、8/20は0:00〜20:00、8/23は0:00〜21:00で集計します。</strong></p>
-      </section>
-
-      <section class="section with-checker" id="points" aria-labelledby="points-title">
-        <p class="mini-kicker">RULE 02</p>
-        <div class="inline-head">
-          <span class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 17l5-5 4 3 7-8"></path>
-              <path d="M15 7h5v5"></path>
-              <path d="M4 21h16"></path>
-            </svg>
-          </span>
-          <h2 class="bar-title" id="points-title">ポイントのしくみ</h2>
-        </div>
-        <div class="score-formula" aria-label="得点計算式">
-          <div class="formula-block">
-            <div class="formula-kicker">ミッションクリア</div>
-            <div class="formula-main">1本クリア = 1pt</div>
-            <div class="formula-sub">（最大3pt/日）</div>
-          </div>
-          <div class="formula-symbol" aria-hidden="true">＋</div>
-          <div class="formula-block bonus">
-            <div class="formula-kicker">順位ボーナス</div>
-            <div class="formula-main">項目ごとに</div>
-            <div class="formula-sub">1位+3 / 2位+2 / 3位+1</div>
-          </div>
-          <div class="formula-symbol" aria-hidden="true">＝</div>
-          <div class="formula-block total">
-            <div class="formula-kicker">その日の競争ポイント</div>
-            <div class="formula-main">最大 12pt</div>
-          </div>
-        </div>
-        <p>ミッションクリアと順位ボーナスで競う「競争ポイント」は1日最大12pt。重点ミッションの日は追加ボーナス（最大+3）が加わり、1日の最大は15pt。7日間積み上げて、最終日の合計が最も多いチームが優勝。</p>
-        <aside class="spotlight-banner" aria-labelledby="spotlight-title">
-          <div class="spotlight-content">
-            <div class="spotlight-heading">
-              <span class="spotlight-badge" aria-hidden="true">×2</span>
-              <h3 id="spotlight-title">日替わり重点ミッション</h3>
-              <span class="spotlight-label">毎日発表</span>
-            </div>
-            <p>毎日どれか1つのミッションが「本日の重点」に指定され、その項目の順位ボーナスが2倍になります。</p>
-            <div class="spotlight-chips" aria-label="重点ミッションの順位ボーナス">
-              <span class="spotlight-chip">1位 +6pt</span>
-              <span class="spotlight-chip">2位 +4pt</span>
-              <span class="spotlight-chip">3位 +2pt</span>
-            </div>
-            <p class="spotlight-note">どれが重点かは前日の夜〜当日の朝に発表。4日目（中間発表の日）は重点なしです。</p>
-          </div>
-        </aside>
-        <div class="podium" aria-label="順位ボーナス">
-          <h3>順位ボーナス（3項目それぞれで毎日）</h3>
-          <div class="podium-steps">
-            <div class="podium-step second">2位<br>+2pt</div>
-            <div class="podium-step first">1位<br>+3pt</div>
-            <div class="podium-step third">3位<br>+1pt</div>
-          </div>
-          <p class="podium-note">順位ボーナスの対象は、その項目の基準をクリアしたチームのみ。4位以下はボーナスなし。実数値が同数のときは同順位です。</p>
-        </div>
-        <h3>ある日の例</h3>
-        <h4>ミッションごとの結果</h4>
-        <div class="mission-example-grid">
-          <article class="mission-example-card">
-            <div class="mission-example-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="8"></circle>
-                  <path d="M12 7v5l3 2"></path>
-                </svg>
-              </span>
-              <h5><span class="tag">稼働タイム</span></h5>
-            </div>
-            <div class="goal-badge mission-goal-badge">
-              <span class="goal-label">基準 12時間/日</span>
-            </div>
-            <div class="mission-result-list" aria-label="稼働タイムの結果">
-              <div class="mission-result-row top">
-                <span class="mission-team"><span class="mission-rank first">1位</span> <span class="mission-team-name">チームB</span></span>
-                <span class="mission-value">14時間30分</span>
-                <span class="mission-status">クリア</span>
-                <span class="mission-bonus"><span>1位</span> <span class="mission-bonus-points">+3pt</span></span>
-              </div>
-              <div class="mission-result-row">
-                <span class="mission-team"><span class="mission-rank second">2位</span> <span class="mission-team-name">チームA</span></span>
-                <span class="mission-value">13時間50分</span>
-                <span class="mission-status">クリア</span>
-                <span class="mission-bonus"><span>2位</span> <span class="mission-bonus-points">+2pt</span></span>
-              </div>
-              <div class="mission-result-row">
-                <span class="mission-team"><span class="mission-rank third">3位</span> <span class="mission-team-name">チームC</span></span>
-                <span class="mission-value">12時間10分</span>
-                <span class="mission-status">クリア</span>
-                <span class="mission-bonus"><span>3位</span> <span class="mission-bonus-points">+1pt</span></span>
-              </div>
-            </div>
-          </article>
-          <article class="mission-example-card">
-            <div class="mission-example-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M16 19v-1.5a3.5 3.5 0 0 0-7 0V19"></path>
-                  <circle cx="12.5" cy="9" r="3.2"></circle>
-                  <path d="M5.5 18v-1a3 3 0 0 1 3-3"></path>
-                  <path d="M18.5 18v-1a3 3 0 0 0-3-3"></path>
-                </svg>
-              </span>
-              <h5><span class="tag">通話人数</span></h5>
-            </div>
-            <div class="goal-badge mission-goal-badge">
-              <span class="goal-label">基準 30人/日</span>
-            </div>
-            <div class="mission-result-list" aria-label="通話人数の結果">
-              <div class="mission-result-row top">
-                <span class="mission-team"><span class="mission-rank first">1位</span> <span class="mission-team-name">チームA</span></span>
-                <span class="mission-value">34人</span>
-                <span class="mission-status">クリア</span>
-                <span class="mission-bonus"><span>1位</span> <span class="mission-bonus-points">+3pt</span></span>
-              </div>
-              <div class="mission-result-row">
-                <span class="mission-team"><span class="mission-rank second">2位</span> <span class="mission-team-name">チームB</span></span>
-                <span class="mission-value">32人</span>
-                <span class="mission-status">クリア</span>
-                <span class="mission-bonus"><span>2位</span> <span class="mission-bonus-points">+2pt</span></span>
-              </div>
-              <div class="mission-result-row">
-                <span class="mission-team"><span class="mission-rank third">3位</span> <span class="mission-team-name">チームC</span></span>
-                <span class="mission-value">30人</span>
-                <span class="mission-status">クリア</span>
-                <span class="mission-bonus"><span>3位</span> <span class="mission-bonus-points">+1pt</span></span>
-              </div>
-            </div>
-          </article>
-          <article class="mission-example-card">
-            <div class="mission-example-head">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 3l1.7 5.1 5.3.1-4.2 3.1 1.5 5.2L12 13.4l-4.3 3.1 1.5-5.2L5 8.2l5.3-.1L12 3z"></path>
-                </svg>
-              </span>
-              <h5><span class="tag"><span class="nw">はじめまして・おかえり</span></span></h5>
-            </div>
-            <div class="goal-badge mission-goal-badge">
-              <span class="goal-label">基準 3人/日</span>
-            </div>
-            <div class="mission-result-list" aria-label="はじめまして・おかえりの結果">
-              <div class="mission-result-row top">
-                <span class="mission-team"><span class="mission-rank first">1位</span> <span class="mission-team-name">チームA</span></span>
-                <span class="mission-value">3人</span>
-                <span class="mission-status">クリア</span>
-                <span class="mission-bonus"><span>1位</span> <span class="mission-bonus-points">+3pt</span></span>
-              </div>
-              <div class="mission-result-row">
-                <span class="mission-team"><span class="mission-team-name">チームB</span></span>
-                <span class="mission-value">2人</span>
-                <span class="mission-status short">あと1人！</span>
-                <span class="mission-bonus none">対象外</span>
-              </div>
-              <div class="mission-result-row">
-                <span class="mission-team"><span class="mission-team-name">チームC</span></span>
-                <span class="mission-value">1人</span>
-                <span class="mission-status missed">未達</span>
-                <span class="mission-bonus none">対象外</span>
-              </div>
-            </div>
-          </article>
-        </div>
-        <p class="mission-example-note">「クリア」＝基準値突破。順位ボーナスは基準をクリアしたチームだけが対象で、届かなかった項目はボーナスなしです。</p>
-        <h4>この日の合計</h4>
-        <p class="notice">この例は重点ミッションがない日の例です。重点の日は追加ボーナス（最大+3）が加算されます。</p>
-        <div class="score-legend" aria-label="スコアバー凡例">
-          <span>ミッションクリア</span>
-          <span>順位ボーナス</span>
-        </div>
-        <div class="team-scores">
-          <article class="team-score-card top">
-            <div class="team-head">
-              <div class="team-name">チームA</div>
-              <div class="rank-badge">この日の1位</div>
-            </div>
-            <div class="score-detail">
-              <div class="score-equation" aria-label="チームAの得点内訳">
-                <span class="score-chip">クリア 3pt</span>
-                <span class="equation-mark">＋</span>
-                <span class="score-chip bonus">ボーナス +8pt</span>
-                <span class="equation-mark">＝</span>
-                <span class="score-chip total">11pt</span>
-              </div>
-              <p class="score-meta">ミッション3つクリア<wbr>／<span class="nw">順位ボーナス</span>: 1位×2項目・2位×1項目</p>
-              <div class="score-bar-row" aria-label="チームA 12pt満点中11pt">
-                <div class="score-bar">
-                  <span class="score-segment clear" style="width: 25%;"></span>
-                  <span class="score-segment bonus" style="width: 66.7%;"></span>
-                  <span class="score-tick" style="left: 8.333%;"></span>
-                  <span class="score-tick" style="left: 16.667%;"></span>
-                  <span class="score-tick major" style="left: 25%;"></span>
-                  <span class="score-tick" style="left: 33.333%;"></span>
-                  <span class="score-tick" style="left: 41.667%;"></span>
-                  <span class="score-tick major" style="left: 50%;"></span>
-                  <span class="score-tick" style="left: 58.333%;"></span>
-                  <span class="score-tick" style="left: 66.667%;"></span>
-                  <span class="score-tick major" style="left: 75%;"></span>
-                  <span class="score-tick" style="left: 83.333%;"></span>
-                  <span class="score-tick" style="left: 91.667%;"></span>
-                </div>
-                <div class="score-scale" aria-hidden="true">
-                  <span class="score-scale-mark" style="left: 0%;">0</span>
-                  <span class="score-scale-mark" style="left: 8.333%;">1</span>
-                  <span class="score-scale-mark" style="left: 16.667%;">2</span>
-                  <span class="score-scale-mark" style="left: 25%;">3</span>
-                  <span class="score-scale-mark" style="left: 33.333%;">4</span>
-                  <span class="score-scale-mark" style="left: 41.667%;">5</span>
-                  <span class="score-scale-mark" style="left: 50%;">6</span>
-                  <span class="score-scale-mark" style="left: 58.333%;">7</span>
-                  <span class="score-scale-mark" style="left: 66.667%;">8</span>
-                  <span class="score-scale-mark" style="left: 75%;">9</span>
-                  <span class="score-scale-mark" style="left: 83.333%;">10</span>
-                  <span class="score-scale-mark" style="left: 91.667%;">11</span>
-                  <span class="score-scale-mark" style="left: 100%;">12pt</span>
-                </div>
-              </div>
-            </div>
-          </article>
-          <article class="team-score-card">
-            <div class="team-head">
-              <div class="team-name">チームB</div>
-              <div class="rank-badge sub">この日の2位</div>
-            </div>
-            <div class="score-detail">
-              <div class="score-equation" aria-label="チームBの得点内訳">
-                <span class="score-chip">クリア 2pt</span>
-                <span class="equation-mark">＋</span>
-                <span class="score-chip bonus">ボーナス +5pt</span>
-                <span class="equation-mark">＝</span>
-                <span class="score-chip total">7pt</span>
-              </div>
-              <p class="score-meta">ミッション2つクリア<wbr>／<span class="nw">順位ボーナス</span>: 1位×1項目・2位×1項目</p>
-              <div class="score-bar-row" aria-label="チームB 12pt満点中7pt">
-                <div class="score-bar">
-                  <span class="score-segment clear" style="width: 16.7%;"></span>
-                  <span class="score-segment bonus" style="width: 41.7%;"></span>
-                  <span class="score-tick" style="left: 8.333%;"></span>
-                  <span class="score-tick" style="left: 16.667%;"></span>
-                  <span class="score-tick major" style="left: 25%;"></span>
-                  <span class="score-tick" style="left: 33.333%;"></span>
-                  <span class="score-tick" style="left: 41.667%;"></span>
-                  <span class="score-tick major" style="left: 50%;"></span>
-                  <span class="score-tick" style="left: 58.333%;"></span>
-                  <span class="score-tick" style="left: 66.667%;"></span>
-                  <span class="score-tick major" style="left: 75%;"></span>
-                  <span class="score-tick" style="left: 83.333%;"></span>
-                  <span class="score-tick" style="left: 91.667%;"></span>
-                </div>
-                <div class="score-scale" aria-hidden="true">
-                  <span class="score-scale-mark" style="left: 0%;">0</span>
-                  <span class="score-scale-mark" style="left: 8.333%;">1</span>
-                  <span class="score-scale-mark" style="left: 16.667%;">2</span>
-                  <span class="score-scale-mark" style="left: 25%;">3</span>
-                  <span class="score-scale-mark" style="left: 33.333%;">4</span>
-                  <span class="score-scale-mark" style="left: 41.667%;">5</span>
-                  <span class="score-scale-mark" style="left: 50%;">6</span>
-                  <span class="score-scale-mark" style="left: 58.333%;">7</span>
-                  <span class="score-scale-mark" style="left: 66.667%;">8</span>
-                  <span class="score-scale-mark" style="left: 75%;">9</span>
-                  <span class="score-scale-mark" style="left: 83.333%;">10</span>
-                  <span class="score-scale-mark" style="left: 91.667%;">11</span>
-                  <span class="score-scale-mark" style="left: 100%;">12pt</span>
-                </div>
-              </div>
-            </div>
-          </article>
-          <article class="team-score-card">
-            <div class="team-head">
-              <div class="team-name">チームC</div>
-              <div class="rank-badge sub">この日の3位</div>
-            </div>
-            <div class="score-detail">
-              <div class="score-equation" aria-label="チームCの得点内訳">
-                <span class="score-chip">クリア 2pt</span>
-                <span class="equation-mark">＋</span>
-                <span class="score-chip bonus">ボーナス +2pt</span>
-                <span class="equation-mark">＝</span>
-                <span class="score-chip total">4pt</span>
-              </div>
-              <p class="score-meta">ミッション2つクリア<wbr>／<span class="nw">順位ボーナス</span>: 3位×2項目</p>
-              <div class="score-bar-row" aria-label="チームC 12pt満点中4pt">
-                <div class="score-bar">
-                  <span class="score-segment clear" style="width: 16.7%;"></span>
-                  <span class="score-segment bonus" style="width: 16.7%;"></span>
-                  <span class="score-tick" style="left: 8.333%;"></span>
-                  <span class="score-tick" style="left: 16.667%;"></span>
-                  <span class="score-tick major" style="left: 25%;"></span>
-                  <span class="score-tick" style="left: 33.333%;"></span>
-                  <span class="score-tick" style="left: 41.667%;"></span>
-                  <span class="score-tick major" style="left: 50%;"></span>
-                  <span class="score-tick" style="left: 58.333%;"></span>
-                  <span class="score-tick" style="left: 66.667%;"></span>
-                  <span class="score-tick major" style="left: 75%;"></span>
-                  <span class="score-tick" style="left: 83.333%;"></span>
-                  <span class="score-tick" style="left: 91.667%;"></span>
-                </div>
-                <div class="score-scale" aria-hidden="true">
-                  <span class="score-scale-mark" style="left: 0%;">0</span>
-                  <span class="score-scale-mark" style="left: 8.333%;">1</span>
-                  <span class="score-scale-mark" style="left: 16.667%;">2</span>
-                  <span class="score-scale-mark" style="left: 25%;">3</span>
-                  <span class="score-scale-mark" style="left: 33.333%;">4</span>
-                  <span class="score-scale-mark" style="left: 41.667%;">5</span>
-                  <span class="score-scale-mark" style="left: 50%;">6</span>
-                  <span class="score-scale-mark" style="left: 58.333%;">7</span>
-                  <span class="score-scale-mark" style="left: 66.667%;">8</span>
-                  <span class="score-scale-mark" style="left: 75%;">9</span>
-                  <span class="score-scale-mark" style="left: 83.333%;">10</span>
-                  <span class="score-scale-mark" style="left: 91.667%;">11</span>
-                  <span class="score-scale-mark" style="left: 100%;">12pt</span>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-        <p class="score-note">どれだけ大差で1位を取っても、もらえるボーナスは同じ。だから、最終日まで大逆転が起こります。</p>
-        <p class="notice"><span class="nw">順位ボーナス</span>の配点は、参加チーム数の確定後に一部調整される場合があります。ミッションの目標値や、例に使っている数値は変更になる場合があります。</p>
+        <p class="notice">運営からの補足: 日替わり重点ミッションは<strong>前日の夜〜当日の朝</strong>に発表します（4日目・中間発表の日は重点なし）。集計の締め時刻は<a href="#schedule">スケジュール</a>を確認してください。</p>
       </section>
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
 
       <section class="section inverse" id="half-time" aria-labelledby="half-time-title">
-        <p class="mini-kicker">RULE 03</p>
+        <p class="mini-kicker">RULE 02</p>
         <div class="inline-head">
           <span class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -4839,7 +4464,6 @@
           <h2 class="bar-title" id="half-time-title">中間発表クイズ</h2>
         </div>
         <p>4日目・8/20(木) 21:00から、<span class="nw">中間発表</span>の配信を行います。各チーム代表3名が出場する<span class="nw">早押しクイズ大会</span>を開催。全6チーム・<span class="nw">合計18名</span>の早押し勝負です。</p>
-        <p class="quiz-note">クイズに参加できるのは、4日目の集計（20:00締め）を累積10pt以上で通過したチームのみです。</p>
         <div class="quiz-details">
           <article class="quiz-detail-card">
             <div class="quiz-detail-label">出場メンバーの決め方</div>
@@ -4863,79 +4487,16 @@
             </ul>
           </article>
         </div>
-        <div class="table-wrap">
-          <table class="rule-table">
-            <thead>
-              <tr>
-                <th>クイズ順位</th>
-                <th>もらえるポイント</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1位</td>
-                <td class="num"><span class="multiplier">+8pt</span></td>
-              </tr>
-              <tr>
-                <td>2位</td>
-                <td class="num"><span class="multiplier">+6pt</span></td>
-              </tr>
-              <tr>
-                <td>3位</td>
-                <td class="num"><span class="multiplier">+4pt</span></td>
-              </tr>
-              <tr>
-                <td>4位以下</td>
-                <td class="num"><span class="multiplier">+2pt</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="quiz-note">クイズの順位に応じたポイントが、そのまま<span class="nw">累積ポイント</span>に加算されます。1位と4位の差は6pt。ここで順位が大きく動くかもしれません。</p>
         <p class="quiz-note">同点だった場合は<strong>「サドンデス」</strong>で決着します。同点になったチームだけで追加の問題に挑戦していただき、決着がつくまで続けます。</p>
+        <p class="quiz-note">クイズの配点や、参加条件（累積ポイントによる脱落ライン）などの公式ルールは、<a href="https://bs-undokai2026.web.app/" target="_blank" rel="noopener noreferrer">特設サイト</a>で確認してください。</p>
       </section>
 
-      <section class="section" id="survival" aria-labelledby="survival-title">
-        <p class="mini-kicker">RULE 04</p>
-        <h2 class="bar-title" id="survival-title">脱落ルール</h2>
-        <div class="survival-flow" aria-label="脱落判定の流れ">
-          <div class="flow-node start">4日目 8/20(木) 20:00 集計締め</div>
-          <svg class="flow-arrow" viewBox="0 0 34 18" fill="none" aria-hidden="true">
-            <path d="M2 9h26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></path>
-            <path d="M24 3l8 6-8 6" fill="currentColor"></path>
-          </svg>
-          <div class="flow-node judge">累積10pt以上ある？</div>
-          <svg class="flow-arrow" viewBox="0 0 34 18" fill="none" aria-hidden="true">
-            <path d="M2 9h26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></path>
-            <path d="M24 3l8 6-8 6" fill="currentColor"></path>
-          </svg>
-          <div class="flow-branches">
-            <div class="flow-node flow-branch keep">10pt以上 → レース続行</div>
-            <div class="flow-node flow-branch drop"><span>10pt未満 → 脱落</span><span>（中間発表に不参加）</span></div>
-          </div>
-        </div>
-        <div class="survival-panels">
-          <article class="survival-panel">
-            <div class="survival-label">脱落のルール</div>
-            <p><span class="nw">中間発表</span>前まで（4日目の集計終了時点）の<span class="nw">累積ポイント</span>が<span class="nw">10pt未満</span>のチームは、脱落となります。脱落したチームは、<span class="nw">中間発表</span>（クイズ大会）には参加できません。</p>
-            <p class="survival-reassurance">毎日3つのミッションをクリアしていれば 3pt×4日＝12pt。<span class="nw">順位ボーナス</span>がなくても通過できるラインです。</p>
-          </article>
-        </div>
-        <div class="survival-box">
-          <span class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 3l7 3v5c0 4.6-2.9 8.4-7 10-4.1-1.6-7-5.4-7-10V6l7-3z"></path>
-              <path d="M8.5 12l2.2 2.2 4.8-5"></path>
-            </svg>
-          </span>
-          <span>判定はすべて数値による自動判定。主観で決まることはありません。</span>
-        </div>
-      </section>
+
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
 
       <section class="section inverse" id="closing" aria-labelledby="closing-title">
-        <p class="mini-kicker">RULE 05</p>
+        <p class="mini-kicker">RULE 03</p>
         <div class="inline-head">
           <span class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -4954,42 +4515,13 @@
           <li><span class="nw">優勝チーム</span>の発表</li>
           <li>優勝・準優勝チームへの<a href="#prize">特典</a>のお知らせ</li>
         </ul>
-        <h3>同点だったときの決め方</h3>
-        <div class="table-wrap">
-          <table class="rule-table">
-            <thead>
-              <tr>
-                <th>順番</th>
-                <th>くらべるもの</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td><span class="nw">はじめまして・おかえり</span>の7日間合計</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>通話人数の7日間合計</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>稼働タイムの7日間合計</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td><span class="nw">中間発表</span>クイズの順位</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="quiz-note">上から順にくらべて、先に差がついたところで順位が決まります。配信の詳しい内容は、決まりしだいお知らせします。</p>
+        <p class="quiz-note">同点だったときの決め方（タイブレーク）などの公式ルールは、<a href="https://bs-undokai2026.web.app/" target="_blank" rel="noopener noreferrer">特設サイト</a>で確認してください。配信の詳しい内容は、決まりしだいお知らせします。</p>
       </section>
 
       <div class="track-divider" aria-hidden="true"><span></span></div>
 
       <section class="section" id="schedule" aria-labelledby="schedule-title">
-        <p class="mini-kicker">SCHEDULE 06</p>
+        <p class="mini-kicker">SCHEDULE 04</p>
         <div class="inline-head">
           <span class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -5143,7 +4675,7 @@
         <svg class="puff" viewBox="0 0 90 62" aria-hidden="true">
           <path d="M17 37C7 35 4 24 11 17c5-5 13-4 17 1C31 8 43 4 52 11c5 4 7 9 6 15 10-2 20 5 20 16 0 10-8 17-18 17H20C10 59 3 51 6 43c2-4 6-6 11-6z" fill="currentColor" stroke="#FFFFFF" stroke-width="4"></path>
         </svg>
-        <p class="mini-kicker">PRIZE 07</p>
+        <p class="mini-kicker">PRIZE 05</p>
         <div class="trophy-badge" aria-hidden="true">
           <svg class="trophy-rays" viewBox="0 0 150 150">
             <g stroke="currentColor" stroke-width="5" stroke-linecap="round">
@@ -5512,28 +5044,12 @@
             <p>A. 「チーム発表」セクションで全6チームのメンバーを発表しています。</p>
           </details>
           <details>
-            <summary>Q. ミッションは毎日変わりますか？</summary>
-            <p>A. 変わりません。毎日同じ3つの目標に挑み、1日ごとに集計・リセットされます。</p>
-          </details>
-          <details>
-            <summary>Q. 実数値が同じだったら？</summary>
-            <p>A. 完全に同数の場合は同順位として、同じポイント・ボーナスを付与します。</p>
-          </details>
-          <details>
-            <summary>Q. 無料通話もカウントされますか？</summary>
-            <p>A. されます。「通話人数」「<span class="nw">はじめまして・おかえり</span>」は1分以上の通話が対象です。</p>
-          </details>
-          <details>
-            <summary>Q. 同じユーザーが複数のキャストと話したら？</summary>
-            <p>A. 「通話人数」は、チーム内の別のキャストとの通話ならそれぞれカウントされます。同じキャストとの通話は1日1カウントです。</p>
+            <summary>Q. ルールの詳細はどこで確認できますか？</summary>
+            <p>A. ミッション・ポイント・脱落条件・クイズ配点などの公式ルールは、<a href="https://bs-undokai2026.web.app/" target="_blank" rel="noopener noreferrer">大運動会2026 特設サイト</a>で確認してください。</p>
           </details>
           <details>
             <summary>Q. 重点ミッションはいつわかりますか？</summary>
             <p>A. 前日の夜〜当日の朝に、運営から発表します。4日目（中間発表の日）は重点なしです。</p>
-          </details>
-          <details>
-            <summary>Q. 最終結果が同点だったら？</summary>
-            <p>A. 「はじめまして・おかえり」の合計→「通話人数」の合計→「稼働タイム」の合計の順にくらべて、それでも同じなら中間クイズの順位で決めます。</p>
           </details>
         </div>
       </section>
@@ -5828,10 +5344,8 @@
       const sectionToggleConfig = [
         { id: "about", label: "イベント概要", open: true },
         { id: "teams", label: "チーム発表", open: false },
-        { id: "rules", label: "デイリーミッション", open: false },
-        { id: "points", label: "ポイントのしくみ", open: false },
+        { id: "rules", label: "公式ルール", open: false },
         { id: "half-time", label: "中間発表クイズ", open: false },
-        { id: "survival", label: "脱落ルール", open: false },
         { id: "closing", label: "閉会式", open: false },
         { id: "schedule", label: "スケジュール", open: false },
         { id: "prize", label: "優勝・準優勝賞品", open: false },
