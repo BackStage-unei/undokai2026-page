@@ -64,10 +64,26 @@ PRESERVED_SECTION_TERMS = {
         "32人",
         "あと1人",
         "11pt",
-        "9pt",
-        "5pt",
+        "7pt",
+        "4pt",
+        "基準をクリアしたチームのみ",
     ],
-    "half-time": ["早押しクイズ大会", "+8pt", "+6pt", "+4pt", "+2pt"],
+    "half-time": [
+        "早押しクイズ大会",
+        "合計18名",
+        "各チームから3名が出場",
+        "前日の8/19(水)",
+        "運営リーダー経由で回収",
+        "リアルタイムで参加できること",
+        "20:00",
+        "1時間前から参加できること",
+        "BackStageにまつわるクイズ",
+        "サドンデス",
+        "+8pt",
+        "+6pt",
+        "+4pt",
+        "+2pt",
+    ],
     "closing": ["8/23", "21:00", "優勝チーム", "はじめまして・おかえり", "クイズの順位"],
     "survival": ["累積10pt以上ある？", "10pt未満", "3pt×4日＝12pt"],
     "schedule": ["8/20", "集計 0:00〜20:00", "8/23", "集計 0:00〜21:00"],
@@ -291,6 +307,8 @@ def css_rule_failures(css: str) -> list[str]:
         "#pv-voice .pv-detail-box",
         "#pv-voice .pv-recording-tips",
         ".section-toggle-title",
+        ".quiz-detail-card",
+        ".quiz-detail-card li",
     }
     base_css = strip_media_blocks(css)
 
@@ -1112,7 +1130,9 @@ def main() -> int:
         "調整中",
         "優勝チーム",
         "準優勝チーム",
-        "パネル設置",
+        "集団立ち絵パネルの",
+        "店頭設置",
+        "集合立ち絵 or 集合SDイラスト",
         "ブースPOP",
         "集合立ち絵ポスター",
     ]
@@ -1532,7 +1552,9 @@ def main() -> int:
         ", ".join(missing_new_point_terms) + (" サポーターpt残存" if forbidden_supporter else ""),
     )
 
-    mission_bonus_count = points_html.count('class="mission-bonus"')
+    mission_bonus_count = points_html.count('class="mission-bonus"') + points_html.count(
+        'class="mission-bonus none"'
+    )
     missing_mission_bonus_terms = [
         term for term in ["1位 +3pt", "2位 +2pt", "3位 +1pt"] if term not in points_text
     ]

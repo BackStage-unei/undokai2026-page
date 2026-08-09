@@ -555,6 +555,31 @@
       letter-spacing: 0.08em;
     }
 
+    .page-updated {
+      display: inline-block;
+      max-width: none;
+      margin: -6px auto 18px;
+      padding: 5px 14px;
+      color: var(--royal-deep);
+      background: rgba(255, 255, 255, 0.78);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .page-updated a {
+      color: var(--royal);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      white-space: nowrap;
+    }
+
+    .page-updated a:hover,
+    .page-updated a:focus-visible {
+      color: var(--orange-deep);
+    }
+
     .anchor-nav {
       display: none;
       flex-wrap: wrap;
@@ -1849,6 +1874,11 @@
       line-height: 1;
     }
 
+    .mission-bonus.none {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
     .mission-example-note {
       max-width: 40em;
       margin: 0 auto 0;
@@ -2171,6 +2201,54 @@
       background: rgba(255, 255, 255, 0.14);
       border: 1px solid rgba(255, 255, 255, 0.28);
       border-radius: 16px;
+    }
+
+    .quiz-details {
+      display: grid;
+      gap: 14px;
+      max-width: 640px;
+      margin: 18px auto;
+    }
+
+    .quiz-detail-card {
+      display: grid;
+      gap: 10px;
+      justify-items: start;
+      padding: 18px 20px;
+      background: var(--white);
+      border-radius: 18px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+      text-align: left;
+    }
+
+    .quiz-detail-label {
+      padding: 6px 12px;
+      color: var(--white);
+      background: var(--royal-deep);
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .quiz-detail-card ul {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding-left: 1.3em;
+    }
+
+    .quiz-detail-card li {
+      color: var(--ink);
+      font-size: 14.5px;
+      font-weight: 700;
+      line-height: 1.8;
+      text-align: left;
+      text-shadow: none;
+    }
+
+    .quiz-detail-card li strong {
+      color: var(--royal-deep);
     }
 
     .inline-head {
@@ -4219,6 +4297,7 @@
         <p class="lead">チームで挑む、7日間の大運動会。日々の待機・通話実績が、チームの得点になります。</p>
         <div class="date-pill">イベント開催期間：8/17(月) 〜 8/23(日)</div>
         <p class="date-sub">全7日間</p>
+        <p class="page-updated">最終更新: 2026/8/8(土) 15:39 ／ 更新箇所: <a href="#half-time">中間発表クイズの詳細</a>・<a href="#points">順位ボーナスの条件</a>・<a href="#prize">特典の表記</a></p>
         <nav class="anchor-nav" aria-label="ページ内ナビゲーション">
           <a href="#about">イベント概要</a>
           <a href="#teams">チーム発表</a>
@@ -4478,7 +4557,7 @@
             <div class="podium-step first">1位<br>+3pt</div>
             <div class="podium-step third">3位<br>+1pt</div>
           </div>
-          <p class="podium-note">4位以下はボーナスなし。実数値が同数のときは同順位です。</p>
+          <p class="podium-note">順位ボーナスの対象は、その項目の基準をクリアしたチームのみ。4位以下はボーナスなし。実数値が同数のときは同順位です。</p>
         </div>
         <h3>ある日の例</h3>
         <h4>ミッションごとの結果</h4>
@@ -4573,21 +4652,21 @@
                 <span class="mission-bonus"><span>1位</span> <span class="mission-bonus-points">+3pt</span></span>
               </div>
               <div class="mission-result-row">
-                <span class="mission-team"><span class="mission-rank second">2位</span> <span class="mission-team-name">チームB</span></span>
+                <span class="mission-team"><span class="mission-team-name">チームB</span></span>
                 <span class="mission-value">2人</span>
                 <span class="mission-status short">あと1人！</span>
-                <span class="mission-bonus"><span>2位</span> <span class="mission-bonus-points">+2pt</span></span>
+                <span class="mission-bonus none">対象外</span>
               </div>
               <div class="mission-result-row">
-                <span class="mission-team"><span class="mission-rank third">3位</span> <span class="mission-team-name">チームC</span></span>
+                <span class="mission-team"><span class="mission-team-name">チームC</span></span>
                 <span class="mission-value">1人</span>
                 <span class="mission-status missed">未達</span>
-                <span class="mission-bonus"><span>3位</span> <span class="mission-bonus-points">+1pt</span></span>
+                <span class="mission-bonus none">対象外</span>
               </div>
             </div>
           </article>
         </div>
-        <p class="mission-example-note">「クリア」＝基準値突破。基準に届かなくても、実数値の順位でボーナスは入ります。</p>
+        <p class="mission-example-note">「クリア」＝基準値突破。順位ボーナスは基準をクリアしたチームだけが対象で、届かなかった項目はボーナスなしです。</p>
         <h4>この日の合計</h4>
         <p class="notice">この例は重点ミッションがない日の例です。重点の日は追加ボーナス（最大+3）が加算されます。</p>
         <div class="score-legend" aria-label="スコアバー凡例">
@@ -4652,15 +4731,15 @@
               <div class="score-equation" aria-label="チームBの得点内訳">
                 <span class="score-chip">クリア 2pt</span>
                 <span class="equation-mark">＋</span>
-                <span class="score-chip bonus">ボーナス +7pt</span>
+                <span class="score-chip bonus">ボーナス +5pt</span>
                 <span class="equation-mark">＝</span>
-                <span class="score-chip total">9pt</span>
+                <span class="score-chip total">7pt</span>
               </div>
-              <p class="score-meta">ミッション2つクリア<wbr>／<span class="nw">順位ボーナス</span>: 1位×1項目・2位×2項目</p>
-              <div class="score-bar-row" aria-label="チームB 12pt満点中9pt">
+              <p class="score-meta">ミッション2つクリア<wbr>／<span class="nw">順位ボーナス</span>: 1位×1項目・2位×1項目</p>
+              <div class="score-bar-row" aria-label="チームB 12pt満点中7pt">
                 <div class="score-bar">
                   <span class="score-segment clear" style="width: 16.7%;"></span>
-                  <span class="score-segment bonus" style="width: 58.3%;"></span>
+                  <span class="score-segment bonus" style="width: 41.7%;"></span>
                   <span class="score-tick" style="left: 8.333%;"></span>
                   <span class="score-tick" style="left: 16.667%;"></span>
                   <span class="score-tick major" style="left: 25%;"></span>
@@ -4700,15 +4779,15 @@
               <div class="score-equation" aria-label="チームCの得点内訳">
                 <span class="score-chip">クリア 2pt</span>
                 <span class="equation-mark">＋</span>
-                <span class="score-chip bonus">ボーナス +3pt</span>
+                <span class="score-chip bonus">ボーナス +2pt</span>
                 <span class="equation-mark">＝</span>
-                <span class="score-chip total">5pt</span>
+                <span class="score-chip total">4pt</span>
               </div>
-              <p class="score-meta">ミッション2つクリア<wbr>／<span class="nw">順位ボーナス</span>: 3位×3項目</p>
-              <div class="score-bar-row" aria-label="チームC 12pt満点中5pt">
+              <p class="score-meta">ミッション2つクリア<wbr>／<span class="nw">順位ボーナス</span>: 3位×2項目</p>
+              <div class="score-bar-row" aria-label="チームC 12pt満点中4pt">
                 <div class="score-bar">
                   <span class="score-segment clear" style="width: 16.7%;"></span>
-                  <span class="score-segment bonus" style="width: 25%;"></span>
+                  <span class="score-segment bonus" style="width: 16.7%;"></span>
                   <span class="score-tick" style="left: 8.333%;"></span>
                   <span class="score-tick" style="left: 16.667%;"></span>
                   <span class="score-tick major" style="left: 25%;"></span>
@@ -4759,8 +4838,31 @@
           </span>
           <h2 class="bar-title" id="half-time-title">中間発表クイズ</h2>
         </div>
-        <p>4日目・8/20(木) 21:00から、<span class="nw">中間発表</span>の配信を行います。全チームのキャストが参加する<span class="nw">早押しクイズ大会</span>を開催。</p>
+        <p>4日目・8/20(木) 21:00から、<span class="nw">中間発表</span>の配信を行います。各チーム代表3名が出場する<span class="nw">早押しクイズ大会</span>を開催。全6チーム・<span class="nw">合計18名</span>の早押し勝負です。</p>
         <p class="quiz-note">クイズに参加できるのは、4日目の集計（20:00締め）を累積10pt以上で通過したチームのみです。</p>
+        <div class="quiz-details">
+          <article class="quiz-detail-card">
+            <div class="quiz-detail-label">出場メンバーの決め方</div>
+            <ul>
+              <li>各チームから<strong>3名</strong>が出場します。出場メンバーは、運営リーダーも含めて各チームのチャット内でみんなで相談して決めてください。</li>
+              <li>選出の締切は<strong>前日の8/19(水)</strong>。運営リーダー経由で回収します。</li>
+            </ul>
+          </article>
+          <article class="quiz-detail-card">
+            <div class="quiz-detail-label">出場の条件</div>
+            <ul>
+              <li>8/20(木) 21:00〜の配信に<strong>リアルタイムで参加できること</strong>。Discordと、早押しクイズのサイトを使用します。</li>
+              <li>事前準備・説明を<strong>20:00</strong>から行うので、<strong>1時間前から参加できること</strong>。</li>
+            </ul>
+          </article>
+          <article class="quiz-detail-card">
+            <div class="quiz-detail-label">出題内容</div>
+            <ul>
+              <li>出題テーマは<strong>「BackStageにまつわるクイズ」</strong>。サービスのことや、大運動会のルール、これまでのイベントなどから出題します。</li>
+              <li>特別な準備や勉強は必要ありません。近い数字を答えられれば加点される問題や、勘と発想で勝てる問題も入れています。どなたが出ても戦える内容ですので、気軽に手を挙げてください。</li>
+            </ul>
+          </article>
+        </div>
         <div class="table-wrap">
           <table class="rule-table">
             <thead>
@@ -4790,6 +4892,7 @@
           </table>
         </div>
         <p class="quiz-note">クイズの順位に応じたポイントが、そのまま<span class="nw">累積ポイント</span>に加算されます。1位と4位の差は6pt。ここで順位が大きく動くかもしれません。</p>
+        <p class="quiz-note">同点だった場合は<strong>「サドンデス」</strong>で決着します。同点になったチームだけで追加の問題に挑戦していただき、決着がつくまで続けます。</p>
       </section>
 
       <section class="section" id="survival" aria-labelledby="survival-title">
@@ -5082,7 +5185,7 @@
             <div class="prize-rank-card prize-rank-gold">
               <p class="prize-rank-label">優勝チーム</p>
               <ul class="prize-rank-list">
-                <li>集合SDイラストを店舗に<strong>パネル設置</strong></li>
+                <li>集団立ち絵パネルの<strong>店頭設置</strong>（集合立ち絵 or 集合SDイラスト）</li>
                 <li>店内ブース席に<strong>チームのブースPOPを掲出</strong></li>
               </ul>
             </div>
@@ -5448,8 +5551,7 @@
     <footer class="site-footer">
       <div class="wrap footer-inner">
         <p class="footer-title">大運動会2026 — <span class="nw">BackStage</span></p>
-        <p class="footer-note">本ページは参加キャスト向けの案内です。外部への共有はしないでください。<br>一部調整中の項目がありますので、最新情報は運営からの連絡をご確認ください。適宜本ページも更新します。</p>
-      </div>
+        <p class="footer-note">本ページは参加キャスト向けの案内です。外部への共有はしないでください。<br>一部調整中の項目がありますので、最新情報は運営からの連絡をご確認ください。適宜本ページも更新します。</p>      </div>
     </footer>
   </div>
   <script>
